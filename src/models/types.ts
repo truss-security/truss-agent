@@ -1,16 +1,6 @@
-export const SCALAR_ATTRIBUTES = ['category', 'source'] as const;
-export const ARRAY_ATTRIBUTES = ['author', 'industry', 'region', 'reference', 'tags'] as const;
-export const INDICATOR_ATTRIBUTES = ['indicators'] as const;
-export const PRODUCT_ATTRIBUTES = [...SCALAR_ATTRIBUTES, ...ARRAY_ATTRIBUTES, ...INDICATOR_ATTRIBUTES] as const;
+type ProductAttribute = 'category' | 'source' | 'author' | 'industry' | 'region' | 'reference' | 'tags' | 'indicators'
 
-export type ScalarAttribute = (typeof SCALAR_ATTRIBUTES)[number];
-export type ArrayAttribute = (typeof ARRAY_ATTRIBUTES)[number];
-export type IndicatorAttribute = (typeof INDICATOR_ATTRIBUTES)[number];
-export type ProductAttribute = ScalarAttribute | ArrayAttribute | IndicatorAttribute;
-
-export interface ProductFilter {
-  [key in ProductAttribute]?: string[];
-}
+export type ProductFilter = Partial<Record<ProductAttribute, string[]>>;
 
 export interface ApiSearchFilter {
   filter?: ProductFilter;
