@@ -14,7 +14,7 @@ async function runSync() {
   }
 }
 
-async function main() {
+export async function main() {
   try {
     logger.info('Starting security indicator service...');
 
@@ -22,14 +22,14 @@ async function main() {
     await runSync();
 
     // Schedule regular syncs if cron is configured
-    const cronSchedule = config.get('schedule.cron');
-    if (cronSchedule) {
-      logger.info(`Scheduling regular syncs with cron pattern: ${cronSchedule}`);
-      cron.schedule(cronSchedule, async () => {
-        logger.info('Starting scheduled sync');
-        await runSync();
-      });
-    }
+    // const cronSchedule = config.get('schedule.cron');
+    // if (cronSchedule) {
+    //   logger.info(`Scheduling regular syncs with cron pattern: ${cronSchedule}`);
+    //   cron.schedule(cronSchedule, async () => {
+    //     logger.info('Starting scheduled sync');
+    //     await runSync();
+    //   });
+    // }
 
   } catch (error) {
     logger.error('Fatal error in main application:', error);
@@ -37,4 +37,7 @@ async function main() {
   }
 }
 
-main(); 
+// Only run if this file is being run directly
+if (require.main === module) {
+  main();
+} 

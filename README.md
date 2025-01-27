@@ -73,3 +73,34 @@ docker run -d security-indicator-service
 Configuration is managed through environment variables and/or config files. See `src/config/config.ts` for available options.
 
 
+# CLI Commands
+
+## Run a one-time sync
+
+```bash
+npm run cli sync
+```
+
+## Start the service with default schedule
+
+```bash
+npm run cli serve
+```
+
+## Start with custom schedule
+
+```bash
+npm run cli serve --cron "*/30 * * * *"
+```
+
+## View current configuration
+
+```bash
+npm run cli config --list
+```
+
+## Test configuration
+
+```bash
+npm run cli config --test
+```

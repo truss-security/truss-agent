@@ -1,11 +1,14 @@
-type ProductAttribute = 'category' | 'source' | 'author' | 'industry' | 'region' | 'reference' | 'tags' | 'indicators'
-
-export type ProductFilter = Partial<Record<ProductAttribute, string[]>>;
-
 export interface ApiSearchFilter {
-  filter?: ProductFilter;
   fromDate?: number;
   toDate?: number;
+  category?: string[];
+  source?: string[];
+  author?: string[];
+  industry?: string[];
+  region?: string[];
+  reference?: string[];
+  tags?: string[];
+  indicators?: string[];
 }
 
 export interface SecurityIndicator {

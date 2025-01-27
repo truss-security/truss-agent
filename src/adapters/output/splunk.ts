@@ -31,10 +31,90 @@ interface SearchOptions {
   index?: string;
 }
 
+// Add proper typing for the Service class
+type SplunkService = {
+  login(): Promise<void>;
+  indexes(): {
+    item(name: string): SplunkIndex;
+  };
+  savedSearches(): {
+    create(params: SavedSearchParams): Promise<SavedSearch>;
+    fetch(): Promise<SavedSearchCollection>;
+  };
+  firedAlertGroups(): {
+    fetch(): Promise<FiredAlertGroupCollection>;
+  };
+}
+
+type SplunkIndex = {
+  submitEvent(event: Record<string, any>, callback: (err: Error | null) => void): void;
+}
+
+type SavedSearchParams = {
+  name: string;
+  search: string;
+  earliest_time?: string;
+  latest_time?: string;
+  index?: string;
+  description?: string;
+  alert_type?: string;
+  'alert.severity'?: string;
+  'alert.suppress'?: string;
+  'alert.track'?: string;
+  'dispatch.earliest_time'?: string;
+  'dispatch.latest_time'?: string;
+  is_scheduled?: string;
+  cron_schedule?: string;
+}
+
+type SavedSearch = {
+  name: string;
+  properties(): { search: string };
+  dispatch(): Promise<[SearchJob, SavedSearch]>;
+  remove(): Promise<void>;
+}
+
+type SearchJob = {
+  sid: string;
+  properties(): {
+    eventCount: number;
+    resultCount: number;
+    diskUsage: number;
+    priority: number;
+  };
+  results(options: { count: number }): Promise<[any[], SearchJob]>;
+  track(
+    options: { period: number },
+    callbacks: {
+      done: (job: SearchJob) => void;
+      failed: (job: SearchJob) => void;
+      error: (err: Error) => void;
+    }
+  ): Promise<void>;
+}
+
+type SavedSearchCollection = {
+  list(): SavedSearch[];
+  item(name: string): SavedSearch | null;
+}
+
+type FiredAlertGroupCollection = {
+  list(): FiredAlertGroup[];
+}
+
+type FiredAlertGroup = {
+  name: string;
+  count(): number;
+  list(): Promise<[FiredAlert[], FiredAlertGroup]>;
+}
+
+type FiredAlert = {
+  properties(): Record<string, any>;
+}
+
 export class SplunkAgent {
-  serviceParams: ServiceParams
-  service: any
-  private config: SplunkConfig
+  private service!: SplunkService;
+  private config: SplunkConfig;
 
   constructor() {
     this.config = {
@@ -135,206 +215,5 @@ export class SplunkAgent {
     });
 
     return query;
-  }
-
-  async deleteSavedSearch(name: string): Promise<void> {
-    try {
-      const savedSearches = await this.service.savedSearches().fetch();
-      const search = savedSearches.item(name);
-
-      if (!search) {
-        logger.warn(`Saved search '${name}' not found`);
-        return;
-      }
-
-      await search.remove();
-      logger.info(`Deleted saved search: ${name}`);
-    } catch (error) {
-      logger.error('Failed to delete saved search:', error);
-      throw error;
-    }
-  }
-
-  async listSavedSearches(): Promise<Array<{ name: string; query: string }>> {
-    try {
-      const savedSearches = await this.service.savedSearches().fetch();
-      return savedSearches.list().map(search => ({
-        name: search.name,
-        query: search.properties().search
-      }));
-    } catch (error) {
-      logger.error('Failed to list saved searches:', error);
-      throw error;
-    }
-  }
-
-  async listAlerts() {
-    try {
-      // Get the collection of all fired alert groups for the current user
-      let firedAlertGroups = await this.service.firedAlertGroups().fetch();
-              
-      // Get the list of all fired alert groups, including the all group (represented by "-")
-      firedAlertGroups = firedAlertGroups.list();
-      console.log("Fired alert groups:", firedAlertGroups);
-              
-      // For each fired alert group...
-      for(let a in firedAlertGroups) {
-        if (firedAlertGroups.hasOwnProperty(a)) {
-          let firedAlertGroup = firedAlertGroups[a];
-          let firedAlerts;
-          [firedAlerts, firedAlertGroup] = await firedAlertGroup.list();
-          // How many times were this group's alerts fired?
-          console.log(firedAlertGroup.name, "(Count:", firedAlertGroup.count(), ")");
-          // Print the properties for each fired alert (default of 30 per alert group)
-          for(let i = 0; i < firedAlerts.length; i++) {
-              let firedAlert = firedAlerts[i];
-              for(let key in firedAlert.properties()) {
-                  if (firedAlert.properties().hasOwnProperty(key)) {
-                      console.log("\t", key, ":", firedAlert.properties()[key]);
-                  }
-              }
-              console.log();
-          }
-          console.log("======================================");
-        }
-      }
-
-      return "return"
-    } catch (err) {
-      console.log("Error:", err);
-    }
-  }
-
-  async createAlert(productName: string, id: string, indicators: {}, alertOptions?: {}) { 
-    try {
-      const timestamp = Date.now()
-      const alertName = productName.replace(/ /g, "_") + '-' + timestamp
-
-      const defaultAlertOptions = {
-        "alert_type": "always",
-        "alert.severity": "4",
-        "alert.suppress": "0",
-        "alert.track": "1",
-        "dispatch.earliest_time": "-1h",
-        "dispatch.latest_time": "now",
-        "is_scheduled": "1",
-        "cron_schedule": "* * * * *"
-      };
-      alertOptions = alertOptions ? alertOptions : defaultAlertOptions
-
-      // Create the search query from the indicators
-      let searchQuery = `index="_internal"`
-      for (const indicator in indicators) {
-        let indicatorRange = ''
-        indicators[indicator].forEach((item: string) => {
-          indicatorRange += `"${item}",`
-        })
-        indicatorRange = indicatorRange.slice(0, -1); 
-        searchQuery += ` | search ${indicator.toLowerCase()} IN (${indicatorRange})`  
-      }
-
-      // Create a saved search as an alert.
-      let alert = await this.service.savedSearches().create({
-        name: alertName.substring(0,100), // Splunk only allows names < 100 char
-        search: searchQuery,
-        description: id,
-        ...alertOptions
-      });
-
-      return {name: alert.name}
-    
-    } catch (err) {
-      throw err
-    }
-  }
-
-  async deleteAlert(alertName: string) {
-    try {
-      const name = alertName;
-      // Retrieve the alert group.
-      let firedAlertGroups = await this.service.savedSearches().fetch();
-      // Get the alert group to delete using its name.
-      let alertToDelete = firedAlertGroups.item(name);
-
-      // Does the alert exist?
-      if (!alertToDelete) {
-          console.log("Can't delete '" + name + "' because it doesn't exist!");
-      }
-      else {
-          // Delete the alert.
-          await alertToDelete.remove();
-          console.log("Deleted alert: " + name + "");
-      }
-    } catch (err) {
-      console.log("Error:", err);
-    }
-  }
-  
-  async getSavedSearches() {
-    try {
-      let mySavedSearches = this.service.savedSearches();
-      mySavedSearches = await mySavedSearches.fetch();
-  
-      console.log("There are " + mySavedSearches.list().length + " saved searches");
-  
-      let savedSearchColl = mySavedSearches.list();
-  
-      for(let i = 0; i < savedSearchColl.length; i++) {
-          let search = savedSearchColl[i];
-          console.log(i + ": " + search.name);
-          console.log("    Query: " + search.properties().search + "\n");
-      }
-    } catch (err) {
-      console.log("Error:", err);
-    }
-  }
-
-  // Run a saved search
-  async runSearch(searchName: string) {
-    // Retrieve the saved search collection
-    let mySavedSearches = this.service.savedSearches();
-    mySavedSearches = await mySavedSearches.fetch();
-
-    // Retrieve the saved search 
-    let mySavedSearch = mySavedSearches.item(searchName);
-
-    // Run the saved search and poll for completion
-    let [job, savedSearch] = await mySavedSearch.dispatch();
-
-    // Display the job's search ID
-    console.log("Job SID: ", job.sid);
-
-    // Poll the status of the search job
-    await job.track({
-            period: 200
-        }, {
-            done: async function(job) {
-                console.log("Done!");
-
-                // Print out the statics
-                console.log("Job statistics:");
-                console.log("  Event count:  " + job.properties().eventCount);
-                console.log("  Result count: " + job.properties().resultCount);
-                console.log("  Disk usage:   " + job.properties().diskUsage + " bytes");
-                console.log("  Priority:     " + job.properties().priority);
-
-                // Get 10 results and print them
-                let results;
-                [results, job] = await job.results({
-                    count: 10
-                });
-                console.log(JSON.stringify(results));
-            },
-            failed: function(job) {
-                console.log(`Job failed: ${job.sid}`)
-            },
-            error: function(err) {
-                console.log(err);
-            }
-        }
-    );
-
-    return job
-
   }
 }

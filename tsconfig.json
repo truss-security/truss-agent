@@ -14,7 +14,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "typeRoots": ["./src/models"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test"]

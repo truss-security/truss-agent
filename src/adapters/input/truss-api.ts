@@ -19,7 +19,19 @@ interface ApiResponse {
   Count: number;
 }
 
-class TrussIndicatorApi {
+export type AgentData = {
+  apiKey: string;
+  username: string;
+  filterName: string;
+  filter: ApiSearchFilter;
+  runIntervalMinutes: number;
+  serviceName: string;
+  serviceUrl: string;
+  serviceKey: string;
+  serviceUser: string;
+}
+
+class TrussApi {
   private apiClient: AxiosInstance;
   private baseUrl: string;
   private apiKey: string;
@@ -37,19 +49,29 @@ class TrussIndicatorApi {
     });
   }
 
+  public async getAgentData(apiKey: string, configName: string): Promise<AgentData> {
+    const response = await this.apiClient.post<AgentData>('/agent-data', {
+      apiKey,
+      configName
+    });
+    return response.data;
+  }
+
   public async searchIndicators(filter: ApiSearchFilter): Promise<SecurityIndicator[]> {
     try {
       let allIndicators: SecurityIndicator[] = [];
       let lastEvaluatedKey: LastEvaluatedKey | undefined;
 
       do {
-        const currentFilter = {
+        console.log('xxxx')
+        let currentFilter = {
           ...filter,
           LastEvaluatedKey: lastEvaluatedKey
         };
+        console.log('currentFilter: ', currentFilter);
 
         const response = await this.apiClient.post<ApiResponse>('/product/search', currentFilter);
-        
+        console.log('response', response.data);
         if (!response.data) {
           throw new Error('No data received from API');
         }
@@ -61,10 +83,13 @@ class TrussIndicatorApi {
         }
 
         const indicators = Items.map(item => item as SecurityIndicator);
+        console.log('indicators GGGG', indicators);
+        console.log('indicators HHHH', allIndicators);
         allIndicators = [...allIndicators, ...indicators];
         lastEvaluatedKey = newLastEvaluatedKey;
 
         logger.info(`Retrieved batch of ${indicators.length} indicators. Running total: ${allIndicators.length}`);
+        console.log('lastEvaluatedKey zzzzzz', lastEvaluatedKey);
 
       } while (lastEvaluatedKey);
 
@@ -86,4 +111,4 @@ class TrussIndicatorApi {
   }
 }
 
-export default TrussIndicatorApi; 
+export default TrussApi; 
