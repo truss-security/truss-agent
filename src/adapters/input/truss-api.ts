@@ -50,11 +50,19 @@ class TrussApi {
   }
 
   public async getAgentData(apiKey: string, configName: string): Promise<AgentData> {
-    const response = await this.apiClient.post<AgentData>('/agent-data', {
-      apiKey,
-      configName
-    });
-    return response.data;
+    console.log('apiKey', apiKey);
+    console.log('configName', configName);
+    try {
+      const response = await this.apiClient.post<AgentData>('/agent-data', {
+        apiKey,
+        configName
+      });
+      console.log('response', response);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting agent data:', error);
+      throw error;
+    }
   }
 
   public async searchIndicators(filter: ApiSearchFilter): Promise<SecurityIndicator[]> {
@@ -63,7 +71,6 @@ class TrussApi {
       let lastEvaluatedKey: LastEvaluatedKey | undefined;
 
       do {
-        console.log('xxxx')
         let currentFilter = {
           ...filter,
           LastEvaluatedKey: lastEvaluatedKey
@@ -71,7 +78,7 @@ class TrussApi {
         console.log('currentFilter: ', currentFilter);
 
         const response = await this.apiClient.post<ApiResponse>('/product/search', currentFilter);
-        console.log('response', response.data);
+
         if (!response.data) {
           throw new Error('No data received from API');
         }
@@ -83,13 +90,11 @@ class TrussApi {
         }
 
         const indicators = Items.map(item => item as SecurityIndicator);
-        console.log('indicators GGGG', indicators);
-        console.log('indicators HHHH', allIndicators);
+
         allIndicators = [...allIndicators, ...indicators];
         lastEvaluatedKey = newLastEvaluatedKey;
 
         logger.info(`Retrieved batch of ${indicators.length} indicators. Running total: ${allIndicators.length}`);
-        console.log('lastEvaluatedKey zzzzzz', lastEvaluatedKey);
 
       } while (lastEvaluatedKey);
 

@@ -42,12 +42,12 @@ class IndicatorSyncService {
       if (!apiKey) {
         throw new Error('TRUSS_API_KEY is not set');
       }
+      console.log('this.trussApi', this.trussApi);
       const agentData: AgentData = await this.trussApi.getAgentData(apiKey, 'Discord');
       logger.info(`Retrieved agent data from Truss API`);
       console.log('agentData', agentData);
-
       filter = {
-        fromDate: Date.now() - (agentData.runIntervalMinutes * 60 * 1000 * 8), // Last 24 hours
+        startDate: Date.now() - (60 * agentData.runIntervalMinutes * 1000 * 24 * 8), // Last 24 hours
         ...agentData.filter
       }
 

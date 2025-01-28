@@ -1,6 +1,6 @@
 export interface ApiSearchFilter {
-  fromDate?: number;
-  toDate?: number;
+  startDate?: number;
+  endDate?: number;
   category?: string[];
   source?: string[];
   author?: string[];
