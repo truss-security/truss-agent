@@ -31,15 +31,15 @@ const JOBS_FILE = config.get('jobs.jobsFile') as string;
 const AGENT_FILE = config.get('agent.agentFile') as string;
 
 const MAIN_MENU_CHOICES = [
-  { name: 'First-time setup (agent name, Truss API key)', value: 'setup' },
-  { name: 'Create new connection', value: 'create' },
-  { name: 'Modify existing connection', value: 'modify' },
+  { name: 'First-Time Setup (agent name, Truss API key)', value: 'setup' },
+  { name: 'Create New Connection', value: 'create' },
   { name: 'Test Destination Connection', value: 'test' },
-  { name: 'Test Truss API → Destination (fetch & preview payload)', value: 'testTrussToDiscord' },
-  { name: 'List all connections', value: 'list' },
-  { name: 'Enable/disable connection', value: 'enableDisable' },
-  { name: 'Delete connection', value: 'delete' },
-  { name: 'Reset all configuration', value: 'reset' },
+  { name: 'Test Truss API → Destination', value: 'testTrussToDiscord' },
+  { name: 'Enable/Disable Connection', value: 'enableDisable' },
+  { name: 'List All Connections', value: 'list' },
+  { name: 'Modify Existing Connection', value: 'modify' },
+  { name: 'Delete Connection', value: 'delete' },
+  { name: 'Reset All Configuration', value: 'reset' },
   { name: 'Exit', value: 'exit' },
 ] as const;
 
@@ -842,15 +842,12 @@ async function runListConnections(): Promise<void> {
       c.type === 'discord' ? maskWebhookUrl((c as DiscordConnection).webhookUrl) : '—';
     const status = isConnectionEnabled(c) ? 'enabled' : 'disabled';
     const dconn = c as DiscordConnection;
-    const querySummary = dconn.query?.configName
-      ? `query: configName=${dconn.query.configName}`
-      : dconn.query?.filter && Object.keys(dconn.query.filter).length > 0
-        ? `query: filter (${Object.keys(dconn.query.filter).join(', ')})`
-        : dconn.query
-          ? 'query: (no filter)'
-          : 'query: (none)';
+    const queryJson =
+      dconn.query != null && Object.keys(dconn.query).length > 0
+        ? JSON.stringify(dconn.query)
+        : '{}';
     console.log(`  ${c.name} (${c.type}${channel})  ${status}  webhook: ${webhook}`);
-    console.log(`    ${querySummary}`);
+    console.log(`    query: ${queryJson}`);
   }
   console.log('');
 }
