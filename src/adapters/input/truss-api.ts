@@ -121,10 +121,10 @@ class TrussApi {
         hasMore = data.hasMore === true;
         page += 1;
 
-        logger.info(`Retrieved batch of ${batch.length} indicators. Running total: ${allIndicators.length}`);
+        logger.debug(`Retrieved batch of ${batch.length} indicators. Running total: ${allIndicators.length}`);
       }
 
-      logger.info(`Completed retrieval of all indicators. Total count: ${allIndicators.length}`);
+      logger.debug(`Completed retrieval of all indicators. Total count: ${allIndicators.length}`);
       return allIndicators;
     } catch (error) {
       if (axios.isAxiosError(error)) {

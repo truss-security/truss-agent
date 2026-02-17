@@ -60,9 +60,7 @@ export function buildReportEmbeds(indicators: SecurityIndicator[]): DiscordPaylo
     if (item.reference?.length) {
       const reversed = [...item.reference].reverse();
       const url = reversed[0];
-      const label = url.length > 60 ? url.slice(0, 57) + '…' : url;
-      const refValue = `[${label}](${url})`;
-      fields.push({ name: 'References', value: truncateField(refValue), inline: false });
+      fields.push({ name: 'References', value: truncateField(url), inline: false });
     }
 
     if (item.tags?.length) {

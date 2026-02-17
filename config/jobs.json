@@ -2,13 +2,31 @@
   "jobs": [
     {
       "name": "discord-test",
-      "connectionName": "discord-test",
-      "schedule": 10080,
-      "outputFormat": "report",
       "filter": {
         "tags": [
           "clawhub",
           "OpenClaw"
+        ]
+      },
+      "windowMinutes": 10080,
+      "schedule": 10080,
+      "connectionName": "discord-test",
+      "outputFormat": "report"
+    },
+    {
+      "name": "Larger-Test",
+      "connectionName": "Larger-Test",
+      "schedule": 10080,
+      "outputFormat": "summary",
+      "filter": {
+        "industry": [
+          "Cryptocurrency",
+          "Financial Services",
+          "Banking",
+          "Web3",
+          "Blockchain",
+          "E-commerce",
+          "Finance & Banking"
         ]
       },
       "windowMinutes": 10080
