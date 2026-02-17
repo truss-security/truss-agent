@@ -1,9 +1,9 @@
 # Run the configured Truss agent (scheduled job service).
-# Prerequisites: run `npm run config` to create config/ and .env, then start with:
-#   docker compose up -d
+# The image is credential-free (.env and config/ are in .dockerignore).
+# Prerequisites: on the RUN host, have config/ and .env (from npm run config
+# or a secrets store), then: docker compose up -d
 #
-# The agent uses config/ (agent.json, connections.json, jobs.json) and .env
-# from the host so your existing configuration is used as-is.
+# config/ and .env are mounted from the run host at runtime only.
 
 services:
   agent:

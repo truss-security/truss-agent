@@ -111,29 +111,40 @@ Use these menu options to change or remove existing setup.
 
 ## Docker
 
+The container image is **credential-free**: it never contains API keys, webhook URLs, or other secrets. `.env` and `config/` are excluded from the build (see `.dockerignore`). Credentials and config are only supplied at runtime (mounts and env). If a deployed container is compromised, its image and layers contain no retrievable secrets.
+
+- **Config host:** Run `npm run config` to produce `config/` and `.env` (or export env vars). These stay on the config host or in a secrets store; they are not baked into the image.
+- **Run host:** Supply config and secrets at runtime only: mount `config/` and provide env (e.g. `env_file: .env` or env from a secrets manager). The same image can run anywhere; each run host provides its own credentials.
+
 ### Docker Compose (recommended)
 
-After configuring the agent with `npm run config` (so `config/` and `.env` exist), start the configured agent with:
+On the host where the container runs, ensure `config/` and `.env` exist (created there or copied from the config host). Then:
 
 ```bash
 docker compose up -d
 ```
 
-This builds the image, mounts your `config/` and loads `.env`, and runs the scheduled job service. To rebuild after code changes:
+This builds the image (without any secrets), mounts `config/` and loads `.env` from the **run host**, and runs the scheduled job service.
 
-```bash
-docker compose up -d --build
-```
+- **Config on the same host as the container:** After adding or changing connections (or any config), restart so the agent reloads config. No rebuild needed:
+  ```bash
+  docker compose restart
+  ```
+- **Config on a different host (e.g. config on your laptop, container on a server):** Do not bake `config/` or `.env` into the image. On the **run host**, create or copy `config/` and `.env` (or inject env from a secrets manager), then start or recreate the container. The image stays credential-free; if the container is compromised, secrets are not stored in the image.
+- **After code changes:** Rebuild and recreate the container:
+  ```bash
+  docker compose up -d --build
+  ```
 
 ### Plain Docker
 
-Build the image:
+Build the image (no credentials or config are included):
 
 ```bash
 docker build -t security-indicator-service .
 ```
 
-Run the container (ensure `config/` and `.env` are present, e.g. from a previous `npm run config` or by mounting/copying them):
+Run the container on the run host; provide config and secrets at runtime only (e.g. mount `config/` and use `--env-file` or env vars from a secrets store):
 
 ```bash
 docker run -d -v $(pwd)/config:/app/config --env-file .env security-indicator-service
