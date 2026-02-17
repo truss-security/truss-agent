@@ -94,6 +94,16 @@ export class QueryManager {
       return;
     }
 
+    if (job.connectionName) {
+      const connectionsPath = config.get('connections.connectionsFile') as string;
+      const connections = loadConnections(connectionsPath);
+      const conn = getConnectionByName(connections, job.connectionName);
+      if (conn && !isConnectionEnabled(conn)) {
+        logger.info({ job: job.name, connectionName: job.connectionName }, 'Connection is disabled; skipping job (no pull, no send)');
+        return;
+      }
+    }
+
     try {
       logger.info({ job: job.name }, 'Running job');
       const filter = await this.resolveFilter(job, apiKey);

@@ -34,8 +34,8 @@ const MAIN_MENU_CHOICES = [
   { name: 'First-time setup (agent name, Truss API key)', value: 'setup' },
   { name: 'Create new connection', value: 'create' },
   { name: 'Modify existing connection', value: 'modify' },
-  { name: 'Test connection', value: 'test' },
-  { name: 'Test Truss API → Discord (fetch & preview payload)', value: 'testTrussToDiscord' },
+  { name: 'Test Destination Connection', value: 'test' },
+  { name: 'Test Truss API → Destination (fetch & preview payload)', value: 'testTrussToDiscord' },
   { name: 'List all connections', value: 'list' },
   { name: 'Enable/disable connection', value: 'enableDisable' },
   { name: 'Delete connection', value: 'delete' },
@@ -70,7 +70,7 @@ async function runFirstTimeSetup(): Promise<void> {
   saveAgentConfig({ agentName: answers.agentName.trim() }, AGENT_FILE);
   updateEnvFile('TRUSS_API_KEY', answers.apiKey.trim());
   console.log('Agent name saved to', AGENT_FILE);
-  console.log('TRUSS_API_KEY saved to .env. You can use Test Truss API → Discord in this session; the key is re-loaded when needed.');
+  console.log('TRUSS_API_KEY saved to .env. You can use Test Truss API → Destination in this session; the key is re-loaded when needed.');
 }
 
 async function promptCreateDiscord(): Promise<DiscordConnection> {
@@ -656,15 +656,20 @@ async function runTest(): Promise<void> {
     console.log('No connections defined. Create one first.');
     return;
   }
+  console.log('This only tests the destination (e.g. Discord webhook). No API pull.\n');
   const choice = await inquirer.prompt<{ connection: string }>({
     type: 'list',
     name: 'connection',
-    message: 'Select connection to test:',
-    choices: connections.map((c) => ({
-      name: `${c.name} (${c.type})`,
-      value: c.name,
-    })),
+    message: 'Select connection to test (destination only):',
+    choices: [
+      { name: 'None (skip test)', value: '__none__' },
+      ...connections.map((c) => ({
+        name: `${c.name} (${c.type})`,
+        value: c.name,
+      })),
+    ],
   });
+  if (choice.connection === '__none__') return;
   const conn = getConnectionByName(connections, choice.connection);
   if (!conn) return;
   const webhookUrl = getWebhookUrlForConnection(conn);
@@ -690,15 +695,20 @@ async function runTestTrussToDiscord(): Promise<void> {
     console.log('No Discord connections defined. Create one first.');
     return;
   }
+  console.log('This tests the full operation (pull from Truss API + send to Discord) for the selected connection, regardless of enabled/disabled.\n');
   const connChoice = await inquirer.prompt<{ connection: string }>({
     type: 'list',
     name: 'connection',
-    message: 'Select Discord connection to send test data to:',
-    choices: connections.map((c) => ({
-      name: `${c.name} (${c.type}${c.type === 'discord' && (c as DiscordConnection).channelLabel ? ` ${(c as DiscordConnection).channelLabel}` : ''})`,
-      value: c.name,
-    })),
+    message: 'Select Discord connection to test (full flow):',
+    choices: [
+      { name: 'None (skip test)', value: '__none__' },
+      ...connections.map((c) => ({
+        name: `${c.name} (${c.type}${c.type === 'discord' && (c as DiscordConnection).channelLabel ? ` ${(c as DiscordConnection).channelLabel}` : ''}) – ${isConnectionEnabled(c) ? 'enabled' : 'disabled'}`,
+        value: c.name,
+      })),
+    ],
   });
+  if (connChoice.connection === '__none__') return;
   const conn = getConnectionByName(connections, connChoice.connection);
   if (!conn) return;
   const webhookUrl = getWebhookUrlForConnection(conn);
@@ -851,23 +861,38 @@ async function runEnableDisableConnection(): Promise<void> {
     console.log('No connections configured. Create one first.');
     return;
   }
-  const choice = await inquirer.prompt<{ connection: string }>({
-    type: 'list',
-    name: 'connection',
-    message: 'Select connection to enable or disable:',
+  const answer = await inquirer.prompt<{ enabledConnections: string[] }>({
+    type: 'checkbox',
+    name: 'enabledConnections',
+    message: 'Toggle connections (space = switch, Enter = continue). Checked = enabled:',
     choices: connections.map((c) => ({
-      name: `${c.name} (${c.type}) – ${isConnectionEnabled(c) ? 'enabled' : 'disabled'}`,
+      name: `${c.name} (${c.type}) ${c.type === 'discord' && (c as DiscordConnection).channelLabel ? ` – ${(c as DiscordConnection).channelLabel}` : ''}`,
       value: c.name,
+      checked: isConnectionEnabled(c),
     })),
   });
-  const conn = getConnectionByName(connections, choice.connection);
-  if (!conn || conn.type !== 'discord') return;
-  const next = connections.map((c) =>
-    c.name === conn.name ? { ...c, enabled: !(c as DiscordConnection).enabled } : c
-  );
+  const enabledSet = new Set(answer.enabledConnections);
+  const next = connections.map((c) => ({
+    ...c,
+    enabled: c.type === 'discord' ? enabledSet.has(c.name) : (c as DiscordConnection).enabled,
+  }));
+  const confirm = await inquirer.prompt<{ save: boolean }>({
+    type: 'confirm',
+    name: 'save',
+    message: 'Save changes?',
+    default: true,
+  });
+  if (!confirm.save) {
+    console.log('Changes not saved.');
+    return;
+  }
   saveConnections(CONNECTIONS_FILE, next);
-  const newState = !(conn as DiscordConnection).enabled;
-  console.log(`Connection "${conn.name}" is now ${newState ? 'enabled' : 'disabled'}.`);
+  const changed = connections.filter((c) => isConnectionEnabled(c) !== enabledSet.has(c.name));
+  if (changed.length > 0) {
+    console.log(`Updated ${changed.length} connection(s): ${changed.map((c) => `${c.name} → ${enabledSet.has(c.name) ? 'enabled' : 'disabled'}`).join(', ')}.`);
+  } else {
+    console.log('No changes to save.');
+  }
 }
 
 async function runDeleteConnection(): Promise<void> {
