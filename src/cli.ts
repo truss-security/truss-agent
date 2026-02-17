@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { logger } from './utils/logger';
-import IndicatorSyncService from './services/indicator-sync-service';
-import config from './config/config';
+import { QueryManager } from './services/query-manager';
+import { runConfigCommand } from './cli/config-command';
 
 const program = new Command();
 
@@ -12,66 +12,50 @@ program
 
 program
   .command('sync')
-  .description('Run a one-time sync of security indicators')
-  .option('-f, --force', 'Force sync regardless of last run time')
+  .description('Run all jobs once (or a single job by name)')
+  .option('-f, --force', 'Force sync regardless of last run time (reserved)')
+  .option('-j, --job <name>', 'Run only the job with this name')
   .action(async (options) => {
     try {
-      logger.info('Starting manual sync...');
-      const syncService = new IndicatorSyncService();
-      await syncService.initialize();
-      await syncService.syncIndicators();
-      logger.info('Manual sync completed');
+      const manager = new QueryManager();
+      manager.load();
+      if (options.job) {
+        const found = await manager.runJobByName(options.job);
+        if (!found) process.exit(1);
+      } else {
+        await manager.runAllOnce();
+      }
+      logger.info('Sync completed');
     } catch (error) {
-      logger.error('Sync failed:', error);
+      logger.error({ err: error }, 'Sync failed');
       process.exit(1);
     }
   });
 
 program
   .command('serve')
-  .description('Start the service in daemon mode with scheduled syncs')
-  .option('-c, --cron <pattern>', 'Override default cron schedule')
-  .action(async (options) => {
+  .description('Start the service in daemon mode with scheduled jobs')
+  .option('-c, --cron <pattern>', 'Override default cron schedule (reserved)')
+  .action(async () => {
     try {
-      if (options.cron) {
-        config.set('schedule.cron', options.cron);
-      }
-      // Use the existing main function
-      await (await import('./index.js')).main();
+      const { main } = await import('./index');
+      await main();
     } catch (error) {
-      logger.error('Service failed:', error);
+      logger.error({ err: error }, 'Service failed');
       process.exit(1);
     }
   });
 
-// program
-//   .command('config')
-//   .description('Manage service configuration')
-//   .option('-l, --list', 'List current configuration')
-//   .option('-t, --test', 'Test current configuration')
-//   .action(async (options) => {
-//     if (options.list) {
-//       const conf = config.getProperties();
-//       const maskedConfig = JSON.parse(JSON.stringify(conf));
-//       const schema = config.getSchema() as { properties: Record<string, { sensitive?: boolean }> };
-      
-//       Object.entries(schema.properties).forEach(([key, value]) => {
-//         if (value.sensitive) {
-//           maskedConfig[key] = '********';
-//         }
-//       });
-//       console.log(JSON.stringify(maskedConfig, null, 2));
-//     }
-//     if (options.test) {
-//       try {
-//         const syncService = new IndicatorSyncService();
-//         await syncService.initialize();
-//         logger.info('Configuration test successful');
-//       } catch (error) {
-//         logger.error('Configuration test failed:', error);
-//         process.exit(1);
-//       }
-//     }
-//   });
+program
+  .command('config')
+  .description('Interactive configuration: create, modify, and test connections')
+  .action(async () => {
+    try {
+      await runConfigCommand();
+    } catch (error) {
+      logger.error({ err: error }, 'Config failed');
+      process.exit(1);
+    }
+  });
 
-program.parse(); 
+program.parse();

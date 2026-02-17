@@ -1,43 +1,21 @@
 import { logger } from './utils/logger';
-import IndicatorSyncService from './services/indicator-sync-service';
-import config from './config/config';
-import cron from 'node-cron';
+import { QueryManager } from './services/query-manager';
 
-async function runSync() {
-  const syncService = new IndicatorSyncService();
-  
+export async function main(): Promise<void> {
   try {
-    await syncService.initialize();
-    await syncService.syncIndicators();
+    logger.info('Starting Truss agent (query manager)...');
+    const manager = new QueryManager();
+    const jobs = manager.load();
+    if (jobs.length === 0) {
+      logger.warn('No jobs configured. Set JOBS_FILE or JOBS_JSON and ensure TRUSS_API_KEY is set.');
+    }
+    manager.start();
   } catch (error) {
-    logger.error('Sync failed:', error);
-  }
-}
-
-export async function main() {
-  try {
-    logger.info('Starting security indicator service...');
-
-    // Run initial sync
-    await runSync();
-
-    // Schedule regular syncs if cron is configured
-    // const cronSchedule = config.get('schedule.cron');
-    // if (cronSchedule) {
-    //   logger.info(`Scheduling regular syncs with cron pattern: ${cronSchedule}`);
-    //   cron.schedule(cronSchedule, async () => {
-    //     logger.info('Starting scheduled sync');
-    //     await runSync();
-    //   });
-    // }
-
-  } catch (error) {
-    logger.error('Fatal error in main application:', error);
+    logger.error({ err: error }, 'Fatal error in main application');
     process.exit(1);
   }
 }
 
-// Only run if this file is being run directly
 if (require.main === module) {
   main();
-} 
+}

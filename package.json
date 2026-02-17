@@ -11,18 +11,21 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "prepare": "husky install",
-    "cli": "ts-node src/cli.ts"
+    "cli": "ts-node src/cli.ts",
+    "config": "ts-node src/cli.ts config"
   },
   "dependencies": {
+    "@types/inquirer": "^8.2.12",
     "axios": "^1.6.7",
+    "commander": "^11.0.0",
     "convict": "^6.2.4",
     "date-fns": "^3.3.1",
     "dotenv": "^16.4.5",
+    "inquirer": "^8.2.7",
     "node-cron": "^3.0.3",
     "pino": "^8.19.0",
-    "zod": "^3.22.4",
     "splunk-sdk": "^1.11.0",
-    "commander": "^11.0.0"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/convict": "^6.1.6",
@@ -43,4 +46,4 @@
   "bin": {
     "security-indicator": "./dist/cli.js"
   }
-} 
+}

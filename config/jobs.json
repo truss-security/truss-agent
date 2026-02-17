@@ -1,0 +1,17 @@
+{
+  "jobs": [
+    {
+      "name": "discord-test",
+      "connectionName": "discord-test",
+      "schedule": 10080,
+      "outputFormat": "report",
+      "filter": {
+        "tags": [
+          "clawhub",
+          "OpenClaw"
+        ]
+      },
+      "windowMinutes": 10080
+    }
+  ]
+}
