@@ -57,7 +57,7 @@ Other available commands:
 ## Workflow
 
 1. **Configure** – Run the interactive config to set up the agent, connections, and jobs (see below).
-2. **Run the service** – Start the Docker container (or `npm run cli serve`). The container runs the scheduled job service: it runs your configured cron/interval jobs and keeps connections up to date by pulling from the Truss API and posting to the configured destinations (e.g. Discord, Slack, MS Teams, SIEM, EDR, FW, etc.).
+2. **Run the service** – Start the configured agent with `docker compose up -d` (or `npm run cli serve`). The service runs your configured cron/interval jobs and keeps connections up to date by pulling from the Truss API and posting to the configured destinations (e.g. Discord, Slack, MS Teams, SIEM, EDR, FW, etc.).
 
 ## Configure (run first)
 
@@ -111,6 +111,22 @@ Use these menu options to change or remove existing setup.
 
 ## Docker
 
+### Docker Compose (recommended)
+
+After configuring the agent with `npm run config` (so `config/` and `.env` exist), start the configured agent with:
+
+```bash
+docker compose up -d
+```
+
+This builds the image, mounts your `config/` and loads `.env`, and runs the scheduled job service. To rebuild after code changes:
+
+```bash
+docker compose up -d --build
+```
+
+### Plain Docker
+
 Build the image:
 
 ```bash
@@ -120,7 +136,7 @@ docker build -t security-indicator-service .
 Run the container (ensure `config/` and `.env` are present, e.g. from a previous `npm run config` or by mounting/copying them):
 
 ```bash
-docker run -d security-indicator-service
+docker run -d -v $(pwd)/config:/app/config --env-file .env security-indicator-service
 ```
 
 The container runs the scheduled job service: it loads jobs from `config/jobs.json`, runs each job on its schedule (cron or interval), pulls from the Truss API for enabled connections, and posts results to the configured destinations (e.g. Discord).

@@ -1,0 +1,18 @@
+# Run the configured Truss agent (scheduled job service).
+# Prerequisites: run `npm run config` to create config/ and .env, then start with:
+#   docker compose up -d
+#
+# The agent uses config/ (agent.json, connections.json, jobs.json) and .env
+# from the host so your existing configuration is used as-is.
+
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: truss-agent:latest
+    container_name: truss-agent
+    env_file: .env
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped
