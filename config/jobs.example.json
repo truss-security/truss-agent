@@ -1,0 +1,20 @@
+{
+  "jobs": [
+    {
+      "name": "discord-ioc",
+      "configName": "Discord",
+      "schedule": "0 */6 * * *",
+      "discordWebhookUrl": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+      "outputFormat": "ioc"
+    },
+    {
+      "name": "local-report",
+      "filter": {
+        "category": ["Malware"]
+      },
+      "schedule": 60,
+      "discordWebhookUrl": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+      "outputFormat": "report"
+    }
+  ]
+}

@@ -30,6 +30,37 @@ const config = convict({
       env: 'SCHEDULE_CRON',
     },
   },
+  jobs: {
+    jobsFile: {
+      doc: 'Path to jobs config file (JSON array or { jobs: [] })',
+      format: String,
+      default: 'config/jobs.json',
+      env: 'JOBS_FILE',
+    },
+    jobsJson: {
+      doc: 'JSON string of jobs (overrides jobsFile when set)',
+      format: String,
+      default: '',
+      env: 'JOBS_JSON',
+      sensitive: false,
+    },
+  },
+  connections: {
+    connectionsFile: {
+      doc: 'Path to connections config file',
+      format: String,
+      default: 'config/connections.json',
+      env: 'CONNECTIONS_FILE',
+    },
+  },
+  agent: {
+    agentFile: {
+      doc: 'Path to agent config file (agent name, etc.)',
+      format: String,
+      default: 'config/agent.json',
+      env: 'AGENT_CONFIG_FILE',
+    },
+  },
   indicators: {
     apiUrl: {
       doc: 'URL for the Truss Security API',

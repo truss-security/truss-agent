@@ -1,0 +1,22 @@
+# Never ship credentials or config into the image. Supplied at runtime only.
+.env
+.env.*
+config/
+
+# Dependencies and build output (rebuilt in image)
+node_modules/
+dist/
+coverage/
+
+# Git and IDE
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Misc
+*.log
+.DS_Store
+README.md
+docker-compose.yml
+.dockerignore

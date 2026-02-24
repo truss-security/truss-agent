@@ -1,0 +1,41 @@
+{
+  "connections": [
+    {
+      "name": "discord-test",
+      "type": "discord",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "channelLabel": "list-test",
+      "enabled": false,
+      "query": {
+        "filter": {
+          "tags": [
+            "clawhub",
+            "OpenClaw"
+          ]
+        },
+        "windowMinutes": 10080
+      }
+    },
+    {
+      "name": "Larger-Test",
+      "type": "discord",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "channelLabel": "Many Hits",
+      "enabled": false,
+      "query": {
+        "filter": {
+          "industry": [
+            "Cryptocurrency",
+            "Financial Services",
+            "Banking",
+            "Web3",
+            "Blockchain",
+            "E-commerce",
+            "Finance & Banking"
+          ]
+        },
+        "windowMinutes": 10080
+      }
+    }
+  ]
+}
