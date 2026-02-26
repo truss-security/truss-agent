@@ -980,18 +980,15 @@ async function runBuildAndRunDockerCompose(): Promise<void> {
     return;
   }
   if (!(await confirmConnectionsBeforeDockerBuild())) return;
-  console.log('Building and starting with docker compose (Ctrl+C to stop)...\n');
+  console.log('Building and starting with docker compose (detached/background)...\n');
   try {
-    execSync('docker compose up --build', {
+    execSync('docker compose up --build -d', {
       stdio: 'inherit',
       cwd,
     });
+    console.log('\nContainer is running in the background. Use "docker compose logs -f" to follow logs or "docker compose down" to stop.');
   } catch (err) {
-    if (err instanceof Error && 'status' in err && (err as { status?: number }).status === 130) {
-      console.log('\nStopped by user.');
-    } else {
-      console.error('Docker compose failed:', err instanceof Error ? err.message : err);
-    }
+    console.error('Docker compose failed:', err instanceof Error ? err.message : err);
   }
 }
 
