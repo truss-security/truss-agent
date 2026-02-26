@@ -6,7 +6,7 @@ import { runConfigCommand } from './cli/config-command';
 const program = new Command();
 
 program
-  .name('security-indicator-service')
+  .name('truss-agent')
   .description('CLI to manage security indicator collection and distribution')
   .version('0.1.0');
 

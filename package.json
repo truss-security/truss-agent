@@ -1,5 +1,5 @@
 {
-  "name": "security-indicator-service",
+  "name": "truss-agent",
   "version": "0.1.0",
   "description": "Service for collecting and distributing cybersecurity indicators",
   "main": "dist/index.js",
@@ -44,6 +44,6 @@
     "typescript": "^5.3.3"
   },
   "bin": {
-    "security-indicator": "./dist/cli.js"
+    "truss-agent": "./dist/cli.js"
   }
 }

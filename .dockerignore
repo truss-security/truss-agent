@@ -1,4 +1,4 @@
-# Never ship credentials or config into the image. Supplied at runtime only.
+# Never ship credentials or config into the image. Supply at runtime (mounts + env).
 .env
 .env.*
 config/

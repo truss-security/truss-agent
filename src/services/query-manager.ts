@@ -8,9 +8,11 @@ import {
   isConnectionEnabled,
   buildFilterFromConnectionQuery,
 } from '../config/connections';
+import type { Connection } from '../connections';
+import { getModule } from '../connections';
 import { logger } from '../utils/logger';
+import { formatFiltersUsed } from '../formatters/exec-summary-formatter';
 import TrussApi, { type AgentData } from '../adapters/input/truss-api';
-import { sendTextToDiscord, sendReportToDiscord, sendExecSummaryToDiscord } from '../adapters/output/discord';
 import { formatIndicatorsAsIoc } from '../formatters/ioc-formatter';
 import { ApiSearchFilter } from '../models/types';
 
@@ -115,12 +117,28 @@ export class QueryManager {
         return;
       }
 
-      const webhookUrl = this.resolveWebhookUrl(job);
+      const conn = this.resolveConnection(job);
+      const webhookUrl = conn ? getWebhookUrlForConnection(conn) : job.discordWebhookUrl;
       if (!webhookUrl) {
         logger.error(
           { job: job.name },
           'Job has no destination: set connectionName or discordWebhookUrl'
         );
+        return;
+      }
+
+      const connectionDisplay = conn
+        ? { name: conn.name, description: conn.description }
+        : undefined;
+      const filterSummary = formatFiltersUsed(filter);
+      const displayWithFilter = connectionDisplay
+        ? { ...connectionDisplay, filterSummary }
+        : undefined;
+
+      const typeId = conn?.type ?? 'discord';
+      const module = getModule(typeId);
+      if (!module) {
+        logger.error({ job: job.name, typeId }, 'Unknown connection type');
         return;
       }
 
@@ -130,34 +148,32 @@ export class QueryManager {
           logger.info({ job: job.name }, 'Formatter produced empty output');
           return;
         }
-        await sendTextToDiscord(webhookUrl, text);
+        await module.sendText(webhookUrl, text);
       } else if (job.outputFormat === 'summary') {
-        await sendExecSummaryToDiscord(webhookUrl, indicators, filter);
+        await module.sendExecSummary(webhookUrl, indicators, filter, displayWithFilter);
       } else {
-        await sendReportToDiscord(webhookUrl, indicators);
+        await module.sendReport(webhookUrl, indicators, displayWithFilter);
       }
-      logger.info({ job: job.name }, 'Posted to Discord');
+      logger.info({ job: job.name }, 'Posted to destination');
     } catch (err) {
       logger.error({ err, job: job.name }, 'Job failed');
     }
   }
 
   private resolveWebhookUrl(job: Job): string | undefined {
-    if (job.connectionName) {
-      const connectionsPath = config.get('connections.connectionsFile') as string;
-      const connections = loadConnections(connectionsPath);
-      const conn = getConnectionByName(connections, job.connectionName);
-      if (!conn) {
-        logger.warn({ connectionName: job.connectionName }, 'Connection not found');
-        return undefined;
-      }
-      if (!isConnectionEnabled(conn)) {
-        logger.warn({ connectionName: job.connectionName }, 'Connection is disabled; skipping');
-        return undefined;
-      }
-      return getWebhookUrlForConnection(conn);
-    }
+    const conn = this.resolveConnection(job);
+    if (conn) return getWebhookUrlForConnection(conn);
     return job.discordWebhookUrl;
+  }
+
+  /** Returns the connection when job uses connectionName and it exists and is enabled; otherwise undefined. */
+  private resolveConnection(job: Job): Connection | undefined {
+    if (!job.connectionName) return undefined;
+    const connectionsPath = config.get('connections.connectionsFile') as string;
+    const connections = loadConnections(connectionsPath);
+    const conn = getConnectionByName(connections, job.connectionName);
+    if (!conn || !isConnectionEnabled(conn)) return undefined;
+    return conn;
   }
 
   private async resolveFilter(job: Job, apiKey: string): Promise<ApiSearchFilter> {

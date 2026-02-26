@@ -16,7 +16,8 @@ function formatDateRange(start?: string | number, end?: string | number): string
   return start ? `From ${fmt(start)}` : `Through ${fmt(end!)}`;
 }
 
-function formatFiltersUsed(filter: ApiSearchFilter | undefined): string {
+/** Human-readable filter summary for display in embeds and reports. */
+export function formatFiltersUsed(filter: ApiSearchFilter | undefined): string {
   if (!filter) return 'As per job/connection query';
   const parts: string[] = [];
   if (filter.category?.length) parts.push(`Category: ${filter.category.join(', ')}`);
