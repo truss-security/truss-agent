@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { logger } from '../../utils/logger';
+import { sanitizeErrorForLog } from '../../utils/sanitize-error';
 import config from '../../config/config';
 import {
   SecurityIndicator,
@@ -88,7 +89,26 @@ class TrussApi {
       console.log('response', response);
       return response.data;
     } catch (error) {
+<<<<<<< Updated upstream
       console.error('Error getting agent data:', error);
+=======
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        logger.error(
+          {
+            status,
+            message: error.message,
+            responseData: error.response?.data,
+            configName,
+          },
+          status && status >= 500
+            ? 'Truss API server error (5xx) getting agent data. Try again later.'
+            : 'Error getting agent data'
+        );
+      } else {
+        logger.error(sanitizeErrorForLog(error), 'Error getting agent data');
+      }
+>>>>>>> Stashed changes
       throw error;
     }
   }

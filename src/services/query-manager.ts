@@ -9,6 +9,11 @@ import {
   buildFilterFromConnectionQuery,
 } from '../config/connections';
 import { logger } from '../utils/logger';
+<<<<<<< Updated upstream
+=======
+import { sanitizeErrorForLog } from '../utils/sanitize-error';
+import { formatFiltersUsed } from '../formatters/exec-summary-formatter';
+>>>>>>> Stashed changes
 import TrussApi, { type AgentData } from '../adapters/input/truss-api';
 import { sendTextToDiscord, sendReportToDiscord, sendExecSummaryToDiscord } from '../adapters/output/discord';
 import { formatIndicatorsAsIoc } from '../formatters/ioc-formatter';
@@ -138,7 +143,7 @@ export class QueryManager {
       }
       logger.info({ job: job.name }, 'Posted to Discord');
     } catch (err) {
-      logger.error({ err, job: job.name }, 'Job failed');
+      logger.error({ ...sanitizeErrorForLog(err), job: job.name }, 'Job failed');
     }
   }
 
