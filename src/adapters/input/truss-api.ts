@@ -79,19 +79,13 @@ class TrussApi {
   }
 
   public async getAgentData(apiKey: string, configName: string): Promise<AgentData> {
-    console.log('apiKey', apiKey);
-    console.log('configName', configName);
     try {
       const response = await this.apiClient.post<AgentData>('/agent-data', {
         apiKey,
         configName
       });
-      console.log('response', response);
       return response.data;
     } catch (error) {
-<<<<<<< Updated upstream
-      console.error('Error getting agent data:', error);
-=======
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
         logger.error(
@@ -108,7 +102,6 @@ class TrussApi {
       } else {
         logger.error(sanitizeErrorForLog(error), 'Error getting agent data');
       }
->>>>>>> Stashed changes
       throw error;
     }
   }
@@ -148,13 +141,21 @@ class TrussApi {
       return allIndicators;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        logger.error('API request failed:', {
-          status: error.response?.status,
-          message: error.message,
-          data: error.response?.data
-        });
+        const status = error.response?.status;
+        const data = error.response?.data;
+        logger.error(
+          {
+            status,
+            message: error.message,
+            responseData: data,
+            url: error.config?.url,
+          },
+          status && status >= 500
+            ? 'Truss API server error (5xx). Try again later or contact the API provider.'
+            : 'Truss API request failed.'
+        );
       } else {
-        logger.error('Error searching indicators:', error);
+        logger.error({ err: error }, 'Error searching indicators');
       }
       throw error;
     }

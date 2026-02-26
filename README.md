@@ -21,7 +21,7 @@ A service for collecting cybersecurity indicators from external APIs and distrib
 
 ```bash
 git clone [repository-url]
-cd security-indicator-service
+cd truss-agent
 ```
 
 2. Install dependencies:
@@ -30,29 +30,7 @@ cd security-indicator-service
 npm install
 ```
 
-3. Create a `.env` file in the root directory:
-
-```env
-NODE_ENV=development
-LOG_LEVEL=info
-TRUSS_API_KEY=your-api-key
-JOBS_FILE=config/jobs.json
-```
-
-## Development
-
-Start the service in development mode:
-
-```bash
-npm run dev
-```
-
-Other available commands:
-- `npm run build` - Build the TypeScript code
-- `npm run start` - Run the built code
-- `npm run test` - Run tests
-- `npm run lint` - Run linter
-- `npm run format` - Format code
+3. Run `npm run config` and complete **First-Time Setup**. This creates `config/agent.json` and `.env` with `TRUSS_API_KEY` (your API key) and defaults: `NODE_ENV=development`, `LOG_LEVEL=info`, `JOBS_FILE=config/jobs.json`. No need to create `.env` manually unless you want to customize it (see Configuration).
 
 ## Workflow
 
@@ -76,7 +54,7 @@ Use the menu to complete initial setup (see walkthroughs below). When you’re d
 Follow these steps in order when configuring the agent for the first time.
 
 1. **First-Time Setup**  
-   Choose **First-Time Setup (agent name, Truss API key)**. Enter your agent name and Truss API key. The name is saved to `config/agent.json`; the API key is written to `.env` as `TRUSS_API_KEY`. You can use **Test Truss API → Destination** in the same session without restarting.
+   Choose **First-Time Setup (agent name, Truss API key)**. Enter your agent name and Truss API key. The name is saved to `config/agent.json`; `.env` is created or updated with `TRUSS_API_KEY` and defaults (`NODE_ENV`, `LOG_LEVEL`, `JOBS_FILE`). You can use **Test Truss API → Destination** in the same session without restarting.
 
 2. **Create New Connection**  
    Choose **Create New Connection**. Select a destination type (e.g. Discord). Enter the connection name, destination URL (for Discord: webhook URL), and optional channel/label for display. When prompted, add a Truss query and pull frequency: either use a Truss API config name or define a filter (paste a query or enter category, source, industry, etc.). Set pull frequency as an interval (e.g. `10m`, `1h`, `7d`) or a cron expression. A job is created and linked to this connection; the connection's query is saved in `config/connections.json`.
@@ -111,46 +89,83 @@ Use these menu options to change or remove existing setup.
 
 ## Docker
 
-The container image is **credential-free**: it never contains API keys, webhook URLs, or other secrets. `.env` and `config/` are excluded from the build (see `.dockerignore`). Credentials and config are only supplied at runtime (mounts and env). If a deployed container is compromised, its image and layers contain no retrievable secrets.
-
-- **Config host:** Run `npm run config` to produce `config/` and `.env` (or export env vars). These stay on the config host or in a secrets store; they are not baked into the image.
-- **Run host:** Supply config and secrets at runtime only: mount `config/` and provide env (e.g. `env_file: .env` or env from a secrets manager). The same image can run anywhere; each run host provides its own credentials.
+The image is **credential-free**: `config/` and `.env` are excluded from the build (see `.dockerignore`). You supply them at **runtime** so the image never contains secrets and is safe to build, push, and run anywhere.
 
 ### Docker Compose (recommended)
 
-On the host where the container runs, ensure `config/` and `.env` exist (created there or copied from the config host). Then:
+On the host where the container runs, ensure `config/` and `.env` exist (run `npm run config` there or copy from another host). Then:
 
 ```bash
 docker compose up -d
 ```
 
-This builds the image (without any secrets), mounts `config/` and loads `.env` from the **run host**, and runs the scheduled job service.
+Compose builds the image (no secrets), mounts `config/` and loads `.env` from the host, and runs the scheduled job service.
 
-- **Config on the same host as the container:** After adding or changing connections (or any config), restart so the agent reloads config. No rebuild needed:
+- **After adding or changing connections:** Restart so the agent reloads config (no rebuild needed):
   ```bash
   docker compose restart
   ```
-- **Config on a different host (e.g. config on your laptop, container on a server):** Do not bake `config/` or `.env` into the image. On the **run host**, create or copy `config/` and `.env` (or inject env from a secrets manager), then start or recreate the container. The image stays credential-free; if the container is compromised, secrets are not stored in the image.
-- **After code changes:** Rebuild and recreate the container:
+- **After code changes:** Rebuild and recreate:
   ```bash
   docker compose up -d --build
   ```
 
 ### Plain Docker
 
-Build the image (no credentials or config are included):
+Build the image (no config or secrets included):
 
 ```bash
-docker build -t security-indicator-service .
+docker build -t truss-agent:latest .
 ```
 
-Run the container on the run host; provide config and secrets at runtime only (e.g. mount `config/` and use `--env-file` or env vars from a secrets store):
+Run the container and **provide** `config/` and `.env` in the run command:
 
 ```bash
-docker run -d -v $(pwd)/config:/app/config --env-file .env security-indicator-service
+docker run -d -v $(pwd)/config:/app/config --env-file .env truss-agent:latest
 ```
 
-The container runs the scheduled job service: it loads jobs from `config/jobs.json`, runs each job on its schedule (cron or interval), pulls from the Truss API for enabled connections, and posts results to the configured destinations (e.g. Discord).
+Config and credentials stay on the host; the container receives them only at runtime.
+
+### CI/CD: Build and push to a container registry
+
+If the image must be built in CI/CD and stored in a container registry so your pipeline can deploy it (e.g. Kubernetes, ECS, Cloud Run), use the **Plain Docker** build above. The credential-free image is safe to push; each deployment environment supplies `config/` and `.env` at runtime (mounts and env vars).
+
+**Build and tag for your registry**, then push. Examples:
+
+**Docker Hub**
+
+```bash
+docker build -t your-username/truss-agent:latest .
+docker push your-username/truss-agent:latest
+```
+
+**GitHub Container Registry (GHCR)**
+
+```bash
+docker build -t ghcr.io/your-org/truss-agent:latest .
+docker push ghcr.io/your-org/truss-agent:latest
+```
+
+(Authenticate first: `echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin`.)
+
+**AWS ECR**
+
+```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789.dkr.ecr.us-east-1.amazonaws.com
+docker build -t 123456789.dkr.ecr.us-east-1.amazonaws.com/truss-agent:latest .
+docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/truss-agent:latest
+```
+
+**Google Artifact Registry**
+
+```bash
+docker build -t us-central1-docker.pkg.dev/your-project/your-repo/truss-agent:latest .
+docker push us-central1-docker.pkg.dev/your-project/your-repo/truss-agent:latest
+```
+
+(Use `gcloud auth configure-docker us-central1-docker.pkg.dev` if needed.)
+
+In your pipeline, run the same `docker build` and `docker push` (with registry auth from secrets). In the deployment environment, mount `config/` and provide `.env` (or equivalent secrets) so the container has credentials at runtime.
 
 ## Configuration
 

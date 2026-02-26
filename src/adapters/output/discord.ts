@@ -2,11 +2,13 @@ import axios from 'axios';
 import { logger } from '../../utils/logger';
 import type { SecurityIndicator } from '../../models/types';
 import { getExecSummaryData, type ExecSummaryData } from '../../formatters/exec-summary-formatter';
+import type { ConnectionDisplay } from '../../connections/types';
 
 const DISCORD_CONTENT_MAX_LENGTH = 2000;
 const DISCORD_EMBEDS_PER_MESSAGE = 10;
 const DISCORD_FIELD_VALUE_MAX = 1024;
 const DISCORD_TITLE_MAX = 256;
+const DISCORD_FOOTER_MAX = 2048;
 
 export interface DiscordPayload {
   content?: string;
@@ -39,9 +41,26 @@ function truncateField(value: string, max: number = DISCORD_FIELD_VALUE_MAX): st
   return s.slice(0, max - 3) + '…';
 }
 
-/** Build Discord embeds from indicators for a rich report. */
-export function buildReportEmbeds(indicators: SecurityIndicator[]): DiscordPayload['embeds'] {
+/** Metadata cards: connection name, description, and filter at bottom in footer (Discord renders footer smaller). */
+function formatMetadataFooterText(connectionDisplay?: ConnectionDisplay | null): string {
+  if (!connectionDisplay?.name?.trim()) return 'Truss Agent';
+  const name = connectionDisplay.name.trim();
+  const desc = connectionDisplay.description?.trim();
+  const filter = connectionDisplay.filterSummary?.trim();
+  const parts = [name];
+  if (desc) parts.push(desc);
+  if (filter) parts.push(`Filter: ${filter}`);
+  const text = parts.join(' · ');
+  return text.length > DISCORD_FOOTER_MAX ? text.slice(0, DISCORD_FOOTER_MAX - 1) + '…' : text;
+}
+
+/** Build Discord embeds from indicators for a rich report (Metadata). Connection name, description, filter at bottom in footer (smaller). */
+export function buildReportEmbeds(
+  indicators: SecurityIndicator[],
+  connectionDisplay?: ConnectionDisplay | null
+): DiscordPayload['embeds'] {
   const EMBED_COLOR = 0x5865f2; // Discord blurple
+  const footerText = formatMetadataFooterText(connectionDisplay);
 
   return indicators.map((item) => {
     const fields: Array<{ name: string; value: string; inline?: boolean }> = [];
@@ -105,7 +124,7 @@ export function buildReportEmbeds(indicators: SecurityIndicator[]): DiscordPaylo
       title: safeTitle,
       color: EMBED_COLOR,
       fields: fields.length > 0 ? fields : [{ name: '\u200b', value: 'No metadata', inline: false }],
-      footer: { text: 'Truss Agent' },
+      footer: { text: footerText },
       timestamp: item.pubDate || new Date().toISOString(),
     };
   });
@@ -161,13 +180,15 @@ export async function sendTextToDiscord(webhookUrl: string, text: string): Promi
 
 /**
  * Send indicators as rich Discord embeds (one embed per indicator). Chunks into messages of 10 embeds each.
+ * connectionDisplay is used in embed footer for Metadata and Report operations.
  */
 export async function sendReportToDiscord(
   webhookUrl: string,
-  indicators: SecurityIndicator[]
+  indicators: SecurityIndicator[],
+  connectionDisplay?: ConnectionDisplay | null
 ): Promise<void> {
   if (!indicators.length) return;
-  const embeds = buildReportEmbeds(indicators) ?? [];
+  const embeds = buildReportEmbeds(indicators, connectionDisplay) ?? [];
   for (let i = 0; i < embeds.length; i += DISCORD_EMBEDS_PER_MESSAGE) {
     const slice = embeds.slice(i, i + DISCORD_EMBEDS_PER_MESSAGE);
     await postToDiscord(webhookUrl, { embeds: slice });
@@ -182,14 +203,32 @@ function formatTop5Value(items: Array<{ name: string; count: number }>): string 
 }
 
 /**
- * Build a single Discord embed for the executive summary (official report style).
+ * Build a single Discord embed for the executive summary (Report). Connection name, description, filter at top in bold (same size).
  */
-export function buildExecSummaryEmbed(data: ExecSummaryData): DiscordPayload['embeds'] {
-  const description = [
+export function buildExecSummaryEmbed(
+  data: ExecSummaryData,
+  connectionDisplay?: ConnectionDisplay | null
+): DiscordPayload['embeds'] {
+  const bodyLines = [
     `**Timeframe:** ${data.timeframe}`,
     `**Findings:** ${data.numberOfFindings}`,
     `**Filters:** ${data.filtersUsed}`,
-  ].join('\n');
+  ];
+  const connectionBlock =
+    connectionDisplay?.name?.trim() &&
+    [
+      connectionDisplay.description?.trim()
+        ? `**${connectionDisplay.name.trim()}** — **${connectionDisplay.description.trim()}**`
+        : `**${connectionDisplay.name.trim()}**`,
+      connectionDisplay.filterSummary?.trim()
+        ? `**Filter:** ${connectionDisplay.filterSummary.trim()}`
+        : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
+  const description = connectionBlock
+    ? `${connectionBlock}\n\n${bodyLines.join('\n')}`
+    : bodyLines.join('\n');
 
   const fields: Array<{ name: string; value: string; inline?: boolean }> = [
     { name: '▸ Commonality', value: data.commonality, inline: false },
@@ -202,13 +241,16 @@ export function buildExecSummaryEmbed(data: ExecSummaryData): DiscordPayload['em
     { name: 'Indicator types', value: formatTop5Value(data.top5.indicatorTypes), inline: true },
   ].map((f) => ({ ...f, value: truncateField(f.value) }));
 
+  const rawFooter = 'Truss Agent · Threat Intelligence Report';
+  const footerText = rawFooter.length > DISCORD_FOOTER_MAX ? rawFooter.slice(0, DISCORD_FOOTER_MAX - 1) + '…' : rawFooter;
+
   return [
     {
       title: 'Executive Summary',
       description: truncateField(description, 4096),
       color: EXEC_SUMMARY_COLOR,
       fields,
-      footer: { text: 'Truss Agent · Threat Intelligence Report' },
+      footer: { text: footerText },
       timestamp: new Date().toISOString(),
     },
   ];
@@ -216,15 +258,17 @@ export function buildExecSummaryEmbed(data: ExecSummaryData): DiscordPayload['em
 
 /**
  * Send executive summary as a single professional Discord embed.
+ * connectionDisplay is used in embed footer for Report operations.
  */
 export async function sendExecSummaryToDiscord(
   webhookUrl: string,
   indicators: SecurityIndicator[],
-  filter?: import('../../models/types').ApiSearchFilter
+  filter?: import('../../models/types').ApiSearchFilter,
+  connectionDisplay?: ConnectionDisplay | null
 ): Promise<void> {
   if (!indicators.length) return;
   const data = getExecSummaryData(indicators, filter);
-  const embeds = buildExecSummaryEmbed(data) ?? [];
+  const embeds = buildExecSummaryEmbed(data, connectionDisplay) ?? [];
   await postToDiscord(webhookUrl, { embeds });
 }
 
