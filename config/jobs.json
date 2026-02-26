@@ -1,22 +1,6 @@
 {
   "jobs": [
     {
-      "name": "discord-ransomware",
-      "filter": {
-        "category": [
-          "Ransomware"
-        ],
-        "tags": [
-          "Ransomware",
-          "Ransomware-as-a-Service"
-        ]
-      },
-      "windowMinutes": 60,
-      "schedule": 60,
-      "connectionName": "discord-ransomware",
-      "outputFormat": "report"
-    },
-    {
       "name": "discord-all-ransomware",
       "filter": {
         "tags": [
