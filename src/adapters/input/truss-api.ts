@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { logger } from '../../utils/logger';
+import { sanitizeErrorForLog } from '../../utils/sanitize-error';
 import config from '../../config/config';
 import {
   SecurityIndicator,
@@ -99,7 +100,7 @@ class TrussApi {
             : 'Error getting agent data'
         );
       } else {
-        logger.error({ err: error }, 'Error getting agent data');
+        logger.error(sanitizeErrorForLog(error), 'Error getting agent data');
       }
       throw error;
     }

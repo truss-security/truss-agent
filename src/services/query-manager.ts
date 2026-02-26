@@ -11,6 +11,7 @@ import {
 import type { Connection } from '../connections';
 import { getModule } from '../connections';
 import { logger } from '../utils/logger';
+import { sanitizeErrorForLog } from '../utils/sanitize-error';
 import { formatFiltersUsed } from '../formatters/exec-summary-formatter';
 import TrussApi, { type AgentData } from '../adapters/input/truss-api';
 import { formatIndicatorsAsIoc } from '../formatters/ioc-formatter';
@@ -156,7 +157,7 @@ export class QueryManager {
       }
       logger.info({ job: job.name }, 'Posted to destination');
     } catch (err) {
-      logger.error({ err, job: job.name }, 'Job failed');
+      logger.error({ ...sanitizeErrorForLog(err), job: job.name }, 'Job failed');
     }
   }
 
