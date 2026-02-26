@@ -1,4 +1,7 @@
 import dotenv from 'dotenv';
+import { execSync } from 'child_process';
+import * as path from 'path';
+import * as fs from 'fs';
 import inquirer from 'inquirer';
 import config from '../config/config';
 import {
@@ -8,10 +11,9 @@ import {
   getWebhookUrlForConnection,
   isConnectionEnabled,
   buildFilterFromConnectionQuery,
-  type Connection,
-  type DiscordConnection,
-  type ConnectionQuery,
 } from '../config/connections';
+import type { Connection, ConnectionQuery } from '../connections';
+import { getConnectionTypes, getModule } from '../connections';
 import { loadJobs, saveJobs, type Job } from '../config/jobs';
 import {
   loadAgentConfig,
@@ -21,17 +23,20 @@ import {
   deleteAgentConfigFile,
 } from '../config/agent';
 import type { ApiSearchFilter } from '../models/types';
-import { sendTextToDiscord, sendReportToDiscord, sendExecSummaryToDiscord } from '../adapters/output/discord';
 import TrussApi from '../adapters/input/truss-api';
 import { formatIndicatorsAsIoc } from '../formatters/ioc-formatter';
-import { buildExecSummary } from '../formatters/exec-summary-formatter';
+import { buildExecSummary, formatFiltersUsed } from '../formatters/exec-summary-formatter';
 
 const CONNECTIONS_FILE = config.get('connections.connectionsFile') as string;
 const JOBS_FILE = config.get('jobs.jobsFile') as string;
 const AGENT_FILE = config.get('agent.agentFile') as string;
 
-const MAIN_MENU_CHOICES = [
-  { name: 'First-Time Setup (agent name, Truss API key)', value: 'setup' },
+const BACK_TO_MENU_VALUE = '__back__';
+
+const SETUP_CHOICE_VALUE = 'setup';
+
+const MAIN_MENU_CHOICES_BASE = [
+  { name: 'First-Time Setup (agent name, Truss API key)', value: SETUP_CHOICE_VALUE },
   { name: 'Create New Connection', value: 'create' },
   { name: 'Test Destination Connection', value: 'test' },
   { name: 'Test Truss API → Destination', value: 'testTrussToDiscord' },
@@ -40,10 +45,24 @@ const MAIN_MENU_CHOICES = [
   { name: 'Modify Existing Connection', value: 'modify' },
   { name: 'Delete Connection', value: 'delete' },
   { name: 'Reset All Configuration', value: 'reset' },
+  { name: 'Build Docker Container (docker only)', value: 'buildDocker' },
+  { name: 'Build and run Docker container (docker-compose)', value: 'buildRunDockerCompose' },
   { name: 'Exit', value: 'exit' },
 ] as const;
 
-type MainMenuChoice = (typeof MAIN_MENU_CHOICES)[number]['value'];
+type MainMenuChoice = (typeof MAIN_MENU_CHOICES_BASE)[number]['value'];
+
+function getMainMenuChoices(): { name: string; value: MainMenuChoice }[] {
+  const agent = loadAgentConfig(AGENT_FILE);
+  const isEstablished = agent != null && agent.agentName?.trim() !== '';
+  const setupLabel = isEstablished
+    ? 'Modify Agent Settings (agent name, Truss API key)'
+    : 'First-Time Setup (agent name, Truss API key)';
+  return [
+    { name: setupLabel, value: SETUP_CHOICE_VALUE },
+    ...MAIN_MENU_CHOICES_BASE.slice(1),
+  ];
+}
 
 function getConnections(): Connection[] {
   return loadConnections(CONNECTIONS_FILE);
@@ -69,110 +88,11 @@ async function runFirstTimeSetup(): Promise<void> {
   ]);
   saveAgentConfig({ agentName: answers.agentName.trim() }, AGENT_FILE);
   updateEnvFile('TRUSS_API_KEY', answers.apiKey.trim());
+  updateEnvFile('NODE_ENV', 'development');
+  updateEnvFile('LOG_LEVEL', 'info');
+  updateEnvFile('JOBS_FILE', 'config/jobs.json');
   console.log('Agent name saved to', AGENT_FILE);
-  console.log('TRUSS_API_KEY saved to .env. You can use Test Truss API → Destination in this session; the key is re-loaded when needed.');
-}
-
-async function promptCreateDiscord(): Promise<DiscordConnection> {
-  const answers = await inquirer.prompt<{
-    name: string;
-    webhookUrl: string;
-    channelLabel: string;
-  }>([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'Connection name (e.g. discord-alerts):',
-      validate: (input: string) => {
-        if (!input.trim()) return 'Name is required';
-        const connections = getConnections();
-        if (connections.some((c) => c.name === input.trim())) {
-          return 'A connection with this name already exists';
-        }
-        return true;
-      },
-    },
-    {
-      type: 'input',
-      name: 'webhookUrl',
-      message:
-        'Discord webhook URL (Server Settings > Integrations > Webhooks; the URL determines the channel):',
-      validate: (input: string) => {
-        if (!input.trim()) return 'Webhook URL is required';
-        try {
-          new URL(input.trim());
-          return true;
-        } catch {
-          return 'Enter a valid URL';
-        }
-      },
-    },
-    {
-      type: 'input',
-      name: 'channelLabel',
-      message: 'Channel label for display (e.g. #alerts, optional):',
-      default: '',
-    },
-  ]);
-  return {
-    name: answers.name.trim(),
-    type: 'discord',
-    webhookUrl: answers.webhookUrl.trim(),
-    channelLabel: answers.channelLabel.trim() || undefined,
-    enabled: false,
-  };
-}
-
-async function promptModifyDiscord(existing: DiscordConnection): Promise<DiscordConnection> {
-  const answers = await inquirer.prompt<{
-    name: string;
-    webhookUrl: string;
-    channelLabel: string;
-    enabled: boolean;
-  }>([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'Connection name:',
-      default: existing.name,
-      validate: (input: string) => (input.trim() ? true : 'Name is required'),
-    },
-    {
-      type: 'input',
-      name: 'webhookUrl',
-      message: 'Discord webhook URL:',
-      default: existing.webhookUrl,
-      validate: (input: string) => {
-        if (!input.trim()) return 'Webhook URL is required';
-        try {
-          new URL(input.trim());
-          return true;
-        } catch {
-          return 'Enter a valid URL';
-        }
-      },
-    },
-    {
-      type: 'input',
-      name: 'channelLabel',
-      message: 'Channel label for display (optional):',
-      default: existing.channelLabel ?? '',
-    },
-    {
-      type: 'confirm',
-      name: 'enabled',
-      message: 'Enabled (jobs will send to this connection)?',
-      default: existing.enabled !== false,
-    },
-  ]);
-  return {
-    name: answers.name.trim(),
-    type: 'discord',
-    webhookUrl: answers.webhookUrl.trim(),
-    channelLabel: answers.channelLabel.trim() || undefined,
-    enabled: answers.enabled,
-    query: existing.query,
-  };
+  console.log('.env updated with TRUSS_API_KEY, NODE_ENV, LOG_LEVEL, JOBS_FILE. You can use Test Truss API → Destination in this session.');
 }
 
 /**
@@ -583,10 +503,15 @@ async function runCreate(): Promise<void> {
     type: 'list',
     name: 'type',
     message: 'Connection type:',
-    choices: [{ name: 'Discord', value: 'discord' }],
+    choices: [
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
+      ...getConnectionTypes().map((m) => ({ name: m.label, value: m.typeId })),
+    ],
   });
-  if (typeAnswer.type !== 'discord') return;
-  let conn = await promptCreateDiscord();
+  if (typeAnswer.type === BACK_TO_MENU_VALUE) return;
+  const module = getModule(typeAnswer.type);
+  if (!module) return;
+  let conn = await module.promptCreate(getConnections);
   const connections = getConnections();
   connections.push(conn);
   saveConnections(CONNECTIONS_FILE, connections);
@@ -637,14 +562,23 @@ async function runModify(): Promise<void> {
     type: 'list',
     name: 'connection',
     message: 'Select connection to modify:',
-    choices: connections.map((c) => ({
-      name: `${c.name} (${c.type}${c.type === 'discord' && (c as DiscordConnection).channelLabel ? ` ${(c as DiscordConnection).channelLabel}` : ''})`,
-      value: c.name,
-    })),
+    choices: [
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
+      ...connections.map((c) => ({
+        name: `${c.name} (${c.type}${c.channelLabel ? ` ${c.channelLabel}` : ''})`,
+        value: c.name,
+      })),
+    ],
   });
+  if (choice.connection === BACK_TO_MENU_VALUE) return;
   const existing = getConnectionByName(connections, choice.connection);
-  if (!existing || existing.type !== 'discord') return;
-  const updated = await promptModifyDiscord(existing as DiscordConnection);
+  if (!existing) return;
+  const module = getModule(existing.type);
+  if (!module) {
+    console.log('Unsupported connection type.');
+    return;
+  }
+  const updated = await module.promptModify(existing);
   const next = connections.map((c) => (c.name === existing.name ? updated : c));
   saveConnections(CONNECTIONS_FILE, next);
   console.log(`Updated connection "${updated.name}".`);
@@ -656,12 +590,13 @@ async function runTest(): Promise<void> {
     console.log('No connections defined. Create one first.');
     return;
   }
-  console.log('This only tests the destination (e.g. Discord webhook). No API pull.\n');
+  console.log('This only tests the destination (webhook). No API pull.\n');
   const choice = await inquirer.prompt<{ connection: string }>({
     type: 'list',
     name: 'connection',
     message: 'Select connection to test (destination only):',
     choices: [
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
       { name: 'None (skip test)', value: '__none__' },
       ...connections.map((c) => ({
         name: `${c.name} (${c.type})`,
@@ -669,14 +604,16 @@ async function runTest(): Promise<void> {
       })),
     ],
   });
-  if (choice.connection === '__none__') return;
+  if (choice.connection === BACK_TO_MENU_VALUE || choice.connection === '__none__') return;
   const conn = getConnectionByName(connections, choice.connection);
   if (!conn) return;
+  const module = getModule(conn.type);
+  if (!module) return;
   const webhookUrl = getWebhookUrlForConnection(conn);
   const testMessage =
     'Truss Agent test message – if you see this, the connection works.';
   try {
-    await sendTextToDiscord(webhookUrl, testMessage);
+    await module.sendText(webhookUrl, testMessage);
     console.log('Test message sent successfully. Check the channel.');
   } catch (err) {
     console.error('Test failed:', err instanceof Error ? err.message : err);
@@ -692,38 +629,41 @@ async function runTestTrussToDiscord(): Promise<void> {
   }
   const connections = getConnections().filter((c) => getWebhookUrlForConnection(c));
   if (connections.length === 0) {
-    console.log('No Discord connections defined. Create one first.');
+    console.log('No connections defined. Create one first.');
     return;
   }
-  console.log('This tests the full operation (pull from Truss API + send to Discord) for the selected connection, regardless of enabled/disabled.\n');
+  console.log('This tests the full operation (pull from Truss API + send to destination) for the selected connection, regardless of enabled/disabled.\n');
   const connChoice = await inquirer.prompt<{ connection: string }>({
     type: 'list',
     name: 'connection',
-    message: 'Select Discord connection to test (full flow):',
+    message: 'Select connection to test (full flow):',
     choices: [
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
       { name: 'None (skip test)', value: '__none__' },
       ...connections.map((c) => ({
-        name: `${c.name} (${c.type}${c.type === 'discord' && (c as DiscordConnection).channelLabel ? ` ${(c as DiscordConnection).channelLabel}` : ''}) – ${isConnectionEnabled(c) ? 'enabled' : 'disabled'}`,
+        name: `${c.name} (${c.type}${c.channelLabel ? ` ${c.channelLabel}` : ''}) – ${isConnectionEnabled(c) ? 'enabled' : 'disabled'}`,
         value: c.name,
       })),
     ],
   });
-  if (connChoice.connection === '__none__') return;
+  if (connChoice.connection === BACK_TO_MENU_VALUE || connChoice.connection === '__none__') return;
   const conn = getConnectionByName(connections, connChoice.connection);
   if (!conn) return;
   const webhookUrl = getWebhookUrlForConnection(conn);
   if (!webhookUrl) return;
 
-  const formatChoice = await inquirer.prompt<{ format: 'ioc' | 'report' | 'summary' }>({
+  const formatChoice = await inquirer.prompt<{ format: string }>({
     type: 'list',
     name: 'format',
-    message: 'Output format for Discord:',
+    message: 'Output format:',
     choices: [
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
       { name: 'IOC (indicators list)', value: 'ioc' },
       { name: 'Metadata (title, author, category, etc.)', value: 'report' },
       { name: 'Report (exec summary)', value: 'summary' },
     ],
   });
+  if (formatChoice.format === BACK_TO_MENU_VALUE) return;
 
   const now = new Date();
   const endDate = now.toISOString();
@@ -734,26 +674,29 @@ async function runTestTrussToDiscord(): Promise<void> {
   if (built) {
     filter = { ...built.rest, startDate: built.startDate, endDate: built.endDate } as ApiSearchFilter;
     console.log('Using connection query filter:', JSON.stringify(built.rest, null, 2));
-  } else if (conn.type === 'discord' && (conn as DiscordConnection).query?.configName) {
-    const trussApi = new TrussApi(apiKey);
-    const configName = (conn as DiscordConnection).query!.configName!;
-    console.log('Fetching filter from Truss API config:', configName);
-    try {
-      const agentData = await trussApi.getAgentData(apiKey, configName);
-      const windowMs =
-        agentData.runIntervalMinutes > 0
-          ? agentData.runIntervalMinutes * 60 * 1000
-          : jobWindowMs;
-      const startDate = new Date(Date.now() - windowMs).toISOString();
-      filter = { ...agentData.filter, startDate, endDate };
-    } catch (err) {
-      console.error('Failed to get agent data:', err instanceof Error ? err.message : err);
-      return;
-    }
   } else {
-    const startDate = new Date(now.getTime() - jobWindowMs).toISOString();
-    filter = { startDate, endDate };
-    console.log(`No query on connection; using job/connection timeframe (${Math.round(jobWindowMs / 60000)} min). Add a query when creating the connection to filter results.`);
+    const mod = getModule(conn.type);
+    const configName = mod?.getConfigName?.(conn);
+    if (configName) {
+      const trussApi = new TrussApi(apiKey);
+      console.log('Fetching filter from Truss API config:', configName);
+      try {
+        const agentData = await trussApi.getAgentData(apiKey, configName);
+        const windowMs =
+          agentData.runIntervalMinutes > 0
+            ? agentData.runIntervalMinutes * 60 * 1000
+            : jobWindowMs;
+        const startDate = new Date(Date.now() - windowMs).toISOString();
+        filter = { ...agentData.filter, startDate, endDate };
+      } catch (err) {
+        console.error('Failed to get agent data:', err instanceof Error ? err.message : err);
+        return;
+      }
+    } else {
+      const startDate = new Date(now.getTime() - jobWindowMs).toISOString();
+      filter = { startDate, endDate };
+      console.log(`No query on connection; using job/connection timeframe (${Math.round(jobWindowMs / 60000)} min). Add a query when creating the connection to filter results.`);
+    }
   }
 
   console.log('Fetching indicators from Truss API...');
@@ -762,19 +705,26 @@ async function runTestTrussToDiscord(): Promise<void> {
   try {
     indicators = await trussApi.searchIndicators(filter);
   } catch (err) {
-    console.error('Truss API request failed:', err instanceof Error ? err.message : err);
+    const msg = err instanceof Error ? err.message : String(err);
+    const status = (err as { response?: { status?: number } })?.response?.status;
+    if (status && status >= 500) {
+      console.error(`Truss API request failed: ${msg}`);
+      console.error('The Truss API (or gateway) returned a server error. Try again in a few minutes or contact the API provider.');
+    } else {
+      console.error('Truss API request failed:', msg);
+    }
     return;
   }
   if (indicators.length === 0) {
-    console.log('No indicators returned. Nothing to send to Discord.');
+    console.log('No indicators returned. Nothing to send.');
     return;
   }
 
   if (formatChoice.format === 'report') {
-    console.log(`\nWill send ${indicators.length} metadata embed(s) to Discord (rich cards with title, author, category, source, date, references, tags, IOC types and counts).`);
+    console.log(`\nWill send ${indicators.length} metadata embed(s) (rich cards with title, author, category, source, date, references, tags, IOC types and counts).`);
   } else if (formatChoice.format === 'summary') {
     const summary = buildExecSummary(indicators, filter);
-    console.log('\n--- Report (exec summary) that will be sent to Discord ---');
+    console.log('\n--- Report (exec summary) that will be sent ---');
     console.log(summary);
     console.log('--- End payload ---\n');
   } else {
@@ -783,7 +733,7 @@ async function runTestTrussToDiscord(): Promise<void> {
       console.log('Formatter produced empty output.');
       return;
     }
-    console.log('\n--- Payload that will be sent to Discord ---');
+    console.log('\n--- Payload that will be sent ---');
     console.log(text);
     console.log('--- End payload ---\n');
   }
@@ -791,25 +741,31 @@ async function runTestTrussToDiscord(): Promise<void> {
   const sendConfirm = await inquirer.prompt<{ send: boolean }>({
     type: 'confirm',
     name: 'send',
-    message: 'Send this to the Discord channel?',
+    message: 'Send this to the channel?',
     default: true,
   });
   if (!sendConfirm.send) {
     console.log('Not sent.');
     return;
   }
+  const connectionDisplay = {
+    name: conn.name,
+    description: conn.description,
+    filterSummary: formatFiltersUsed(filter),
+  };
+  const module = getModule(conn.type);
+  if (!module) return;
   try {
     if (formatChoice.format === 'report') {
-      await sendReportToDiscord(webhookUrl, indicators);
-  } else if (formatChoice.format === 'summary') {
-    await sendExecSummaryToDiscord(webhookUrl, indicators, filter);
-  } else {
-      const text = formatIndicatorsAsIoc(indicators);
-      await sendTextToDiscord(webhookUrl, text);
+      await module.sendReport(webhookUrl, indicators, connectionDisplay);
+    } else if (formatChoice.format === 'summary') {
+      await module.sendExecSummary(webhookUrl, indicators, filter, connectionDisplay);
+    } else {
+      await module.sendText(webhookUrl, formatIndicatorsAsIoc(indicators));
     }
-    console.log('Sent successfully. Check your Discord channel.');
+    console.log('Sent successfully. Check your channel.');
   } catch (err) {
-    console.error('Failed to send to Discord:', err instanceof Error ? err.message : err);
+    console.error('Failed to send:', err instanceof Error ? err.message : err);
   }
 }
 
@@ -834,17 +790,12 @@ async function runListConnections(): Promise<void> {
   }
   console.log('\nConfigured connections:\n');
   for (const c of connections) {
-    const channel =
-      c.type === 'discord' && (c as DiscordConnection).channelLabel
-        ? ` ${(c as DiscordConnection).channelLabel}`
-        : '';
-    const webhook =
-      c.type === 'discord' ? maskWebhookUrl((c as DiscordConnection).webhookUrl) : '—';
+    const channel = c.channelLabel ? ` ${c.channelLabel}` : '';
+    const webhook = maskWebhookUrl(c.webhookUrl);
     const status = isConnectionEnabled(c) ? 'enabled' : 'disabled';
-    const dconn = c as DiscordConnection;
     const queryJson =
-      dconn.query != null && Object.keys(dconn.query).length > 0
-        ? JSON.stringify(dconn.query)
+      c.query != null && typeof c.query === 'object' && Object.keys(c.query).length > 0
+        ? JSON.stringify(c.query)
         : '{}';
     console.log(`  ${c.name} (${c.type}${channel})  ${status}  webhook: ${webhook}`);
     console.log(`    query: ${queryJson}`);
@@ -858,38 +809,57 @@ async function runEnableDisableConnection(): Promise<void> {
     console.log('No connections configured. Create one first.');
     return;
   }
+  const proceed = await inquirer.prompt<{ action: string }>({
+    type: 'list',
+    name: 'action',
+    message: 'Enable/Disable connections:',
+    choices: [
+      { name: 'Toggle enable/disable for connections', value: 'toggle' },
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
+    ],
+  });
+  if (proceed.action === BACK_TO_MENU_VALUE) return;
   const answer = await inquirer.prompt<{ enabledConnections: string[] }>({
     type: 'checkbox',
     name: 'enabledConnections',
     message: 'Toggle connections (space = switch, Enter = continue). Checked = enabled:',
     choices: connections.map((c) => ({
-      name: `${c.name} (${c.type}) ${c.type === 'discord' && (c as DiscordConnection).channelLabel ? ` – ${(c as DiscordConnection).channelLabel}` : ''}`,
+      name: `${c.name} (${c.type}) ${c.channelLabel ? ` – ${c.channelLabel}` : ''}`,
       value: c.name,
       checked: isConnectionEnabled(c),
     })),
   });
   const enabledSet = new Set(answer.enabledConnections);
-  const next = connections.map((c) => ({
-    ...c,
-    enabled: c.type === 'discord' ? enabledSet.has(c.name) : (c as DiscordConnection).enabled,
-  }));
-  const confirm = await inquirer.prompt<{ save: boolean }>({
-    type: 'confirm',
-    name: 'save',
-    message: 'Save changes?',
-    default: true,
-  });
-  if (!confirm.save) {
-    console.log('Changes not saved.');
+  const toEnable = connections.filter((c) => !isConnectionEnabled(c) && enabledSet.has(c.name));
+  const toDisable = connections.filter((c) => isConnectionEnabled(c) && !enabledSet.has(c.name));
+  const changedCount = toEnable.length + toDisable.length;
+  if (changedCount === 0) {
+    console.log('No changes to save.');
     return;
   }
-  saveConnections(CONNECTIONS_FILE, next);
-  const changed = connections.filter((c) => isConnectionEnabled(c) !== enabledSet.has(c.name));
-  if (changed.length > 0) {
-    console.log(`Updated ${changed.length} connection(s): ${changed.map((c) => `${c.name} → ${enabledSet.has(c.name) ? 'enabled' : 'disabled'}`).join(', ')}.`);
-  } else {
-    console.log('No changes to save.');
+  const lines: string[] = [];
+  if (toEnable.length > 0) {
+    lines.push(`Enable: ${toEnable.map((c) => c.name).join(', ')}`);
   }
+  if (toDisable.length > 0) {
+    lines.push(`Disable: ${toDisable.map((c) => c.name).join(', ')}`);
+  }
+  const confirm = await inquirer.prompt<{ apply: boolean }>({
+    type: 'confirm',
+    name: 'apply',
+    message: `You are about to:\n  ${lines.join('\n  ')}\n\nJobs in config/jobs.json that use these connections will run when enabled and be skipped when disabled. Apply these changes?`,
+    default: true,
+  });
+  if (!confirm.apply) {
+    console.log('Changes not applied.');
+    return;
+  }
+  const next = connections.map((c) => ({
+    ...c,
+    enabled: enabledSet.has(c.name),
+  }));
+  saveConnections(CONNECTIONS_FILE, next);
+  console.log(`Updated ${changedCount} connection(s): ${toEnable.map((c) => `${c.name} → enabled`).concat(toDisable.map((c) => `${c.name} → disabled`)).join(', ')}.`);
 }
 
 async function runDeleteConnection(): Promise<void> {
@@ -902,11 +872,15 @@ async function runDeleteConnection(): Promise<void> {
     type: 'list',
     name: 'connection',
     message: 'Select connection to delete:',
-    choices: connections.map((c) => ({
-      name: `${c.name} (${c.type}${c.type === 'discord' && (c as DiscordConnection).channelLabel ? ` ${(c as DiscordConnection).channelLabel}` : ''})`,
-      value: c.name,
-    })),
+    choices: [
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
+      ...connections.map((c) => ({
+        name: `${c.name} (${c.type}${c.channelLabel ? ` ${c.channelLabel}` : ''})`,
+        value: c.name,
+      })),
+    ],
   });
+  if (choice.connection === BACK_TO_MENU_VALUE) return;
   const jobs = getJobsFromFile();
   const jobsUsing = jobs.filter((j) => j.connectionName === choice.connection);
   if (jobsUsing.length > 0) {
@@ -929,6 +903,96 @@ async function runDeleteConnection(): Promise<void> {
   const next = connections.filter((c) => c.name !== choice.connection);
   saveConnections(CONNECTIONS_FILE, next);
   console.log(`Deleted connection "${choice.connection}".`);
+}
+
+function ensureDockerContext(): boolean {
+  const cwd = process.cwd();
+  const dockerfile = path.join(cwd, 'Dockerfile');
+  if (!fs.existsSync(dockerfile)) {
+    console.error('Dockerfile not found in current directory. Run this from the truss-agent project root.');
+    return false;
+  }
+  return true;
+}
+
+/** Show enabled/disabled connections and prompt to continue or go back. Returns true to continue, false to go back. */
+async function confirmConnectionsBeforeDockerBuild(): Promise<boolean> {
+  const connections = getConnections();
+  const enabled = connections.filter((c) => isConnectionEnabled(c));
+  const disabled = connections.filter((c) => !isConnectionEnabled(c));
+
+  console.log('\n--- Connections summary ---');
+  if (enabled.length > 0) {
+    console.log('Enabled (will be active in the container):');
+    enabled.forEach((c) => {
+      const channel = c.channelLabel ? ` ${c.channelLabel}` : '';
+      console.log(`  • ${c.name} (${c.type}${channel})`);
+    });
+  } else {
+    console.log('Enabled (will be active in the container): none');
+  }
+  if (disabled.length > 0) {
+    console.log('Disabled (will not be used by the container):');
+    disabled.forEach((c) => {
+      const channel = c.channelLabel ? ` ${c.channelLabel}` : '';
+      console.log(`  • ${c.name} (${c.type}${channel})`);
+    });
+  } else if (connections.length > 0) {
+    console.log('Disabled: none');
+  }
+  if (connections.length === 0) {
+    console.log('No connections configured.');
+  }
+  console.log('---\n');
+
+  const answer = await inquirer.prompt<{ action: string }>({
+    type: 'list',
+    name: 'action',
+    message: 'Continue with build?',
+    choices: [
+      { name: 'Continue', value: 'continue' },
+      { name: 'Back to main menu', value: BACK_TO_MENU_VALUE },
+    ],
+  });
+  return answer.action !== BACK_TO_MENU_VALUE;
+}
+
+async function runBuildDocker(): Promise<void> {
+  if (!ensureDockerContext()) return;
+  if (!(await confirmConnectionsBeforeDockerBuild())) return;
+  console.log('Building Docker image (truss-agent:latest)...\n');
+  try {
+    execSync('docker build -t truss-agent:latest .', {
+      stdio: 'inherit',
+      cwd: process.cwd(),
+    });
+    console.log('\nBuild complete. Image: truss-agent:latest');
+  } catch (err) {
+    console.error('Docker build failed:', err instanceof Error ? err.message : err);
+  }
+}
+
+async function runBuildAndRunDockerCompose(): Promise<void> {
+  const cwd = process.cwd();
+  const composeFile = path.join(cwd, 'docker-compose.yml');
+  if (!fs.existsSync(composeFile)) {
+    console.error('docker-compose.yml not found in current directory. Run this from the truss-agent project root.');
+    return;
+  }
+  if (!(await confirmConnectionsBeforeDockerBuild())) return;
+  console.log('Building and starting with docker compose (Ctrl+C to stop)...\n');
+  try {
+    execSync('docker compose up --build', {
+      stdio: 'inherit',
+      cwd,
+    });
+  } catch (err) {
+    if (err instanceof Error && 'status' in err && (err as { status?: number }).status === 130) {
+      console.log('\nStopped by user.');
+    } else {
+      console.error('Docker compose failed:', err instanceof Error ? err.message : err);
+    }
+  }
 }
 
 async function runResetAll(): Promise<void> {
@@ -962,11 +1026,14 @@ export async function runConfigCommand(): Promise<void> {
   console.log('Truss Agent – Connection configuration\n');
   let running = true;
   while (running) {
+    const menuChoices = getMainMenuChoices();
     const answer = await inquirer.prompt<{ action: MainMenuChoice }>({
       type: 'list',
       name: 'action',
       message: 'What do you want to do?',
-      choices: [...MAIN_MENU_CHOICES],
+      choices: menuChoices,
+      pageSize: menuChoices.length,
+      loop: false,
     });
     switch (answer.action) {
       case 'setup':
@@ -995,6 +1062,12 @@ export async function runConfigCommand(): Promise<void> {
         break;
       case 'reset':
         await runResetAll();
+        break;
+      case 'buildDocker':
+        await runBuildDocker();
+        break;
+      case 'buildRunDockerCompose':
+        await runBuildAndRunDockerCompose();
         break;
       case 'exit':
         running = false;

@@ -117,5 +117,5 @@ export function saveJobs(jobsFilePath: string | undefined, jobs: Job[]): void {
   }
   const content = JSON.stringify({ jobs }, null, 2);
   fs.writeFileSync(resolved, content, 'utf-8');
-  logger.info({ path: resolved, count: jobs.length }, 'Saved jobs');
+  logger.debug({ path: resolved, count: jobs.length }, 'Saved jobs');
 }
