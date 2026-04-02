@@ -7,7 +7,6 @@ export async function promptCreateMSTeams(getConnections: () => unknown[]): Prom
     name: string;
     description: string;
     webhookUrl: string;
-    channelLabel: string;
   }>([
     {
       type: 'input',
@@ -41,19 +40,12 @@ export async function promptCreateMSTeams(getConnections: () => unknown[]): Prom
         }
       },
     },
-    {
-      type: 'input',
-      name: 'channelLabel',
-      message: 'Channel label for display (optional):',
-      default: '',
-    },
   ]);
   return {
     name: answers.name.trim(),
     type: 'ms-teams',
     description: answers.description.trim() || undefined,
     webhookUrl: answers.webhookUrl.trim(),
-    channelLabel: answers.channelLabel.trim() || undefined,
     enabled: false,
   };
 }
@@ -63,7 +55,6 @@ export async function promptModifyMSTeams(existing: MSTeamsConnection): Promise<
     name: string;
     description: string;
     webhookUrl: string;
-    channelLabel: string;
     enabled: boolean;
   }>([
     {
@@ -95,12 +86,6 @@ export async function promptModifyMSTeams(existing: MSTeamsConnection): Promise<
       },
     },
     {
-      type: 'input',
-      name: 'channelLabel',
-      message: 'Channel label for display (optional):',
-      default: existing.channelLabel ?? '',
-    },
-    {
       type: 'confirm',
       name: 'enabled',
       message: 'Enabled (jobs will send to this connection)?',
@@ -112,7 +97,6 @@ export async function promptModifyMSTeams(existing: MSTeamsConnection): Promise<
     type: 'ms-teams',
     description: answers.description.trim() || undefined,
     webhookUrl: answers.webhookUrl.trim(),
-    channelLabel: answers.channelLabel.trim() || undefined,
     enabled: answers.enabled,
     query: existing.query,
   };

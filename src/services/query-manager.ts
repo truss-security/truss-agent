@@ -9,6 +9,7 @@ import {
   buildFilterFromConnectionQuery,
 } from '../config/connections';
 import type { Connection } from '../connections';
+import type { ConnectionDisplay } from '../connections/types';
 import { getModule } from '../connections';
 import { logger } from '../utils/logger';
 import { sanitizeErrorForLog } from '../utils/sanitize-error';
@@ -46,7 +47,21 @@ export class QueryManager {
       return;
     }
 
+    const connectionsPath = config.get('connections.connectionsFile') as string;
+    const connections = loadConnections(connectionsPath);
+
     for (const job of this.jobs) {
+      if (job.connectionName) {
+        const conn = getConnectionByName(connections, job.connectionName);
+        if (!conn) {
+          logger.warn(
+            { job: job.name, connectionName: job.connectionName },
+            'Not scheduling job: connection missing from connections.json. Remove this job from config/jobs.json.'
+          );
+          continue;
+        }
+      }
+
       const schedule = job.schedule;
       if (typeof schedule === 'number') {
         const ms = schedule * 60 * 1000;
@@ -101,7 +116,14 @@ export class QueryManager {
       const connectionsPath = config.get('connections.connectionsFile') as string;
       const connections = loadConnections(connectionsPath);
       const conn = getConnectionByName(connections, job.connectionName);
-      if (conn && !isConnectionEnabled(conn)) {
+      if (!conn) {
+        logger.warn(
+          { job: job.name, connectionName: job.connectionName },
+          'No matching connection in connections.json; skipping job. Remove or edit this job in config/jobs.json (deleting a connection does not remove its jobs).'
+        );
+        return;
+      }
+      if (!isConnectionEnabled(conn)) {
         logger.info({ job: job.name, connectionName: job.connectionName }, 'Connection is disabled; skipping job (no pull, no send)');
         return;
       }
@@ -135,6 +157,10 @@ export class QueryManager {
       const displayWithFilter = connectionDisplay
         ? { ...connectionDisplay, filterSummary }
         : undefined;
+      const execSummaryDisplay: ConnectionDisplay = {
+        ...(conn ? { name: conn.name, description: conn.description } : {}),
+        jobName: job.name,
+      };
 
       const typeId = conn?.type ?? 'discord';
       const module = getModule(typeId);
@@ -150,8 +176,8 @@ export class QueryManager {
           return;
         }
         await module.sendText(webhookUrl, text);
-      } else if (job.outputFormat === 'summary') {
-        await module.sendExecSummary(webhookUrl, indicators, filter, displayWithFilter);
+      } else if (job.outputFormat === 'report') {
+        await module.sendExecSummary(webhookUrl, indicators, filter, execSummaryDisplay);
       } else {
         await module.sendReport(webhookUrl, indicators, displayWithFilter);
       }

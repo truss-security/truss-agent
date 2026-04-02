@@ -1,11 +1,22 @@
 import axios from 'axios';
 import { logger } from '../../utils/logger';
 import type { SecurityIndicator } from '../../models/types';
-import { getExecSummaryData, type ExecSummaryData } from '../../formatters/exec-summary-formatter';
+import {
+  formatExecSummaryHeaderLines,
+  getExecSummaryData,
+  type ExecSummaryData,
+} from '../../formatters/exec-summary-formatter';
 import type { ConnectionDisplay } from '../../connections/types';
+import { chunkTextByMaxLength } from '../../utils/chunk-text';
 
 const DISCORD_CONTENT_MAX_LENGTH = 2000;
+/** Discord allows at most 10 embeds per message. */
 const DISCORD_EMBEDS_PER_MESSAGE = 10;
+/**
+ * Discord: sum of characters in title, description, fields, footer, etc. across all embeds in one webhook
+ * message must not exceed 6000. Stay under to allow encoding overhead.
+ */
+const DISCORD_MESSAGE_EMBEDS_CHAR_BUDGET = 5800;
 const DISCORD_FIELD_VALUE_MAX = 1024;
 const DISCORD_TITLE_MAX = 256;
 const DISCORD_FOOTER_MAX = 2048;
@@ -21,6 +32,108 @@ export interface DiscordPayload {
     footer?: { text: string };
     timestamp?: string;
   }>;
+}
+
+export type DiscordEmbed = NonNullable<DiscordPayload['embeds']>[number];
+
+/** Character count Discord applies toward the 6000-per-message embed budget (approx. their documented sum). */
+function discordEmbedCharCount(embed: DiscordEmbed): number {
+  let n = 0;
+  if (embed.title) n += embed.title.length;
+  if (embed.description) n += embed.description.length;
+  if (embed.footer?.text) n += embed.footer.text.length;
+  if (embed.timestamp) n += embed.timestamp.length;
+  for (const f of embed.fields ?? []) {
+    n += f.name.length + f.value.length;
+  }
+  return n;
+}
+
+/**
+ * Split embeds into webhook messages: max 10 embeds each, combined character count under Discord's 6000 limit.
+ */
+export function chunkEmbedsForDiscordMessage(embeds: DiscordEmbed[]): DiscordEmbed[][] {
+  const batches: DiscordEmbed[][] = [];
+  let batch: DiscordEmbed[] = [];
+  let batchChars = 0;
+
+  for (const e of embeds) {
+    const sz = discordEmbedCharCount(e);
+
+    if (sz > DISCORD_MESSAGE_EMBEDS_CHAR_BUDGET) {
+      if (batch.length > 0) {
+        batches.push(batch);
+        batch = [];
+        batchChars = 0;
+      }
+      batches.push([e]);
+      continue;
+    }
+
+    const overCount = batch.length >= DISCORD_EMBEDS_PER_MESSAGE;
+    const overSize = batchChars + sz > DISCORD_MESSAGE_EMBEDS_CHAR_BUDGET;
+    if ((overCount || overSize) && batch.length > 0) {
+      batches.push(batch);
+      batch = [];
+      batchChars = 0;
+    }
+
+    batch.push(e);
+    batchChars += sz;
+  }
+
+  if (batch.length > 0) {
+    batches.push(batch);
+  }
+
+  return batches;
+}
+
+/**
+ * Discord also caps a single embed at 6000 characters total. Shrink longest field values, then footer/description.
+ */
+function clampDiscordEmbedToMessageBudget(embed: DiscordEmbed): DiscordEmbed {
+  if (discordEmbedCharCount(embed) <= DISCORD_MESSAGE_EMBEDS_CHAR_BUDGET) {
+    return embed;
+  }
+  const fields = (embed.fields ?? []).map((f) => ({ ...f }));
+  let e: DiscordEmbed = { ...embed, fields };
+
+  for (let guard = 0; guard < 400 && discordEmbedCharCount(e) > DISCORD_MESSAGE_EMBEDS_CHAR_BUDGET; guard++) {
+    const over = discordEmbedCharCount(e) - DISCORD_MESSAGE_EMBEDS_CHAR_BUDGET;
+    let bestI = -1;
+    let bestLen = 0;
+    for (let i = 0; i < fields.length; i++) {
+      if (fields[i].value.length > bestLen) {
+        bestLen = fields[i].value.length;
+        bestI = i;
+      }
+    }
+    if (bestI >= 0 && bestLen > 48) {
+      const cut = Math.min(bestLen - 48, Math.max(over, 96));
+      const newLen = Math.max(32, bestLen - cut);
+      fields[bestI] = {
+        ...fields[bestI],
+        value: fields[bestI].value.slice(0, newLen - 1) + '…',
+      };
+      e = { ...e, fields: [...fields] };
+      continue;
+    }
+    if (e.footer?.text && e.footer.text.length > 24) {
+      const ft = e.footer.text;
+      const newLen = Math.max(24, ft.length - Math.max(over, 48));
+      e = { ...e, footer: { text: ft.slice(0, newLen - 1) + '…' } };
+      continue;
+    }
+    if (e.description && e.description.length > 50) {
+      const d = e.description;
+      const newLen = Math.max(50, d.length - Math.max(over, 96));
+      e = { ...e, description: d.slice(0, newLen - 1) + '…' };
+      continue;
+    }
+    break;
+  }
+  return e;
 }
 
 /** Format ISO date for display (e.g. "Feb 16, 2026"). */
@@ -120,13 +233,13 @@ export function buildReportEmbeds(
     const title = (item.title || 'Threat intelligence report').trim();
     const safeTitle = title.length > DISCORD_TITLE_MAX ? title.slice(0, DISCORD_TITLE_MAX - 1) + '…' : title;
 
-    return {
+    return clampDiscordEmbedToMessageBudget({
       title: safeTitle,
       color: EMBED_COLOR,
       fields: fields.length > 0 ? fields : [{ name: '\u200b', value: 'No metadata', inline: false }],
       footer: { text: footerText },
       timestamp: item.pubDate || new Date().toISOString(),
-    };
+    });
   });
 }
 
@@ -172,14 +285,15 @@ export async function sendTextToDiscord(webhookUrl: string, text: string): Promi
   if (!text || !text.trim()) {
     return;
   }
-  const chunks = chunkText(text, DISCORD_CONTENT_MAX_LENGTH);
+  const chunks = chunkTextByMaxLength(text, DISCORD_CONTENT_MAX_LENGTH);
   for (const content of chunks) {
     await postToDiscord(webhookUrl, { content });
   }
 }
 
 /**
- * Send indicators as rich Discord embeds (one embed per indicator). Chunks into messages of 10 embeds each.
+ * Send indicators as rich Discord embeds (one embed per indicator). Chunks by Discord limits: max 10 embeds
+ * and max ~6000 characters combined per message (plus count-based chunking).
  * connectionDisplay is used in embed footer for Metadata and Report operations.
  */
 export async function sendReportToDiscord(
@@ -189,8 +303,8 @@ export async function sendReportToDiscord(
 ): Promise<void> {
   if (!indicators.length) return;
   const embeds = buildReportEmbeds(indicators, connectionDisplay) ?? [];
-  for (let i = 0; i < embeds.length; i += DISCORD_EMBEDS_PER_MESSAGE) {
-    const slice = embeds.slice(i, i + DISCORD_EMBEDS_PER_MESSAGE);
+  const batches = chunkEmbedsForDiscordMessage(embeds);
+  for (const slice of batches) {
     await postToDiscord(webhookUrl, { embeds: slice });
   }
 }
@@ -203,32 +317,19 @@ function formatTop5Value(items: Array<{ name: string; count: number }>): string 
 }
 
 /**
- * Build a single Discord embed for the executive summary (Report). Connection name, description, filter at top in bold (same size).
+ * Build a single Discord embed for the executive summary (Report). Description + job name at top; filter only under **Filters:**.
  */
 export function buildExecSummaryEmbed(
   data: ExecSummaryData,
   connectionDisplay?: ConnectionDisplay | null
 ): DiscordPayload['embeds'] {
+  const intro = formatExecSummaryHeaderLines(connectionDisplay ?? null);
   const bodyLines = [
     `**Timeframe:** ${data.timeframe}`,
     `**Findings:** ${data.numberOfFindings}`,
     `**Filters:** ${data.filtersUsed}`,
   ];
-  const connectionBlock =
-    connectionDisplay?.name?.trim() &&
-    [
-      connectionDisplay.description?.trim()
-        ? `**${connectionDisplay.name.trim()}** — **${connectionDisplay.description.trim()}**`
-        : `**${connectionDisplay.name.trim()}**`,
-      connectionDisplay.filterSummary?.trim()
-        ? `**Filter:** ${connectionDisplay.filterSummary.trim()}`
-        : '',
-    ]
-      .filter(Boolean)
-      .join('\n');
-  const description = connectionBlock
-    ? `${connectionBlock}\n\n${bodyLines.join('\n')}`
-    : bodyLines.join('\n');
+  const description = (intro.length > 0 ? [...intro, '', ...bodyLines] : bodyLines).join('\n');
 
   const fields: Array<{ name: string; value: string; inline?: boolean }> = [
     { name: '▸ Commonality', value: data.commonality, inline: false },
@@ -245,14 +346,14 @@ export function buildExecSummaryEmbed(
   const footerText = rawFooter.length > DISCORD_FOOTER_MAX ? rawFooter.slice(0, DISCORD_FOOTER_MAX - 1) + '…' : rawFooter;
 
   return [
-    {
+    clampDiscordEmbedToMessageBudget({
       title: 'Executive Summary',
       description: truncateField(description, 4096),
       color: EXEC_SUMMARY_COLOR,
       fields,
       footer: { text: footerText },
       timestamp: new Date().toISOString(),
-    },
+    }),
   ];
 }
 
@@ -272,27 +373,10 @@ export async function sendExecSummaryToDiscord(
   await postToDiscord(webhookUrl, { embeds });
 }
 
-function chunkText(text: string, maxLen: number): string[] {
-  const chunks: string[] = [];
-  let remaining = text;
-  while (remaining.length > 0) {
-    if (remaining.length <= maxLen) {
-      chunks.push(remaining);
-      break;
-    }
-    const slice = remaining.slice(0, maxLen);
-    const lastNewline = slice.lastIndexOf('\n');
-    const splitAt = lastNewline > maxLen / 2 ? lastNewline + 1 : maxLen;
-    chunks.push(remaining.slice(0, splitAt));
-    remaining = remaining.slice(splitAt);
-  }
-  return chunks;
-}
-
 function chunkPayload(payload: DiscordPayload): DiscordPayload[] {
   const out: DiscordPayload[] = [];
   if (payload.content && payload.content.length > DISCORD_CONTENT_MAX_LENGTH) {
-    const textChunks = chunkText(payload.content, DISCORD_CONTENT_MAX_LENGTH);
+    const textChunks = chunkTextByMaxLength(payload.content, DISCORD_CONTENT_MAX_LENGTH);
     textChunks.forEach((content) => out.push({ content }));
   } else {
     out.push(payload);

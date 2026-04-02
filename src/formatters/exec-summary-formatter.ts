@@ -1,6 +1,7 @@
 import type { SecurityIndicator, ApiSearchFilter } from '../models/types';
+import type { ConnectionDisplay } from '../connections/types';
 
-const REPORT_TITLE = 'Truss API Query — Executive Summary';
+const REPORT_TITLE = 'Executive Summary';
 
 function formatDateRange(start?: string | number, end?: string | number): string {
   if (!start && !end) return '—';
@@ -16,10 +17,20 @@ function formatDateRange(start?: string | number, end?: string | number): string
   return start ? `From ${fmt(start)}` : `Through ${fmt(end!)}`;
 }
 
+const MAX_FILTER_EXPRESSION_LEN = 200;
+
 /** Human-readable filter summary for display in embeds and reports. */
 export function formatFiltersUsed(filter: ApiSearchFilter | undefined): string {
   if (!filter) return 'As per job/connection query';
   const parts: string[] = [];
+  if (filter.filterExpression?.trim()) {
+    const expr = filter.filterExpression.trim();
+    parts.push(
+      expr.length > MAX_FILTER_EXPRESSION_LEN
+        ? `FilterQL: ${expr.slice(0, MAX_FILTER_EXPRESSION_LEN)}…`
+        : `FilterQL: ${expr}`
+    );
+  }
   if (filter.category?.length) parts.push(`Category: ${filter.category.join(', ')}`);
   if (filter.source?.length) parts.push(`Source: ${filter.source.join(', ')}`);
   if (filter.author?.length) parts.push(`Author: ${filter.author.join(', ')}`);
@@ -28,6 +39,31 @@ export function formatFiltersUsed(filter: ApiSearchFilter | undefined): string {
   if (filter.tags?.length) parts.push(`Tags: ${filter.tags.join(', ')}`);
   if (filter.indicators?.length) parts.push(`Indicator types: ${filter.indicators.join(', ')}`);
   return parts.length > 0 ? parts.join(' | ') : 'As per job/connection query';
+}
+
+export type ExecSummaryHeaderMarkdown = 'discord' | 'slack' | 'plain';
+
+function execSummaryBoldLabel(label: string, md: ExecSummaryHeaderMarkdown): string {
+  if (md === 'discord') return `**${label}**`;
+  if (md === 'slack') return `*${label}*`;
+  return label;
+}
+
+/**
+ * Exec summary header lines (Description, Truss Agent Job Name). Omits filter — use data.filtersUsed once below Findings.
+ * Uses jobName when set; otherwise connection name for CLI test flows.
+ */
+export function formatExecSummaryHeaderLines(
+  connectionDisplay?: ConnectionDisplay | null,
+  md: ExecSummaryHeaderMarkdown = 'discord'
+): string[] {
+  if (!connectionDisplay) return [];
+  const lines: string[] = [];
+  const desc = connectionDisplay.description?.trim();
+  if (desc) lines.push(`${execSummaryBoldLabel('Description:', md)} ${desc}`);
+  const job = connectionDisplay.jobName?.trim() ?? connectionDisplay.name?.trim();
+  if (job) lines.push(`${execSummaryBoldLabel('Truss Agent Job Name:', md)} ${job}`);
+  return lines;
 }
 
 function topN<T>(counts: Map<string, number>, n: number): Array<{ name: string; count: number }> {
@@ -128,25 +164,29 @@ export function getExecSummaryData(
 
 /**
  * Build a high-level executive summary of all findings from an API query.
+ * Optional header context matches Discord/Slack/Teams exec summary (description + job name, filter once after findings).
  */
 export function buildExecSummary(
   indicators: SecurityIndicator[],
-  filter?: ApiSearchFilter
+  filter?: ApiSearchFilter,
+  headerContext?: Pick<ConnectionDisplay, 'name' | 'description' | 'jobName'> | null
 ): string {
   const data = getExecSummaryData(indicators, filter);
   const lines: string[] = [];
 
   lines.push(`**${data.reportTitle}**`);
   lines.push('');
-  lines.push('**Filters used:** ' + data.filtersUsed);
+  const intro = formatExecSummaryHeaderLines(headerContext ?? null);
+  if (intro.length > 0) {
+    lines.push(...intro);
+    lines.push('');
+  }
   lines.push('**Timeframe:** ' + data.timeframe);
+  lines.push(`**Findings:** ${data.numberOfFindings}`);
+  lines.push('**Filters:** ' + data.filtersUsed);
   lines.push('');
-  lines.push('---');
-  lines.push('');
-  lines.push(`**Number of findings:** ${data.numberOfFindings}`);
-  lines.push('');
-  lines.push('**Commonality of findings:**');
-  lines.push('  Unique: ' + data.commonality);
+  lines.push('**▸ Commonality**');
+  lines.push(data.commonality);
   lines.push('');
   lines.push('**Top 5 findings**');
   lines.push('');

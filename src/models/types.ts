@@ -1,4 +1,13 @@
+/** Must match POST /product/search allowed `order_by` values. */
+export type ProductSearchOrderBy = 'pub_date' | 'downloads' | 'rating' | 'timestamp';
+
 export interface ApiSearchFilter {
+  /** FilterQL for POST /product/search; takes precedence over legacy array fields when building the request body. */
+  filterExpression?: string;
+  /** Relative window; omitted from API body when `startDate` is set (rolling jobs always set start/end). */
+  days?: number;
+  order_by?: ProductSearchOrderBy;
+  order_direction?: 'asc' | 'desc';
   startDate?: number | string;
   endDate?: number | string;
   category?: string[];

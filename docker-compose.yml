@@ -4,6 +4,9 @@
 # or a secrets store), then: docker compose up -d
 #
 # config/ and .env are mounted from the run host at runtime only.
+# Run `docker compose` from this directory (same folder as config/) so
+# ./config is the same tree you edit with `npm run config`. Otherwise the
+# container will see a different or empty config/ directory.
 
 services:
   agent:
@@ -12,6 +15,7 @@ services:
       dockerfile: Dockerfile
     image: truss-agent:latest
     container_name: truss-agent
+    working_dir: /app
     env_file: .env
     volumes:
       - ./config:/app/config

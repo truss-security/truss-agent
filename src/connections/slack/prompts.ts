@@ -7,7 +7,6 @@ export async function promptCreateSlack(getConnections: () => unknown[]): Promis
     name: string;
     description: string;
     webhookUrl: string;
-    channelLabel: string;
   }>([
     {
       type: 'input',
@@ -41,19 +40,12 @@ export async function promptCreateSlack(getConnections: () => unknown[]): Promis
         }
       },
     },
-    {
-      type: 'input',
-      name: 'channelLabel',
-      message: 'Channel label for display (optional):',
-      default: '',
-    },
   ]);
   return {
     name: answers.name.trim(),
     type: 'slack',
     description: answers.description.trim() || undefined,
     webhookUrl: answers.webhookUrl.trim(),
-    channelLabel: answers.channelLabel.trim() || undefined,
     enabled: false,
   };
 }
@@ -63,7 +55,6 @@ export async function promptModifySlack(existing: SlackConnection): Promise<Slac
     name: string;
     description: string;
     webhookUrl: string;
-    channelLabel: string;
     enabled: boolean;
   }>([
     {
@@ -95,12 +86,6 @@ export async function promptModifySlack(existing: SlackConnection): Promise<Slac
       },
     },
     {
-      type: 'input',
-      name: 'channelLabel',
-      message: 'Channel label for display (optional):',
-      default: existing.channelLabel ?? '',
-    },
-    {
       type: 'confirm',
       name: 'enabled',
       message: 'Enabled (jobs will send to this connection)?',
@@ -112,7 +97,6 @@ export async function promptModifySlack(existing: SlackConnection): Promise<Slac
     type: 'slack',
     description: answers.description.trim() || undefined,
     webhookUrl: answers.webhookUrl.trim(),
-    channelLabel: answers.channelLabel.trim() || undefined,
     enabled: answers.enabled,
     query: existing.query,
   };

@@ -6,7 +6,6 @@ export const DiscordConnectionSchema = z.object({
   type: z.literal('discord'),
   description: z.string().optional(),
   webhookUrl: z.string().url(),
-  channelLabel: z.string().optional(),
   enabled: z.boolean().default(false),
   query: ConnectionQuerySchema,
 });

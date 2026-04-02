@@ -6,6 +6,7 @@ import {
   SecurityIndicator,
   ApiSearchFilter
 } from '../../models/types';
+import { buildProductSearchPayload } from './build-product-search-payload';
 
 /** Truss API /product/search response shape (products array + pagination). */
 interface ProductSearchResponse {
@@ -114,11 +115,7 @@ class TrussApi {
       let hasMore = true;
 
       while (hasMore) {
-        const payload = {
-          ...filter,
-          page,
-          limit,
-        };
+        const payload = buildProductSearchPayload(filter, page, limit);
 
         const response = await this.apiClient.post<ProductSearchResponse>('/product/search', payload);
 

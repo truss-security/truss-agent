@@ -1,9 +1,11 @@
 import { logger } from './utils/logger';
+import { logResolvedConfigPaths } from './utils/config-paths';
 import { QueryManager } from './services/query-manager';
 
 export async function main(): Promise<void> {
   try {
     logger.info('Starting Truss agent (query manager)...');
+    logResolvedConfigPaths();
     const manager = new QueryManager();
     const jobs = manager.load();
     if (jobs.length === 0) {

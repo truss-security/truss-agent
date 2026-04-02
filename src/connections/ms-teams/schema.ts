@@ -6,7 +6,6 @@ export const MSTeamsConnectionSchema = z.object({
   type: z.literal('ms-teams'),
   description: z.string().optional(),
   webhookUrl: z.string().url(),
-  channelLabel: z.string().optional(),
   enabled: z.boolean().default(false),
   query: ConnectionQuerySchema,
 });

@@ -57,7 +57,7 @@ Follow these steps in order when configuring the agent for the first time.
    Choose **First-Time Setup (agent name, Truss API key)**. Enter your agent name and Truss API key. The name is saved to `config/agent.json`; `.env` is created or updated with `TRUSS_API_KEY` and defaults (`NODE_ENV`, `LOG_LEVEL`, `JOBS_FILE`). You can use **Test Truss API → Destination** in the same session without restarting.
 
 2. **Create New Connection**  
-   Choose **Create New Connection**. Select a destination type (e.g. Discord). Enter the connection name, destination URL (for Discord: webhook URL), and optional channel/label for display. When prompted, add a Truss query and pull frequency: either use a Truss API config name or define a filter (paste a query or enter category, source, industry, etc.). Set pull frequency as an interval (e.g. `10m`, `1h`, `7d`) or a cron expression. A job is created and linked to this connection; the connection's query is saved in `config/connections.json`.
+   Choose **Create New Connection**. Select a destination type (e.g. Discord). You are prompted **first** for **output format** (IOC only, Metadata, or Report / exec summary). **Report (exec summary)** then asks for a **weekly day** and **24-hour time** (converted to a cron schedule) plus how far back to pull each run. **IOC** and **Metadata** use the same **pull frequency** prompt as before (interval such as `10m`, `1h`, `7d`, plain minutes, or cron). Next you enter connection details (name, webhook URL, etc.). Finally you add a **Truss query**: **Copy in Truss API example** (paste **raw JSON** for `POST /product/search` or a dashboard sample: **curl**, **JavaScript**, **Python**, etc.) or **Manually enter Truss filter options**. If you skip the Truss step, no job is created and the earlier schedule choice is not saved. A completed flow creates a job in `config/jobs.json` and saves the query in `config/connections.json`. (Advanced: `configName` in JSON is still supported if you edit the file by hand.)
 
 3. **Test Destination Connection**  
    Choose **Test Destination Connection**. Select a connection (or **None (skip test)** to skip). This only tests the destination (e.g. Discord webhook); no API pull. Use it to confirm the destination is reachable.
@@ -77,10 +77,10 @@ You can also use **List All Connections** anytime to see connections and their e
 Use these menu options to change or remove existing setup.
 
 - **Modify Existing Connection**  
-  Choose **Modify Existing Connection**, then select the connection. You can change the name, destination URL (e.g. webhook URL), channel/label, and enabled state. The connection's saved query (filters, window) is preserved.
+  Choose **Modify Existing Connection**, then select the connection. You are asked first whether to **update output format and pull schedule** (same flow as create: Report → weekly day + time + lookback; IOC/Metadata → interval or cron + lookback; defaults from the linked job). Then you edit connection details (name, webhook, enabled, etc.). Then you can **update the Truss API query** (same two choices as create). If you **rename** the connection, linked jobs get `connectionName` and `name` updated. Linked **jobs** stay in sync when you change query and/or schedule.
 
 - **Delete Connection**  
-  Choose **Delete Connection**, then select the connection. If any job uses it, you'll be warned. Confirm to remove the connection; you'll need to update or remove those jobs in `config/jobs.json` if they still reference it.
+  Choose **Delete Connection**, then select the connection. If any job uses it, you are prompted to confirm; on confirm, the connection is removed from `connections.json` and **those jobs are removed from `config/jobs.json`** automatically.
 
 - **Reset All Configuration**  
   Choose **Reset All Configuration**. You'll be asked to confirm, then type `reset` to finalize. This clears the agent name, all `.env` values, all connections, and all jobs (factory reset). Use only when you want to start over.
@@ -110,6 +110,16 @@ Compose builds the image (no secrets), mounts `config/` and loads `.env` from th
   docker compose up -d --build
   ```
 
+**If the container still shows old connections after you edited `config/connections.json` on the host:**
+
+1. **Run Compose from the repo root** — the mount is `./config:/app/config`. If you start Compose from another directory, Docker binds **that** directory’s `config/` (or creates an empty one), not the folder next to `truss-agent` where `npm run config` wrote the file. Fix: `cd` into the same directory as `docker-compose.yml` and your `config/` folder, then `docker compose up -d`.
+2. **Use relative paths in `.env` for Docker** — keep `CONNECTIONS_FILE=config/connections.json` and `JOBS_FILE=config/jobs.json` (defaults). Do **not** set these to macOS/Linux host paths like `/Users/you/.../connections.json`; those paths do not exist inside the container, so the agent will not read your updated file.
+3. **Confirm what the container sees:**
+   ```bash
+   docker compose exec agent cat /app/config/connections.json
+   ```
+4. On startup the agent logs **Resolved config file paths** (absolute paths inside the container). If you see a warning about `CONNECTIONS_FILE` outside the working directory or “Connections file not found”, fix the mount or env as above.
+
 ### Plain Docker
 
 Build the image (no config or secrets included):
@@ -124,7 +134,7 @@ Run the container and **provide** `config/` and `.env` in the run command:
 docker run -d -v $(pwd)/config:/app/config --env-file .env truss-agent:latest
 ```
 
-Config and credentials stay on the host; the container receives them only at runtime.
+Use `$(pwd)` from the directory that contains your `config/` folder (same as where you run `npm run config`). Config and credentials stay on the host; the container receives them only at runtime.
 
 ### CI/CD: Build and push to a container registry
 
@@ -172,7 +182,7 @@ In your pipeline, run the same `docker build` and `docker push` (with registry a
 - **Environment**: `TRUSS_API_KEY` (required; set via First-Time Setup or `.env`), `TRUSS_API_URL`, `LOG_LEVEL`, `JOBS_FILE`, `JOBS_JSON`, `CONNECTIONS_FILE`, `AGENT_CONFIG_FILE`. See `src/config/config.ts` for all options.
 - **Agent**: `config/agent.json` (default) stores the agent name. Use **First-Time Setup** in `npm run config` to set name and API key.
 - **Connections**: Stored in `config/connections.json` (default). Use `npm run config` to create, modify, and test (see walkthroughs above). For destinations like Discord, the webhook URL specifies the channel.
-- **Jobs**: Define pull jobs in `config/jobs.json` (or `JOBS_JSON`). Each job has a schedule, output format (`ioc` or `report`), and either `connectionName` (reference a connection) or `discordWebhookUrl`. Copy `config/jobs.example.json` and optionally `config/connections.example.json`.
+- **Jobs**: Define **schedules** in `config/jobs.json` (or `JOBS_JSON`). Each job has a schedule, output format (`ioc`, `metadata` for awareness embeds, or `report` for exec summary), and either `connectionName` (reference a connection) or `discordWebhookUrl`. Saved files include `"formatVersion": 2`. **Legacy v1** files without `formatVersion` (or with `formatVersion` less than 2) are migrated on load: old `summary` → `report`, old `report` → `metadata`. **Deleting a connection** via `npm run config` also removes jobs whose `connectionName` matches that connection. Copy `config/jobs.example.json` and optionally `config/connections.example.json`.
 
 ## CLI Commands
 

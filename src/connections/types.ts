@@ -3,32 +3,34 @@ import type { SecurityIndicator, ApiSearchFilter } from '../models/types';
 
 /** Optional connection name, description, and filter summary for Metadata and Report embeds. */
 export interface ConnectionDisplay {
-  name: string;
+  /** Connection name (e.g. metadata card footer). Optional when only jobName is needed for exec summary. */
+  name?: string;
   description?: string;
-  /** Human-readable filter summary (e.g. from formatFiltersUsed). Shown at bottom of metadata cards (footer) and at top of Report in bold. */
+  /** Human-readable filter summary (e.g. from formatFiltersUsed). Shown on metadata card footers only — not duplicated on exec summary (filters appear once as **Filters:**). */
   filterSummary?: string;
+  /** Scheduled job name when the report is run from `config/jobs.json`; shown on exec summary header. */
+  jobName?: string;
 }
 
 /** Truss API query stored on a connection (filter + window or config name). */
-export const ConnectionQuerySchema = z
-  .object({
-    configName: z.string().optional(),
-    filter: z
-      .record(z.union([z.string(), z.array(z.string()), z.number()]))
-      .optional(),
-    windowDays: z.number().int().positive().optional(),
-    windowMinutes: z.number().int().positive().optional(),
-  })
-  .optional();
+export const ConnectionQueryFieldsSchema = z.object({
+  configName: z.string().optional(),
+  filter: z
+    .record(z.union([z.string(), z.array(z.string()), z.number()]))
+    .optional(),
+  windowDays: z.number().int().positive().optional(),
+  windowMinutes: z.number().int().positive().optional(),
+});
 
-export type ConnectionQuery = z.infer<typeof ConnectionQuerySchema>;
+export const ConnectionQuerySchema = ConnectionQueryFieldsSchema.optional();
 
-/** Base shape shared by all connection types (name, type, description, channelLabel, enabled, query). */
+export type ConnectionQuery = z.infer<typeof ConnectionQueryFieldsSchema>;
+
+/** Base shape shared by all connection types (name, type, description, enabled, query). */
 export interface ConnectionBase {
   name: string;
   type: string;
   description?: string;
-  channelLabel?: string;
   enabled: boolean;
   query?: ConnectionQuery;
 }
