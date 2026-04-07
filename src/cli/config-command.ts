@@ -1366,7 +1366,7 @@ export async function runConfigCommand(): Promise<void> {
       message: 'What do you want to do?',
       choices: menuChoices,
       pageSize: menuChoices.length,
-      loop: false,
+      loop: true,
     });
     switch (answer.action) {
       case 'setup':
