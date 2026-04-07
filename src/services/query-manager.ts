@@ -24,6 +24,7 @@ export class QueryManager {
   private trussApi: TrussApi;
   private jobs: Job[] = [];
   private intervalHandles: ReturnType<typeof setInterval>[] = [];
+  private cronTasks: ReturnType<typeof cron.schedule>[] = [];
 
   constructor() {
     this.trussApi = new TrussApi();
@@ -74,7 +75,8 @@ export class QueryManager {
           logger.warn({ job: job.name, schedule }, 'Invalid cron expression; skipping');
           continue;
         }
-        cron.schedule(schedule, () => this.runJob(job));
+        const task = cron.schedule(schedule, () => this.runJob(job));
+        this.cronTasks.push(task);
         logger.info({ job: job.name, cron: schedule }, 'Scheduled job (cron)');
       }
     }
@@ -85,6 +87,10 @@ export class QueryManager {
       clearInterval(handle);
     }
     this.intervalHandles = [];
+    for (const task of this.cronTasks) {
+      task.stop();
+    }
+    this.cronTasks = [];
   }
 
   /** Run all jobs once (e.g. for `sync` CLI). */
