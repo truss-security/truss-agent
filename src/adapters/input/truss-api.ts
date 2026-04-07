@@ -91,6 +91,7 @@ class TrussApi {
         const status = error.response?.status;
         logger.error(
           {
+            operation: 'AGENT PULL',
             status,
             message: error.message,
             responseData: error.response?.data,
@@ -101,7 +102,7 @@ class TrussApi {
             : 'Error getting agent data'
         );
       } else {
-        logger.error(sanitizeErrorForLog(error), 'Error getting agent data');
+        logger.error({ operation: 'AGENT PULL', ...sanitizeErrorForLog(error) }, 'Error getting agent data');
       }
       throw error;
     }
@@ -142,6 +143,7 @@ class TrussApi {
         const data = error.response?.data;
         logger.error(
           {
+            operation: 'AGENT PULL',
             status,
             message: error.message,
             responseData: data,
@@ -152,7 +154,7 @@ class TrussApi {
             : 'Truss API request failed.'
         );
       } else {
-        logger.error({ err: error }, 'Error searching indicators');
+        logger.error({ operation: 'AGENT PULL', err: error }, 'Error searching indicators');
       }
       throw error;
     }

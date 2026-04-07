@@ -130,13 +130,13 @@ export class QueryManager {
     }
 
     try {
-      logger.info({ job: job.name }, 'Running job');
+      logger.info({ operation: 'AGENT PULL', job: job.name }, 'Running job');
       const filter = await this.resolveFilter(job, apiKey);
       const indicators = await this.trussApi.searchIndicators(filter);
-      logger.info({ job: job.name, count: indicators.length }, 'Fetched indicators');
+      logger.info({ operation: 'AGENT PULL', job: job.name, count: indicators.length }, 'Fetched indicators');
 
       if (indicators.length === 0) {
-        logger.info({ job: job.name }, 'No indicators to post');
+        logger.info({ operation: 'AGENT PULL', job: job.name }, 'No indicators to post');
         return;
       }
 
@@ -181,9 +181,9 @@ export class QueryManager {
       } else {
         await module.sendReport(webhookUrl, indicators, displayWithFilter);
       }
-      logger.info({ job: job.name }, 'Posted to destination');
+      logger.info({ operation: 'AGENT PULL', job: job.name }, 'Posted to destination');
     } catch (err) {
-      logger.error({ ...sanitizeErrorForLog(err), job: job.name }, 'Job failed');
+      logger.error({ operation: 'AGENT PULL', ...sanitizeErrorForLog(err), job: job.name }, 'Job failed');
     }
   }
 

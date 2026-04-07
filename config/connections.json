@@ -1,27 +1,963 @@
 {
   "connections": [
     {
-      "name": "discord-weekly-ransomware-report",
+      "name": "discord-weekly-ransomware-nexus-umbrella",
       "type": "discord",
-      "description": "Recap of the weeks ransomware reporting",
+      "description": "Weekly recap: Ransomware-Nexus umbrella vocabulary and RaaS taxonomy (generic ransomware, human-operated ransomware, double extortion, leak sites, Trojan-Ransom).",
       "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
       "enabled": true,
       "query": {
         "filter": {
-          "filterExpression": "tags = 'Ransomware' OR tags = 'Ransomware-as-a-Service' OR tags = 'RaaS' OR tags = 'RansomHub' OR tags = 'Water Bakunawa' OR tags = 'Gold Harvest' OR tags = 'Qilin' OR tags = 'Agenda' OR tags = 'LockBit' OR tags = 'LockBit 3.0' OR tags = 'LockBit 4.0' OR tags = 'LockBit 5.0' OR tags = 'GOLD MYSTIC' OR tags = 'Bitwise Spider' OR tags = 'Play' OR tags = 'PlayCrypt' OR tags = 'Fiddling Scorpius' OR tags = 'Cl0p' OR tags = 'Clop' OR tags = 'FIN11' OR tags = 'Akira' OR tags = 'Gold Sahara' OR tags = 'Storm-1567' OR tags = 'DragonForce' OR tags = 'INC Ransom' OR tags = 'Vanilla Tempest' OR tags = 'Medusa' OR tags = 'Medusa Ransomware' OR tags = 'Frozen Spider' OR tags = 'Lynx' OR tags = 'Lynx Ransomware' OR tags = 'BlackSuit' OR tags = 'Royal' OR tags = 'Royal Ransomware' OR tags = 'Hunters International' OR tags = 'BianLian' OR tags = 'Cactus' OR tags = 'Rhysida' OR tags = 'Fog' OR tags = 'Fog Ransomware' OR tags = 'SafePay' OR tags = '8Base' OR tags = 'Cicada3301' OR tags = 'FunkSec' OR tags = 'Sarcoma' OR tags = 'KillSec' OR tags = 'Kill Security' OR tags = 'Eldorado' OR tags = 'Nitrogen' OR tags = 'Nitrogen Ransomware' OR tags = 'Meow' OR tags = 'MeowLeaks' OR tags = 'MeowCorp' OR tags = 'ShinyHunters' OR tags = 'Mustard Tempest' OR tags = 'Purple Vallhund' OR tags = 'DEV-0206' OR tags = 'Velvet Tempest' OR tags = 'Storm-1811'"
+          "filterExpression": "tags = 'crypto virus' OR tags = 'crypto-virus' OR tags = 'cryptolocker' OR tags = 'data extortion' OR tags = 'double extortion' OR tags = 'encryptor' OR tags = 'extortion' OR tags = 'human-operated ransomware' OR tags = 'leak site' OR tags = 'ransom note' OR tags = 'ransomware' OR tags = 'ransomware affiliate' OR tags = 'ransomware as a service' OR tags = 'RaaS' OR tags = 'Ransomware-as-a-Service' OR tags = 'Trojan-Ransom'"
         },
         "windowDays": 7
       }
     },
     {
-      "name": "discord-ransomware-events",
+      "name": "discord-ransomware-nexus-lockbit",
       "type": "discord",
-      "description": "New ransomware reports. Updated on an hourly basis.",
+      "description": "Ransomware-Nexus — LockBit (Bitwise Spider, Flighty Scorpius, version-era tags). Hourly metadata.",
       "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
       "enabled": true,
       "query": {
         "filter": {
-          "filterExpression": "tags = 'Ransomware' OR tags = 'Ransomware-as-a-Service' OR tags = 'RaaS' OR tags = 'RansomHub' OR tags = 'Water Bakunawa' OR tags = 'Gold Harvest' OR tags = 'Qilin' OR tags = 'Agenda' OR tags = 'LockBit' OR tags = 'LockBit 3.0' OR tags = 'LockBit 4.0' OR tags = 'LockBit 5.0' OR tags = 'GOLD MYSTIC' OR tags = 'Bitwise Spider' OR tags = 'Play' OR tags = 'PlayCrypt' OR tags = 'Fiddling Scorpius' OR tags = 'Cl0p' OR tags = 'Clop' OR tags = 'FIN11' OR tags = 'Akira' OR tags = 'Gold Sahara' OR tags = 'Storm-1567' OR tags = 'DragonForce' OR tags = 'INC Ransom' OR tags = 'Vanilla Tempest' OR tags = 'Medusa' OR tags = 'Medusa Ransomware' OR tags = 'Frozen Spider' OR tags = 'Lynx' OR tags = 'Lynx Ransomware' OR tags = 'BlackSuit' OR tags = 'Royal' OR tags = 'Royal Ransomware' OR tags = 'Hunters International' OR tags = 'BianLian' OR tags = 'Cactus' OR tags = 'Rhysida' OR tags = 'Fog' OR tags = 'Fog Ransomware' OR tags = 'SafePay' OR tags = '8Base' OR tags = 'Cicada3301' OR tags = 'FunkSec' OR tags = 'Sarcoma' OR tags = 'KillSec' OR tags = 'Kill Security' OR tags = 'Eldorado' OR tags = 'Nitrogen' OR tags = 'Nitrogen Ransomware' OR tags = 'Meow' OR tags = 'MeowLeaks' OR tags = 'MeowCorp' OR tags = 'ShinyHunters' OR tags = 'Mustard Tempest' OR tags = 'Purple Vallhund' OR tags = 'DEV-0206' OR tags = 'Velvet Tempest' OR tags = 'Storm-1811'"
+          "filterExpression": "tags = 'ABCD' OR tags = 'Bitwise Spider' OR tags = 'Flighty Scorpius' OR tags = 'LockBit' OR tags = 'LockBit 2.0' OR tags = 'LockBit 3.0' OR tags = 'LockBit Black' OR tags = 'Trojan-Ransom.Win32.Lockbit'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-wizard-spider-conti",
+      "type": "discord",
+      "description": "Ransomware-Nexus — Wizard Spider, Conti ecosystem, Black Basta, TrickBot, Ryuk, Karakurt. Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Black Basta' OR tags = 'BlackBasta' OR tags = 'Conti' OR tags = 'Dark Scorpius' OR tags = 'Diavol' OR tags = 'FIN12' OR tags = 'ITG23' OR tags = 'Karakurt' OR tags = 'Karakurt Team' OR tags = 'Lockean' OR tags = 'Quantum' OR tags = 'Ryuk' OR tags = 'TA577' OR tags = 'TrickBot' OR tags = 'Trojan-Ransom.Win32.Conti' OR tags = 'Trojan-Ransom.Win32.Ryuk' OR tags = 'UNC1878' OR tags = 'UNC4393' OR tags = 'Wandering Spider' OR tags = 'Wizard Spider'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-revil-sodinokibi",
+      "type": "discord",
+      "description": "Ransomware-Nexus — REvil / Sodinokibi (Pinchy Spider, Bumbling Scorpius, Gold Southfield). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Bumbling Scorpius' OR tags = 'Gold Southfield' OR tags = 'Pinchy Spider' OR tags = 'REvil' OR tags = 'Sodin' OR tags = 'Sodinokibi' OR tags = 'Trojan-Ransom.Win32.Sodinokibi'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-alphv-blackcat",
+      "type": "discord",
+      "description": "Ransomware-Nexus — ALPHV / BlackCat / Noberus (Alpha Spider, Ambitious Scorpius). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'ALPHV' OR tags = 'ALPHVM' OR tags = 'Alpha Spider' OR tags = 'AlphaVM' OR tags = 'Ambitious Scorpius' OR tags = 'BlackCat' OR tags = 'Noberus'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-cl0p-ta505-fin11",
+      "type": "discord",
+      "description": "Ransomware-Nexus — Cl0p / TA505 / FIN11 (Lace Tempest, Graceful Spider, Chubby Scorpius). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Chubby Scorpius' OR tags = 'Cl0p' OR tags = 'Clop' OR tags = 'FIN11' OR tags = 'Graceful Spider' OR tags = 'Harpy Spider' OR tags = 'Lace Tempest' OR tags = 'TA505'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-maze-darkside-blackmatter",
+      "type": "discord",
+      "description": "Ransomware-Nexus — Maze cartel era, DarkSide, BlackMatter (Twisted Spider, Carbon Spider). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'BlackMatter' OR tags = 'Carbon Spider' OR tags = 'DarkSide' OR tags = 'Egregor' OR tags = 'Maze' OR tags = 'Sekhmet' OR tags = 'Trojan-Ransom.Win32.BlackMatter' OR tags = 'Trojan-Ransom.Win32.Maze' OR tags = 'Twisted Spider'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-royal-blacksuit-play",
+      "type": "discord",
+      "description": "Ransomware-Nexus — Royal / BlackSuit & Play (Royal Spider, Recess Spider, Fiddling Scorpius). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Balloonfly' OR tags = 'BlackSuit' OR tags = 'Fiddling Scorpius' OR tags = 'Play' OR tags = 'Play ransomware' OR tags = 'PlayCrypt' OR tags = 'Recess Spider' OR tags = 'Royal' OR tags = 'Royal ransomware' OR tags = 'Royal Spider'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-vice-hive-lapsus",
+      "type": "discord",
+      "description": "Ransomware-Nexus — Vice Society, Rhysida, Hive, LAPSUS$, Scattered Spider, Ragnar Locker, and related tags. Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Arcane Mantis' OR tags = 'Avos' OR tags = 'AvosLocker' OR tags = 'Black Byte' OR tags = 'BlackByte' OR tags = 'Cuba' OR tags = 'Cuba ransomware' OR tags = 'DEV-0537' OR tags = 'DEV-0832' OR tags = 'Everest' OR tags = 'Everest ransomware' OR tags = 'Hive' OR tags = 'Hive Spider' OR tags = 'InterLock' OR tags = 'Karma' OR tags = 'Karma ransomware' OR tags = 'LAPSUS$' OR tags = 'Lapsus' OR tags = 'Nefarious Mantis' OR tags = 'Octo Tempest' OR tags = 'PayOrGrief' OR tags = 'Ragnar Locker' OR tags = 'RagnarLocker' OR tags = 'Rhysida' OR tags = 'Scattered Spider' OR tags = 'Spicy Scorpius' OR tags = 'Storm-0875' OR tags = 'Strawberry Tempest' OR tags = 'Tunnel Spider' OR tags = 'Trojan-Ransom.Win32.Hive' OR tags = 'UNC3944' OR tags = 'Vanilla Tempest' OR tags = 'Vice Society' OR tags = 'Vice Spider' OR tags = 'Viking Spider' OR tags = 'Yanluowang'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-ransomware-nexus-commodity-raas",
+      "type": "discord",
+      "description": "Ransomware-Nexus — Commodity RaaS and builder-era families (Phobos, Dharma, Akira, Qilin, Howling Scorpius, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1473393042047238398/aW8MyYvg9OmNbu9l7a9CQW_zCj_dXZkNtLw_pnY-fstKil72_Or5LdGCJVfVMH-KLRTd",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = '8Base' OR tags = 'Agenda' OR tags = 'Akira' OR tags = 'AstroLocker' OR tags = 'BianLian' OR tags = 'Cactus' OR tags = 'CrossLock' OR tags = 'Crysis' OR tags = 'Dharma' OR tags = 'Djvu' OR tags = 'Globe Imposter' OR tags = 'GlobeImposter' OR tags = 'Howling Scorpius' OR tags = 'LockFile' OR tags = 'Mallox' OR tags = 'Medusa Locker' OR tags = 'MedusaLocker' OR tags = 'Monti' OR tags = 'Mount Locker' OR tags = 'Phobos' OR tags = 'Qilin' OR tags = 'RansomHouse' OR tags = 'Snatch' OR tags = 'STOP' OR tags = 'STOP ransomware' OR tags = 'Trojan-Ransom.Win32.Dharma' OR tags = 'Trojan-Ransom.Win32.Mallox' OR tags = 'Trojan-Ransom.Win32.Phobos' OR tags = 'Trojan-Ransom.Win32.Snatch' OR tags = 'Trojan-Ransom.Win32.Stop' OR tags = 'VoidCrypt' OR tags = 'XingLocker'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-weekly-botnet-nexus-umbrella",
+      "type": "discord",
+      "description": "Weekly recap: BotNet-Nexus umbrella vocabulary (generic botnet, zombie/DDoS armies, C2 botnet, Trojan.Botnet).",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127200601509971/jre9cs0gGUFRLBgzvyUwRPl6TyVh9icQtqNeGXW2AATsRmWuK0Wf4vL9RNAwndhPomM-",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'bot army' OR tags = 'bot herd' OR tags = 'bot network' OR tags = 'botnet' OR tags = 'C2 botnet' OR tags = 'command and control botnet' OR tags = 'DDoS botnet' OR tags = 'DDoS network' OR tags = 'Trojan.Botnet' OR tags = 'zombie army' OR tags = 'zombie network'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-botnet-nexus-iot-ddos",
+      "type": "discord",
+      "description": "BotNet-Nexus — IoT, SOHO, Linux server & datacenter DDoS swarms (Mirai, Mozi, VPNFilter, XorDDoS, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127200601509971/jre9cs0gGUFRLBgzvyUwRPl6TyVh9icQtqNeGXW2AATsRmWuK0Wf4vL9RNAwndhPomM-",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'ADB.miner' OR tags = 'Bashlite' OR tags = 'Bill Gates' OR tags = 'BillGates' OR tags = 'BrickerBot' OR tags = 'dark_nexus' OR tags = 'Ebury' OR tags = 'Gafgyt' OR tags = 'Hajime' OR tags = 'HEH' OR tags = 'Hide and Seek' OR tags = 'HideNSeek' OR tags = 'IoTroop' OR tags = 'JenX' OR tags = 'Mayday' OR tags = 'Mēris' OR tags = 'Meris' OR tags = 'Mirai' OR tags = 'Mozi' OR tags = 'OMG' OR tags = 'Persirai' OR tags = 'Reaper' OR tags = 'Satori' OR tags = 'Torii' OR tags = 'VPNFilter' OR tags = 'Windigo' OR tags = 'XOR DDoS' OR tags = 'XorDDoS'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-botnet-nexus-windows-worm-spam",
+      "type": "discord",
+      "description": "BotNet-Nexus — Windows worm/P2P, spam-relay & high-volume botnets (Conficker, Cutwail, Kelihos, ZeroAccess, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127200601509971/jre9cs0gGUFRLBgzvyUwRPl6TyVh9icQtqNeGXW2AATsRmWuK0Wf4vL9RNAwndhPomM-",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Bagle' OR tags = 'Conficker' OR tags = 'Cutwail' OR tags = 'DNSChanger' OR tags = 'Downadup' OR tags = 'Flashback' OR tags = 'Grum' OR tags = 'Kelihos' OR tags = 'Kraken' OR tags = 'Mariposa' OR tags = 'Mydoom' OR tags = 'Oderoor' OR tags = 'Peacomm' OR tags = 'Pushdo' OR tags = 'Purple Fox' OR tags = 'Ramnit' OR tags = 'Rustock' OR tags = 'Sality' OR tags = 'Simda' OR tags = 'Smominru' OR tags = 'Storm worm' OR tags = 'TDL4' OR tags = 'TDSS' OR tags = 'Waledac' OR tags = 'WireX' OR tags = 'ZeroAccess'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-botnet-nexus-banking-loader",
+      "type": "discord",
+      "description": "BotNet-Nexus — Modular banking, loader & crimeware distribution botnets (Zeus, Emotet, TrickBot, Dridex, Necurs, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127200601509971/jre9cs0gGUFRLBgzvyUwRPl6TyVh9icQtqNeGXW2AATsRmWuK0Wf4vL9RNAwndhPomM-",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Andromeda' OR tags = 'Bamital' OR tags = 'Bredolab' OR tags = 'Carberp' OR tags = 'Citadel' OR tags = 'Dridex' OR tags = 'Emotet' OR tags = 'Festi' OR tags = 'GameOver Zeus' OR tags = 'GOZ' OR tags = 'Gozi' OR tags = 'ISFB' OR tags = 'Necurs' OR tags = 'QakBot' OR tags = 'Qbot' OR tags = 'Shifu' OR tags = 'SpyEye' OR tags = 'TrickBot' OR tags = 'Zeus' OR tags = 'Zbot'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-weekly-rat-nexus-umbrella",
+      "type": "discord",
+      "description": "Weekly recap: RAT-Nexus umbrella vocabulary (RAT, Remote Access Trojan, Trojan.RAT, C2 backdoor, interactive backdoor).",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'RAT' OR tags = 'Remote Access Trojan' OR tags = 'remote access trojan' OR tags = 'remote-access trojan' OR tags = 'Trojan.RAT' OR tags = 'C2 backdoor' OR tags = 'interactive backdoor'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-dotnet-commodity",
+      "type": "discord",
+      "description": "RAT-Nexus — .NET commodity RAT ecosystem (AsyncRAT, njRAT, Quasar, XWorm, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'AsyncRAT' OR tags = 'Backdoor:MSIL/Bladabindi' OR tags = 'Bladabindi' OR tags = 'DCRat' OR tags = 'DcRat' OR tags = 'NJ WORM' OR tags = 'njWorm' OR tags = 'njrat' OR tags = 'njRAT' OR tags = 'Pulsar' OR tags = 'Quasar' OR tags = 'Quasar RAT' OR tags = 'QuasarRAT' OR tags = 'Silver RAT' OR tags = 'StormKitty' OR tags = 'Venom RAT' OR tags = 'VenomRAT' OR tags = 'Xworm' OR tags = 'XWorm'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-remcos-orcus-netwire",
+      "type": "discord",
+      "description": "RAT-Nexus — Remcos, Orcus, NetWire, NanoCore & marketed Windows RAT distribution. Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Nancrat' OR tags = 'NanoCore' OR tags = 'NanoCore RAT' OR tags = 'NetWire' OR tags = 'NetWire RAT' OR tags = 'Netwiresploit' OR tags = 'Orcus' OR tags = 'Orcus RAT' OR tags = 'Remcos' OR tags = 'Remcos Pro' OR tags = 'Remcos RAT'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-classic-windows",
+      "type": "discord",
+      "description": "RAT-Nexus — Classic full-feature Windows RAT era (DarkComet, Gh0st, Poison Ivy, Xtreme RAT, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'BlackShades' OR tags = 'BlackShades RAT' OR tags = 'Chinoxy' OR tags = 'CyberGate' OR tags = 'Cybergate' OR tags = 'Dark Comet' OR tags = 'DarkComet' OR tags = 'Farfli' OR tags = 'Gh0st' OR tags = 'Gh0st RAT' OR tags = 'Ghost RAT' OR tags = 'GhostRAT' OR tags = 'Poison Ivy' OR tags = 'PoisonIvy' OR tags = 'Xtreme RAT' OR tags = 'XtremeRAT'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-adwind-jrat",
+      "type": "discord",
+      "description": "RAT-Nexus — Adwind / jRAT & Java cross-platform commodity families. Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Adwind' OR tags = 'AlienSpy' OR tags = 'jRAT' OR tags = 'JSocket' OR tags = 'Unrecom'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-criminal-market-panels",
+      "type": "discord",
+      "description": "RAT-Nexus — Criminal-market RAT brands, panels & secondary commodity families (Warzone, Ave Maria, StrRAT, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Ave Maria' OR tags = 'AveMaria' OR tags = 'CRAT' OR tags = 'Hannah Worm' OR tags = 'HannahWorm' OR tags = 'Imminent Monitor' OR tags = 'ImminentMonitor' OR tags = 'Maria RAT' OR tags = 'PCShare' OR tags = 'PcShare' OR tags = 'PcShare RAT' OR tags = 'Revenge RAT' OR tags = 'RevengeRAT' OR tags = 'StrRAT' OR tags = 'Warzone RAT' OR tags = 'WarzoneRAT'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-mobile-android",
+      "type": "discord",
+      "description": "RAT-Nexus — Mobile Android RATs (AndroRAT, DroidJack, AhMyth, SpyNote). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'AhMyth' OR tags = 'AndroRAT' OR tags = 'DroidJack' OR tags = 'SpyNote' OR tags = 'Spynote'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-regional-ics",
+      "type": "discord",
+      "description": "RAT-Nexus — Regionally named, campaign-named & ICS-adjacent RAT reporting (GravityRAT, Havex, Bandook, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Backdoor.Oldrea' OR tags = 'Bandook' OR tags = 'Bandook RAT' OR tags = 'Crimson RAT' OR tags = 'CrimsonRAT' OR tags = 'Gravity RAT' OR tags = 'GravityRAT' OR tags = 'Havex' OR tags = 'PoetRAT'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-dual-use-rmm",
+      "type": "discord",
+      "description": "RAT-Nexus — Dual-use RMM, remote desktop & red-team frameworks (Cobalt Strike, Sliver, AnyDesk, TeamViewer, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'AnyDesk' OR tags = 'Beacon' OR tags = 'Brute Ratel' OR tags = 'BruteRatel' OR tags = 'Cobalt Strike' OR tags = 'Mythic C2' OR tags = 'remote monitoring and management' OR tags = 'RMM abuse' OR tags = 'Sliver' OR tags = 'TeamViewer'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-rat-nexus-catch-all",
+      "type": "discord",
+      "description": "RAT-Nexus — Catch-all (Agent Tesla, CactusTorch, Monster RAT). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1490127804887601253/Zo0t__0ymTyPmD1hGXfp7m1gxCBadUZ1MRf6Pr5WidxDDetdFlMoCATNjmY2n7WnWuMR",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Agent Tesla' OR tags = 'CactusTorch' OR tags = 'Monster RAT'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-weekly-iran-nexus-umbrella",
+      "type": "discord",
+      "description": "Weekly recap: Iran-Nexus umbrella IRGC & state org labels (IRGC, IRGC-IO, Islamic Revolutionary Guard Corps).",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'IRGC' OR tags = 'IRGC-IO' OR tags = 'Islamic Revolutionary Guard Corps'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-apt33",
+      "type": "discord",
+      "description": "Iran-Nexus — APT33 / Holmium / Peach Sandstorm (Refined Kitten, Cobalt Trinity, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT33' OR tags = 'APT42' OR tags = 'Cobalt Trinity' OR tags = 'Elfin' OR tags = 'Holmium' OR tags = 'Magnallium' OR tags = 'Peach Sandstorm' OR tags = 'Refined Kitten'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-apt34-oilrig",
+      "type": "discord",
+      "description": "Iran-Nexus — APT34 / OilRig (Helix Kitten, Evasive Serpens, Earth Simnavaz, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT34' OR tags = 'Chrysene' OR tags = 'Clayslide' OR tags = 'Cobalt Dickens' OR tags = 'Cobalt Gypsy' OR tags = 'Crambus' OR tags = 'Earth Simnavaz' OR tags = 'Evasive Serpens' OR tags = 'Europium' OR tags = 'Greenbug' OR tags = 'Hazel Sandstorm' OR tags = 'Helix Kitten' OR tags = 'Helminth' OR tags = 'IRN2' OR tags = 'ITG13' OR tags = 'OilRig' OR tags = 'Storm-0861' OR tags = 'TA452'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-apt35-phosphorus",
+      "type": "discord",
+      "description": "Iran-Nexus — APT35 / Phosphorus (Charming Kitten, Mint Sandstorm, Magic Hound, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT35' OR tags = 'Ballistic Bobcat' OR tags = 'Charming Kitten' OR tags = 'Clever Kitten' OR tags = 'Cobalt Illusion' OR tags = 'CopyKittens' OR tags = 'ITG18' OR tags = 'Magic Hound' OR tags = 'Magic Kitten' OR tags = 'MagicHound' OR tags = 'Mint Sandstorm' OR tags = 'Newscaster' OR tags = 'Parastoo' OR tags = 'Phosphorus' OR tags = 'Rocket Kitten' OR tags = 'TA453' OR tags = 'UNC788'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-muddywater",
+      "type": "discord",
+      "description": "Iran-Nexus — MuddyWater / Seedworm (Static Kitten, Mango Sandstorm, Boggy Serpens, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Boggy Serpens' OR tags = 'Earth Vetala' OR tags = 'Mango Sandstorm' OR tags = 'Mercury' OR tags = 'MuddyWater' OR tags = 'NTSTATS' OR tags = 'POWERSTATS' OR tags = 'Seedworm' OR tags = 'Static Kitten' OR tags = 'TA450' OR tags = 'TEMP.Zagros' OR tags = 'Yellow Nix'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-pioneer-fox-kitten",
+      "type": "discord",
+      "description": "Iran-Nexus — Pioneer Kitten / Fox Kitten (Lemon Sandstorm, Rubidium, UNC757, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Cobalt Foxglove' OR tags = 'Fox Kitten' OR tags = 'Lemon Sandstorm' OR tags = 'PARISITE' OR tags = 'Pioneer Kitten' OR tags = 'Rubidium' OR tags = 'UNC757' OR tags = 'Yellow Dev 15'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-apt39",
+      "type": "discord",
+      "description": "Iran-Nexus — APT39 / Chafer (Remix Kitten, Burgundy Sandstorm, ITG07, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT39' OR tags = 'Burgundy Sandstorm' OR tags = 'Cadelle' OR tags = 'Chafer' OR tags = 'Cobalt Hickman' OR tags = 'ITG07' OR tags = 'Remix Kitten' OR tags = 'Storm-0589'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-imperial-kitten-curium",
+      "type": "discord",
+      "description": "Iran-Nexus — Imperial Kitten & Curium (Crimson Sandstorm, Tortoiseshell, Smoke Sandstorm, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Crimson Sandstorm' OR tags = 'Cuboid Sandstorm' OR tags = 'Curium' OR tags = 'DEV-0056' OR tags = 'DEV-0228' OR tags = 'HOUSEBLEND' OR tags = 'Imperial Kitten' OR tags = 'Smoke Sandstorm' OR tags = 'TA456' OR tags = 'Tortoise Shell' OR tags = 'Tortoiseshell' OR tags = 'UNC1549' OR tags = 'Yellow Liderc'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-cotton-sandstorm",
+      "type": "discord",
+      "description": "Iran-Nexus — Cotton Sandstorm / Haywire Kitten (Emennet Pasargad, Neptunium, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Atlas Group' OR tags = 'ChaoticOrchestra' OR tags = 'Cotton Sandstorm' OR tags = 'Emennet Pasargad' OR tags = 'Haywire Kitten' OR tags = 'Neptunium' OR tags = 'Vice Leaker'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-pink-sandstorm",
+      "type": "discord",
+      "description": "Iran-Nexus — Pink Sandstorm / Spectral Kitten (Agrius, Americium, Black Shadow, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Agrius' OR tags = 'Americium' OR tags = 'Black Shadow' OR tags = 'BlackShadow' OR tags = 'DarkRypt' OR tags = 'Deadwood' OR tags = 'FireAnt' OR tags = 'Justice Blade' OR tags = 'Pink Sandstorm' OR tags = 'SharpBoys' OR tags = 'Spectral Kitten'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-red-sandstorm-void-manticore",
+      "type": "discord",
+      "description": "Iran-Nexus — Red Sandstorm & Void Manticore (Banished Kitten, Storm-0842, Handala, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Banished Kitten' OR tags = 'DEV-0842' OR tags = 'Handala Hack Team' OR tags = 'Homeland Justice' OR tags = 'Red Sandstorm' OR tags = 'Scarred Manticore' OR tags = 'Storm-0842' OR tags = 'Void Manticore'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-msft-dev-storm",
+      "type": "discord",
+      "description": "Iran-Nexus — Microsoft DEV & Storm clusters (Gray/Pumpkin Sandstorm, HEXANE, Lyceum, Spirlin, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'DEV-0146' OR tags = 'DEV-0343' OR tags = 'Gray Sandstorm' OR tags = 'HEXANE' OR tags = 'Lyceum' OR tags = 'Pumpkin Sandstorm' OR tags = 'Siamesekitten' OR tags = 'Spirlin' OR tags = 'Storm-0133' OR tags = 'Storm-0343'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-iran-nexus-catch-all",
+      "type": "discord",
+      "description": "Iran-Nexus — Catch-all kitten names, cobalt labels & unstable crosswalks (Cobalt Mirage, Domestic Kitten, UNC clusters, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371532728242268/4EAtMm6ihA781Tr_rOfhAU7fMczths9Jo4zAjlipLlbT1TVoNoq-tvNYngA2_oC1FY6_",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Boss Spider' OR tags = 'Cobalt Mirage' OR tags = 'Cobalt Sapling' OR tags = 'Cobalt Ulster' OR tags = 'Cutting Kitten' OR tags = 'DEV-0270' OR tags = 'Domestic Kitten' OR tags = 'Ferocious Kitten' OR tags = 'Flying Kitten' OR tags = 'Nemesis Kitten' OR tags = 'Rampant Kitten' OR tags = 'Scarecrow' OR tags = 'Slayer Kitten' OR tags = 'TA455' OR tags = 'Tracer Kitten' OR tags = 'UNC2448' OR tags = 'UNC3890' OR tags = 'UNC4899' OR tags = 'Volatile Kitten'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-weekly-dprk-nexus-umbrella",
+      "type": "discord",
+      "description": "Weekly recap: DPRK-Nexus umbrella RGB & military cyber org (Bureau 121, Reconnaissance General Bureau, RGB, Unit 121, Venus 121).",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371900551925901/nnksKuTqLlNFlSm2aydyeglRuYMtHo4NRLvvfEAnthjsRZLfoKodBgSlPrZTmBrsDcDn",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Bureau 121' OR tags = 'Reconnaissance General Bureau' OR tags = 'RGB' OR tags = 'Unit 121' OR tags = 'Venus 121'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-dprk-nexus-lazarus-apt38",
+      "type": "discord",
+      "description": "DPRK-Nexus — Hidden Cobra, Lazarus & APT38 (Labyrinth Chollima, Diamond Sleet, Andariel, BlueNoroff, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371900551925901/nnksKuTqLlNFlSm2aydyeglRuYMtHo4NRLvvfEAnthjsRZLfoKodBgSlPrZTmBrsDcDn",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT-C-26' OR tags = 'APT38' OR tags = 'Alluring Pisces' OR tags = 'Andariel' OR tags = 'AppleJeus' OR tags = 'BeagleBoyz' OR tags = 'Black Alicanto' OR tags = 'BlackAlicanto' OR tags = 'Black Artemis' OR tags = 'BlueNoroff' OR tags = 'COPERNICIUM' OR tags = 'CTG-6459' OR tags = 'CageyChameleon' OR tags = 'CryptoCore' OR tags = 'CryptoMimic' OR tags = 'Dangerous Password' OR tags = 'Dark Seoul' OR tags = 'DarkSeoul' OR tags = 'DEV-0139' OR tags = 'DEV-1222' OR tags = 'Diamond Sleet' OR tags = 'Famous Chollima' OR tags = 'Friendly Chollima' OR tags = 'Genie Spider' OR tags = 'Gleaming Pisces' OR tags = 'Group 77' OR tags = 'Guardians of Peace' OR tags = 'Hastati Group' OR tags = 'Hidden Cobra' OR tags = 'Jumpy Pisces' OR tags = 'Labyrinth Chollima' OR tags = 'Lazarus' OR tags = 'Lazarus Group' OR tags = 'Leery Turtle' OR tags = 'Moonstone Sleet' OR tags = 'NICKEL ACADEMY' OR tags = 'NICKEL GLADSTONE' OR tags = 'NICKEL HYATT' OR tags = 'New Romanic Cyber Army' OR tags = 'NewRomanic Cyber Army Team' OR tags = 'Onyx Sleet' OR tags = 'Operation AppleJeus' OR tags = 'Operation Blacksmith' OR tags = 'Operation DarkSeoul' OR tags = 'Rifle' OR tags = 'Ruby Sleet' OR tags = 'Selective Pisces' OR tags = 'Silent Chollima' OR tags = 'Stardust Chollima' OR tags = 'Stonefly' OR tags = 'TAG-71' OR tags = 'TA404' OR tags = 'TEMP.Hermit' OR tags = 'TDrop2' OR tags = 'Trader Traitor' OR tags = 'TraderTraitor' OR tags = 'UNC1069' OR tags = 'UNC1720' OR tags = 'UNC2226' OR tags = 'UNC2970' OR tags = 'UNC577' OR tags = 'Wassonite' OR tags = 'Whois Hacking Team' OR tags = 'ZINC'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-dprk-nexus-apt37-scarcruft",
+      "type": "discord",
+      "description": "DPRK-Nexus — APT37 / ScarCruft (Ricochet Chollima, InkySquid, Pearl Sleet, TEMP.Reaper, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371900551925901/nnksKuTqLlNFlSm2aydyeglRuYMtHo4NRLvvfEAnthjsRZLfoKodBgSlPrZTmBrsDcDn",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT-C-28' OR tags = 'APT37' OR tags = 'Group 123' OR tags = 'Group123' OR tags = 'ITG10' OR tags = 'Inky Squid' OR tags = 'InkySquid' OR tags = 'Moldy Pisces' OR tags = 'Operation Muzabi' OR tags = 'Pearl Sleet' OR tags = 'Red Eyes' OR tags = 'RedEyes' OR tags = 'Reaper' OR tags = 'Ricochet Chollima' OR tags = 'ScarCruft' OR tags = 'TA-RedAnt' OR tags = 'TEMP.Reaper' OR tags = 'Venus121'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-dprk-nexus-apt43-kimsuky",
+      "type": "discord",
+      "description": "DPRK-Nexus — APT43 / Kimsuky (Velvet Chollima, Emerald Sleet, Sparkling Pisces, SharpTongue, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371900551925901/nnksKuTqLlNFlSm2aydyeglRuYMtHo4NRLvvfEAnthjsRZLfoKodBgSlPrZTmBrsDcDn",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT-C-55' OR tags = 'APT43' OR tags = 'Black Banshee' OR tags = 'CERIUM' OR tags = 'Crooked Pisces' OR tags = 'DPRK IT Worker' OR tags = 'Emerald Sleet' OR tags = 'IT Worker' OR tags = 'Kimsuky' OR tags = 'Opal Sleet' OR tags = 'Operation Contagious Interview' OR tags = 'Operation DreamJob' OR tags = 'Osmium' OR tags = 'SharpTongue' OR tags = 'Slow Pisces' OR tags = 'Sparkling Pisces' OR tags = 'Springtail' OR tags = 'STOLEN PENCIL' OR tags = 'TA406' OR tags = 'TA408' OR tags = 'TA427' OR tags = 'Thallium' OR tags = 'UAT-5394' OR tags = 'Velvet Chollima' OR tags = 'Wagemole'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-dprk-nexus-apt45-plutonium",
+      "type": "discord",
+      "description": "DPRK-Nexus — APT45 / PLUTONIUM (Sapphire Sleet, Citrine Sleet, TA444, UNC4899). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371900551925901/nnksKuTqLlNFlSm2aydyeglRuYMtHo4NRLvvfEAnthjsRZLfoKodBgSlPrZTmBrsDcDn",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT45' OR tags = 'Citrine Sleet' OR tags = 'PLUTONIUM' OR tags = 'Sapphire Sleet' OR tags = 'TA444' OR tags = 'UNC4899'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-dprk-nexus-konni",
+      "type": "discord",
+      "description": "DPRK-Nexus — Konni (Jade Sleet, Smoke Screen). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371900551925901/nnksKuTqLlNFlSm2aydyeglRuYMtHo4NRLvvfEAnthjsRZLfoKodBgSlPrZTmBrsDcDn",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Jade Sleet' OR tags = 'Konni' OR tags = 'Smoke Screen'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-dprk-nexus-catch-all",
+      "type": "discord",
+      "description": "DPRK-Nexus — Catch-all (ARCHIPELAGO, Covellite, Storm/DEV clusters, UNC3782, UNC614, etc.). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476371900551925901/nnksKuTqLlNFlSm2aydyeglRuYMtHo4NRLvvfEAnthjsRZLfoKodBgSlPrZTmBrsDcDn",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'ARCHIPELAGO' OR tags = 'Covellite' OR tags = 'Dark River' OR tags = 'DEV-0954' OR tags = 'ITG16' OR tags = 'Storm-0954' OR tags = 'Storm-1744' OR tags = 'UNC3782' OR tags = 'UNC614'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-weekly-china-nexus-umbrella",
+      "type": "discord",
+      "description": "Weekly recap: China-Nexus umbrella PRC/MSS/PLA & sponsor labels.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'China-nexus' OR tags = 'China state-sponsored' OR tags = 'PRC-nexus' OR tags = 'PRC state-sponsored' OR tags = 'PRC' OR tags = 'MSS' OR tags = 'PLA' OR tags = 'People’s Republic of China' OR tags = 'Ministry of State Security' OR tags = 'People’s Liberation Army' OR tags = 'Chinese Government'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-enterprise-it-cloud",
+      "type": "discord",
+      "description": "China-Nexus — Enterprise IT, cloud, identity & edge access (Silk Typhoon, HAFNIUM, UNC5221). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Silk Typhoon' OR tags = 'Hafnium' OR tags = 'HAFNIUM' OR tags = 'UNC5221' OR tags = 'UNC5174' OR tags = 'Murky Panda'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-critical-infrastructure",
+      "type": "discord",
+      "description": "China-Nexus — Critical infrastructure pre-positioning & smokescreen ops (Volt Typhoon, UNC6201, Bronze Starlight). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Volt Typhoon' OR tags = 'UNC6201' OR tags = 'Bronze Starlight' OR tags = 'RedEcho' OR tags = 'RedFoxtrot' OR tags = 'Vanguard Panda' OR tags = 'BRONZE SILHOUETTE' OR tags = 'Bronze Silhouette' OR tags = 'DEV-0401' OR tags = 'Cinnamon Tempest' OR tags = 'HighGround'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-telecom",
+      "type": "discord",
+      "description": "China-Nexus — Telecommunications intelligence & carrier-scale ops (Salt Typhoon, UNC3886, LightBasin). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Salt Typhoon' OR tags = 'UNC3886' OR tags = 'LightBasin' OR tags = 'UAT-9244' OR tags = 'Operator Panda' OR tags = 'GhostEmperor' OR tags = 'FamousSparrow' OR tags = 'Famous Sparrow' OR tags = 'Tropic Trooper'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-taiwan-cross-strait",
+      "type": "discord",
+      "description": "China-Nexus — Taiwan, cross-strait & at-risk communities (Flax Typhoon, Storm-0919, Evasive Panda). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Flax Typhoon' OR tags = 'Antlion' OR tags = 'Aoqin Dragon' OR tags = 'Bronze Highland' OR tags = 'Dagger Panda' OR tags = 'ETHEREAL PANDA' OR tags = 'Ethereal Panda' OR tags = 'Storm-0919' OR tags = 'Evasive Panda' OR tags = 'Daggerfly'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-japan-industrial",
+      "type": "discord",
+      "description": "China-Nexus — Japan & East Asian industrial espionage (BlackTech, Canary/Swirl Typhoon, Tick). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'BlackTech' OR tags = 'Circuit Panda' OR tags = 'Radio Panda' OR tags = 'Blue Termite' OR tags = 'Cloudy Omega' OR tags = 'Bronze Butler' OR tags = 'RedBaldNight' OR tags = 'Stalker Panda' OR tags = 'Canary Typhoon' OR tags = 'Swirl Typhoon' OR tags = 'CIRCUIT PANDA' OR tags = 'APT24' OR tags = 'Palmerworm' OR tags = 'Tick'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-southeast-asia",
+      "type": "discord",
+      "description": "China-Nexus — Southeast Asia & Indo-Pacific government collection (Earth clusters, Mustang Panda, APT40, Leviathan). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Earth Alux' OR tags = 'Earth Ammit' OR tags = 'Earth Baxia' OR tags = 'Earth Berberoka' OR tags = 'Earth Freybug' OR tags = 'Earth Krahang' OR tags = 'Earth Kurma' OR tags = 'Earth Lamia' OR tags = 'Earth Longzhi' OR tags = 'Earth Lusca' OR tags = 'Earth Minotaur' OR tags = 'Earth Wendigo' OR tags = 'Aquatic Panda' OR tags = 'APT30' OR tags = 'Lotus Blossom' OR tags = 'Spring Dragon' OR tags = 'Lotus Panda' OR tags = 'Phantom Taurus' OR tags = 'Mustang Panda' OR tags = 'Bronze President' OR tags = 'CL-STA-0048' OR tags = 'APT40' OR tags = 'Charcoal Typhoon' OR tags = 'CHROMIUM' OR tags = 'ControlX' OR tags = 'RedHotel' OR tags = 'Twill Typhoon' OR tags = 'Gingham Typhoon' OR tags = 'Kryptonite Panda' OR tags = 'Leviathan'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-diplomatic",
+      "type": "discord",
+      "description": "China-Nexus — Diplomatic, MFA & foreign-policy machinery (APT15, Nylon Typhoon, ke3chang). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT15' OR tags = 'Vixen Panda' OR tags = 'Mustang Panda' OR tags = 'Bronze President' OR tags = 'Nylon Typhoon' OR tags = 'ke3chang'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-policy-think-tanks",
+      "type": "discord",
+      "description": "China-Nexus — Policy, think tanks & cross-sector strategic collection (APT31, Violet Typhoon, Curious Gorge). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT31' OR tags = 'Judgment Panda' OR tags = 'Zirconium' OR tags = 'Curious Gorge' OR tags = 'Violet Typhoon' OR tags = 'Google Threat Analysis Group'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-defense-aerospace",
+      "type": "discord",
+      "description": "China-Nexus — Defense, aerospace & advanced technology R&D (APT1–22, Typhoon rows, Phantom Panda). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT1' OR tags = 'APT3' OR tags = 'Gothic Panda' OR tags = 'APT4' OR tags = 'Maverick Panda' OR tags = 'APT5' OR tags = 'Keyhole Panda' OR tags = 'APT6' OR tags = 'APT9' OR tags = 'Nightshade Panda' OR tags = 'APT12' OR tags = 'Numbered Panda' OR tags = 'APT14' OR tags = 'Anchor Panda' OR tags = 'APT16' OR tags = 'APT17' OR tags = 'Sneaky Panda' OR tags = 'Hidden Lynx' OR tags = 'Aurora Panda' OR tags = 'Hurricane Panda' OR tags = 'APT18' OR tags = 'Dynamite Panda' OR tags = 'APT19' OR tags = 'Deep Panda' OR tags = 'APT20' OR tags = 'Violin Panda' OR tags = 'APT21' OR tags = 'Hammer Panda' OR tags = 'APT22' OR tags = 'APT40' OR tags = 'Gallium' OR tags = 'Brocade Typhoon' OR tags = 'Salmon Typhoon' OR tags = 'Mulberry Typhoon' OR tags = 'Hexagon Typhoon' OR tags = 'Heart Typhoon' OR tags = 'Satin Typhoon' OR tags = 'Checkered Typhoon' OR tags = 'Raspberry Typhoon' OR tags = 'Gingham Typhoon' OR tags = 'Circle Typhoon' OR tags = 'Granite Typhoon' OR tags = 'LOTUS PANDA' OR tags = 'Kryptonite Panda' OR tags = 'Leviathan' OR tags = 'Phantom Panda'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-apt27-global",
+      "type": "discord",
+      "description": "China-Nexus — Global network intrusions & operator tradecraft (APT27, Linen Typhoon, UNC215). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT27' OR tags = 'Emissary Panda' OR tags = 'Bronze Union' OR tags = 'UNC215' OR tags = 'Linen Typhoon' OR tags = 'IODINE' OR tags = 'Iodine' OR tags = 'Red Phoenix'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-apt41-winnti",
+      "type": "discord",
+      "description": "China-Nexus — APT41 & Winnti ecosystem (Brass/Leopard Typhoon, BARIUM). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Brass Typhoon' OR tags = 'APT41' OR tags = 'Winnti' OR tags = 'Barium' OR tags = 'Double Dragon' OR tags = 'Winnti Group' OR tags = 'LightBasin' OR tags = 'Leopard Typhoon' OR tags = 'Wicked Panda' OR tags = 'BARIUM' OR tags = 'LEAD'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-unclustered-ids",
+      "type": "discord",
+      "description": "China-Nexus — Unclustered Mandiant/MITRE-style IDs (UNC4841, Velvet Ant, G1047). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'UNC4841' OR tags = 'Velvet Ant' OR tags = 'Gelsemium' OR tags = 'Goblin Panda' OR tags = 'DragonSpark' OR tags = 'SLIME57' OR tags = 'MITRE G1047' OR tags = 'G1047'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-china-nexus-historical",
+      "type": "discord",
+      "description": "China-Nexus — Historical & ambiguous report names (GhostNet, Night Dragon, Dust Storm). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370934104457329/pXsBS4HfS_Wf0vFsEgechFoob-GrUjCD4aQe2ybr7KoYHiR9GbaEQ7M46K-m5_0qmEpP",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'GhostNet' OR tags = 'Snooping Dragon' OR tags = 'Night Dragon' OR tags = 'Dust Storm' OR tags = 'Covert Grove'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-weekly-russia-nexus-umbrella",
+      "type": "discord",
+      "description": "Weekly recap: Russia-Nexus umbrella GRU/FSB/SVR & formal service labels.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Federal Security Service' OR tags = 'Foreign Intelligence Service' OR tags = 'FSB' OR tags = 'GRU' OR tags = 'Main Intelligence Directorate' OR tags = 'SVR'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-apt28",
+      "type": "discord",
+      "description": "Russia-Nexus — APT28 ecosystem (Fancy Bear, Forest Blizzard, Sofacy, Strontium). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT28' OR tags = 'Fancy Bear' OR tags = 'Fighting Ursa' OR tags = 'Forest Blizzard' OR tags = 'FROZENLAKE' OR tags = 'GruesomeLarch' OR tags = 'Group 74' OR tags = 'Iron Twilight' OR tags = 'Pawn Storm' OR tags = 'Sednit' OR tags = 'SNAKEMACKEREL' OR tags = 'Sofacy' OR tags = 'Strontium' OR tags = 'Swallowtail' OR tags = 'TG-4127' OR tags = 'Tsar Team'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-sandworm-apt44",
+      "type": "discord",
+      "description": "Russia-Nexus — Sandworm & APT44 (Seashell Blizzard, TeleBots, Voodoo Bear). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT44' OR tags = 'BlackEnergy' OR tags = 'Blue Echidna' OR tags = 'ELECTRUM' OR tags = 'FROZENBARENTS' OR tags = 'IRIDIUM' OR tags = 'Quedagh' OR tags = 'Sandworm' OR tags = 'Sandworm Team' OR tags = 'Seashell Blizzard' OR tags = 'Sunglow Blizzard' OR tags = 'TeleBots' OR tags = 'TEMP.Noble' OR tags = 'Voodoo Bear'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-destructive-wartime",
+      "type": "discord",
+      "description": "Russia-Nexus — Destructive & wartime ops (Ember Bear, Cadet Blizzard, UAC-0056). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Bleeding Bear' OR tags = 'Cadet Blizzard' OR tags = 'DEV-0586' OR tags = 'Ember Bear' OR tags = 'UAC-0056' OR tags = 'UNC2589'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-apt29",
+      "type": "discord",
+      "description": "Russia-Nexus — APT29 ecosystem (Cozy Bear, Midnight Blizzard, Nobelium). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'APT29' OR tags = 'Cloaked Ursa' OR tags = 'Cozy Bear' OR tags = 'CozyCar' OR tags = 'Dark Halo' OR tags = 'Group 100' OR tags = 'Hammertoss' OR tags = 'Iron Hemlock' OR tags = 'Iron Ritual' OR tags = 'Midnight Blizzard' OR tags = 'Minidionis' OR tags = 'Nobelium' OR tags = 'SeaDuke' OR tags = 'TAG-11' OR tags = 'The Dukes' OR tags = 'UAC-0029' OR tags = 'UNC2452' OR tags = 'UNC3524' OR tags = 'YTTRIUM'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-star-blizzard-seaborgium",
+      "type": "discord",
+      "description": "Russia-Nexus — Star Blizzard / SEABORGIUM (Cold River, Callisto, TA446). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Blue Charlie' OR tags = 'Callisto' OR tags = 'Callisto Group' OR tags = 'Cold River' OR tags = 'COLDRIVER' OR tags = 'Gossamer Bear' OR tags = 'SEABORGIUM' OR tags = 'Star Blizzard' OR tags = 'TAG-53' OR tags = 'TA446' OR tags = 'UNC4057'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-gamaredon",
+      "type": "discord",
+      "description": "Russia-Nexus — Gamaredon (Primitive Bear, Aqua Blizzard, UAC-0010). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Actinium' OR tags = 'Aqua Blizzard' OR tags = 'Armageddon' OR tags = 'Blue Otso' OR tags = 'BlueAlpha' OR tags = 'Gamaredon' OR tags = 'Gamaredon Group' OR tags = 'Primitive Bear' OR tags = 'Shuckworm' OR tags = 'Trident Ursa' OR tags = 'UAC-0010' OR tags = 'UAC-0082' OR tags = 'UAC-0113' OR tags = 'UAC-0165' OR tags = 'UNC530'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-turla",
+      "type": "discord",
+      "description": "Russia-Nexus — Turla (Venomous Bear, Snake, Secret Blizzard). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'BELUGASTURGEON' OR tags = 'Blue Python' OR tags = 'Hippo Team' OR tags = 'Iron Hunter' OR tags = 'IRON TILDEN' OR tags = 'Krypton' OR tags = 'Oroboros' OR tags = 'Ouroboros' OR tags = 'Pacers' OR tags = 'Secret Blizzard' OR tags = 'Snake' OR tags = 'SUMMIT' OR tags = 'Turla' OR tags = 'Uroburos' OR tags = 'Venomous Bear' OR tags = 'Waterbug'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-energetic-bear-dragonfly",
+      "type": "discord",
+      "description": "Russia-Nexus — Energetic Bear / Dragonfly & energy-sector espionage (Ghost Blizzard, Bromine). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'ALLANITE' OR tags = 'Berserk Bear' OR tags = 'Bromine' OR tags = 'Crouching Yeti' OR tags = 'Dragonfly' OR tags = 'Dragonfly 2.0' OR tags = 'DYMALLOY' OR tags = 'Energetic Bear' OR tags = 'Ghost Blizzard' OR tags = 'InvisiMole' OR tags = 'Iron Liberty' OR tags = 'Koala Team' OR tags = 'RC2 Cluster' OR tags = 'RC2C' OR tags = 'TeamSpy'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-indrik-spider-evil-corp",
+      "type": "discord",
+      "description": "Russia-Nexus — Indrik Spider / Evil Corp (Manatee Tempest, GOLD DRAKE). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Evil Corp' OR tags = 'EvilCorp' OR tags = 'GOLD DRAKE' OR tags = 'Indrik Spider' OR tags = 'Manatee Tempest'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-wizard-spider",
+      "type": "discord",
+      "description": "Russia-Nexus — Wizard Spider (Conti/Ryuk line, ITG23, Gold Blackburn). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'DEV-0193' OR tags = 'Gold Blackburn' OR tags = 'ITG23' OR tags = 'UNC1878' OR tags = 'Wizard Spider'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-fin7-carbon-spider",
+      "type": "discord",
+      "description": "Russia-Nexus — FIN7 / Carbon Spider (Carbanak, Sangria Tempest). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Carbanak' OR tags = 'Carbon Spider' OR tags = 'ELBRUS' OR tags = 'FIN7' OR tags = 'Gold Niagara' OR tags = 'Sangria Tempest'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-ta505",
+      "type": "discord",
+      "description": "Russia-Nexus — TA505 (Graceful Spider, SectorJ04). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Chimichuri' OR tags = 'Graceful Spider' OR tags = 'SectorJ04' OR tags = 'TA505'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-romcom-tropical-scorpius",
+      "type": "discord",
+      "description": "Russia-Nexus — RomCom, Tropical Scorpius & related extortion (Void Blizzard, Storm-0978). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'LAUNDRY BEAR' OR tags = 'RomCom' OR tags = 'Storm-0978' OR tags = 'Tropical Scorpius' OR tags = 'UNC2596' OR tags = 'Void Blizzard' OR tags = 'Void Rabisu'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-inception-cloud-atlas",
+      "type": "discord",
+      "description": "Russia-Nexus — Inception Framework & Cloud Atlas. Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Cloud Atlas' OR tags = 'Inception Framework'"
+        },
+        "windowDays": 7
+      }
+    },
+    {
+      "name": "discord-russia-nexus-catch-all",
+      "type": "discord",
+      "description": "Russia-Nexus — Catch-all (Grizzly Steppe, UAC/UNC tags, Iron Viking). Hourly metadata.",
+      "webhookUrl": "https://discord.com/api/webhooks/1476370525503623309/6Nsi0Dc75j4QX6zsZkOvEPV_ZqlofxHTRGOnsFc5-0QkBnTgAwksi0jx9_Enjl_DA0y6",
+      "enabled": true,
+      "query": {
+        "filter": {
+          "filterExpression": "tags = 'Boulder Bear' OR tags = 'Cyber Army of Russia Reborn' OR tags = 'Grizzly Steppe' OR tags = 'Iron Viking' OR tags = 'UAC-0006' OR tags = 'UAC-0020' OR tags = 'UAC-0050' OR tags = 'UAC-0063' OR tags = 'UAC-0173' OR tags = 'UAC-0185' OR tags = 'UAC-0195' OR tags = 'UAC-0219' OR tags = 'UNC4221' OR tags = 'UNC5792'"
         },
         "windowDays": 7
       }
