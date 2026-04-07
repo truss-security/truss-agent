@@ -25,9 +25,27 @@ export class QueryManager {
   private jobs: Job[] = [];
   private intervalHandles: ReturnType<typeof setInterval>[] = [];
   private cronTasks: ReturnType<typeof cron.schedule>[] = [];
+  /** Single-flight chain so cron/interval triggers cannot overlap Truss API calls (avoids 429 storms). */
+  private jobRunChain: Promise<void> = Promise.resolve();
 
   constructor() {
     this.trussApi = new TrussApi();
+  }
+
+  /**
+   * Run `fn` after all prior scheduled jobs finish. Failures do not block the queue.
+   * Set TRUSS_AGENT_PARALLEL_JOBS=true to disable (not recommended with strict API limits).
+   */
+  private enqueueJobRun(fn: () => Promise<void>): Promise<void> {
+    if (process.env.TRUSS_AGENT_PARALLEL_JOBS === 'true') {
+      return fn();
+    }
+    const next = this.jobRunChain.then(() => fn(), () => fn());
+    this.jobRunChain = next.then(
+      () => undefined,
+      () => undefined
+    );
+    return next;
   }
 
   load(): Job[] {
@@ -112,6 +130,10 @@ export class QueryManager {
   }
 
   async runJob(job: Job): Promise<void> {
+    return this.enqueueJobRun(() => this.executeJob(job));
+  }
+
+  private async executeJob(job: Job): Promise<void> {
     const apiKey = config.get('indicators.apiKey') as string;
     if (!apiKey) {
       logger.error('TRUSS_API_KEY is not set');
