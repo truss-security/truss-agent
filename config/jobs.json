@@ -7,108 +7,108 @@
         "filterExpression": "tags = 'crypto virus' OR tags = 'crypto-virus' OR tags = 'cryptolocker' OR tags = 'data extortion' OR tags = 'double extortion' OR tags = 'encryptor' OR tags = 'extortion' OR tags = 'human-operated ransomware' OR tags = 'leak site' OR tags = 'ransom note' OR tags = 'ransomware' OR tags = 'ransomware affiliate' OR tags = 'ransomware as a service' OR tags = 'RaaS' OR tags = 'Ransomware-as-a-Service' OR tags = 'Trojan-Ransom'"
       },
       "windowDays": 7,
-      "schedule": "0 5 * * 5",
+      "schedule": "0 3 * * 5",
       "connectionName": "discord-weekly-ransomware-nexus-umbrella",
       "outputFormat": "report"
     },
     {
       "name": "discord-ransomware-nexus-lockbit",
       "connectionName": "discord-ransomware-nexus-lockbit",
-      "schedule": "19 * * * *",
+      "schedule": "0 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'ABCD' OR tags = 'Bitwise Spider' OR tags = 'Flighty Scorpius' OR tags = 'LockBit' OR tags = 'LockBit 2.0' OR tags = 'LockBit 3.0' OR tags = 'LockBit Black' OR tags = 'Trojan-Ransom.Win32.Lockbit'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-wizard-spider-conti",
       "connectionName": "discord-ransomware-nexus-wizard-spider-conti",
-      "schedule": "54 * * * *",
+      "schedule": "0 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Black Basta' OR tags = 'BlackBasta' OR tags = 'Conti' OR tags = 'Dark Scorpius' OR tags = 'Diavol' OR tags = 'FIN12' OR tags = 'ITG23' OR tags = 'Karakurt' OR tags = 'Karakurt Team' OR tags = 'Lockean' OR tags = 'Quantum' OR tags = 'Ryuk' OR tags = 'TA577' OR tags = 'TrickBot' OR tags = 'Trojan-Ransom.Win32.Conti' OR tags = 'Trojan-Ransom.Win32.Ryuk' OR tags = 'UNC1878' OR tags = 'UNC4393' OR tags = 'Wandering Spider' OR tags = 'Wizard Spider'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-revil-sodinokibi",
       "connectionName": "discord-ransomware-nexus-revil-sodinokibi",
-      "schedule": "33 * * * *",
+      "schedule": "1 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Bumbling Scorpius' OR tags = 'Gold Southfield' OR tags = 'Pinchy Spider' OR tags = 'REvil' OR tags = 'Sodin' OR tags = 'Sodinokibi' OR tags = 'Trojan-Ransom.Win32.Sodinokibi'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-alphv-blackcat",
       "connectionName": "discord-ransomware-nexus-alphv-blackcat",
-      "schedule": "58 * * * *",
+      "schedule": "2 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'ALPHV' OR tags = 'ALPHVM' OR tags = 'Alpha Spider' OR tags = 'AlphaVM' OR tags = 'Ambitious Scorpius' OR tags = 'BlackCat' OR tags = 'Noberus'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-cl0p-ta505-fin11",
       "connectionName": "discord-ransomware-nexus-cl0p-ta505-fin11",
-      "schedule": "5 * * * *",
+      "schedule": "3 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Chubby Scorpius' OR tags = 'Cl0p' OR tags = 'Clop' OR tags = 'FIN11' OR tags = 'Graceful Spider' OR tags = 'Harpy Spider' OR tags = 'Lace Tempest' OR tags = 'TA505'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-maze-darkside-blackmatter",
       "connectionName": "discord-ransomware-nexus-maze-darkside-blackmatter",
-      "schedule": "26 * * * *",
+      "schedule": "4 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'BlackMatter' OR tags = 'Carbon Spider' OR tags = 'DarkSide' OR tags = 'Egregor' OR tags = 'Maze' OR tags = 'Sekhmet' OR tags = 'Trojan-Ransom.Win32.BlackMatter' OR tags = 'Trojan-Ransom.Win32.Maze' OR tags = 'Twisted Spider'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-royal-blacksuit-play",
       "connectionName": "discord-ransomware-nexus-royal-blacksuit-play",
-      "schedule": "40 * * * *",
+      "schedule": "5 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Balloonfly' OR tags = 'BlackSuit' OR tags = 'Fiddling Scorpius' OR tags = 'Play' OR tags = 'Play ransomware' OR tags = 'PlayCrypt' OR tags = 'Recess Spider' OR tags = 'Royal' OR tags = 'Royal ransomware' OR tags = 'Royal Spider'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-vice-hive-lapsus",
       "connectionName": "discord-ransomware-nexus-vice-hive-lapsus",
-      "schedule": "47 * * * *",
+      "schedule": "6 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Arcane Mantis' OR tags = 'Avos' OR tags = 'AvosLocker' OR tags = 'Black Byte' OR tags = 'BlackByte' OR tags = 'Cuba' OR tags = 'Cuba ransomware' OR tags = 'DEV-0537' OR tags = 'DEV-0832' OR tags = 'Everest' OR tags = 'Everest ransomware' OR tags = 'Hive' OR tags = 'Hive Spider' OR tags = 'InterLock' OR tags = 'Karma' OR tags = 'Karma ransomware' OR tags = 'LAPSUS$' OR tags = 'Lapsus' OR tags = 'Nefarious Mantis' OR tags = 'Octo Tempest' OR tags = 'PayOrGrief' OR tags = 'Ragnar Locker' OR tags = 'RagnarLocker' OR tags = 'Rhysida' OR tags = 'Scattered Spider' OR tags = 'Spicy Scorpius' OR tags = 'Storm-0875' OR tags = 'Strawberry Tempest' OR tags = 'Tunnel Spider' OR tags = 'Trojan-Ransom.Win32.Hive' OR tags = 'UNC3944' OR tags = 'Vanilla Tempest' OR tags = 'Vice Society' OR tags = 'Vice Spider' OR tags = 'Viking Spider' OR tags = 'Yanluowang'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-ransomware-nexus-commodity-raas",
       "connectionName": "discord-ransomware-nexus-commodity-raas",
-      "schedule": "12 * * * *",
+      "schedule": "7 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = '8Base' OR tags = 'Agenda' OR tags = 'Akira' OR tags = 'AstroLocker' OR tags = 'BianLian' OR tags = 'Cactus' OR tags = 'CrossLock' OR tags = 'Crysis' OR tags = 'Dharma' OR tags = 'Djvu' OR tags = 'Globe Imposter' OR tags = 'GlobeImposter' OR tags = 'Howling Scorpius' OR tags = 'LockFile' OR tags = 'Mallox' OR tags = 'Medusa Locker' OR tags = 'MedusaLocker' OR tags = 'Monti' OR tags = 'Mount Locker' OR tags = 'Phobos' OR tags = 'Qilin' OR tags = 'RansomHouse' OR tags = 'Snatch' OR tags = 'STOP' OR tags = 'STOP ransomware' OR tags = 'Trojan-Ransom.Win32.Dharma' OR tags = 'Trojan-Ransom.Win32.Mallox' OR tags = 'Trojan-Ransom.Win32.Phobos' OR tags = 'Trojan-Ransom.Win32.Snatch' OR tags = 'Trojan-Ransom.Win32.Stop' OR tags = 'VoidCrypt' OR tags = 'XingLocker'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-weekly-botnet-nexus-umbrella",
@@ -116,42 +116,42 @@
         "filterExpression": "tags = 'bot army' OR tags = 'bot herd' OR tags = 'bot network' OR tags = 'botnet' OR tags = 'C2 botnet' OR tags = 'command and control botnet' OR tags = 'DDoS botnet' OR tags = 'DDoS network' OR tags = 'Trojan.Botnet' OR tags = 'zombie army' OR tags = 'zombie network'"
       },
       "windowDays": 7,
-      "schedule": "0 5 * * 5",
+      "schedule": "0 4 * * 5",
       "connectionName": "discord-weekly-botnet-nexus-umbrella",
       "outputFormat": "report"
     },
     {
       "name": "discord-botnet-nexus-iot-ddos",
       "connectionName": "discord-botnet-nexus-iot-ddos",
-      "schedule": "7 * * * *",
+      "schedule": "8 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'ADB.miner' OR tags = 'Bashlite' OR tags = 'Bill Gates' OR tags = 'BillGates' OR tags = 'BrickerBot' OR tags = 'dark_nexus' OR tags = 'Ebury' OR tags = 'Gafgyt' OR tags = 'Hajime' OR tags = 'HEH' OR tags = 'Hide and Seek' OR tags = 'HideNSeek' OR tags = 'IoTroop' OR tags = 'JenX' OR tags = 'Mayday' OR tags = 'Mēris' OR tags = 'Meris' OR tags = 'Mirai' OR tags = 'Mozi' OR tags = 'OMG' OR tags = 'Persirai' OR tags = 'Reaper' OR tags = 'Satori' OR tags = 'Torii' OR tags = 'VPNFilter' OR tags = 'Windigo' OR tags = 'XOR DDoS' OR tags = 'XorDDoS'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-botnet-nexus-windows-worm-spam",
       "connectionName": "discord-botnet-nexus-windows-worm-spam",
-      "schedule": "14 * * * *",
+      "schedule": "8 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Bagle' OR tags = 'Conficker' OR tags = 'Cutwail' OR tags = 'DNSChanger' OR tags = 'Downadup' OR tags = 'Flashback' OR tags = 'Grum' OR tags = 'Kelihos' OR tags = 'Kraken' OR tags = 'Mariposa' OR tags = 'Mydoom' OR tags = 'Oderoor' OR tags = 'Peacomm' OR tags = 'Pushdo' OR tags = 'Purple Fox' OR tags = 'Ramnit' OR tags = 'Rustock' OR tags = 'Sality' OR tags = 'Simda' OR tags = 'Smominru' OR tags = 'Storm worm' OR tags = 'TDL4' OR tags = 'TDSS' OR tags = 'Waledac' OR tags = 'WireX' OR tags = 'ZeroAccess'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-botnet-nexus-banking-loader",
       "connectionName": "discord-botnet-nexus-banking-loader",
-      "schedule": "0 * * * *",
+      "schedule": "9 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Andromeda' OR tags = 'Bamital' OR tags = 'Bredolab' OR tags = 'Carberp' OR tags = 'Citadel' OR tags = 'Dridex' OR tags = 'Emotet' OR tags = 'Festi' OR tags = 'GameOver Zeus' OR tags = 'GOZ' OR tags = 'Gozi' OR tags = 'ISFB' OR tags = 'Necurs' OR tags = 'QakBot' OR tags = 'Qbot' OR tags = 'Shifu' OR tags = 'SpyEye' OR tags = 'TrickBot' OR tags = 'Zeus' OR tags = 'Zbot'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-weekly-rat-nexus-umbrella",
@@ -166,101 +166,101 @@
     {
       "name": "discord-rat-nexus-dotnet-commodity",
       "connectionName": "discord-rat-nexus-dotnet-commodity",
-      "schedule": "29 * * * *",
+      "schedule": "10 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'AsyncRAT' OR tags = 'Backdoor:MSIL/Bladabindi' OR tags = 'Bladabindi' OR tags = 'DCRat' OR tags = 'DcRat' OR tags = 'NJ WORM' OR tags = 'njWorm' OR tags = 'njrat' OR tags = 'njRAT' OR tags = 'Pulsar' OR tags = 'Quasar' OR tags = 'Quasar RAT' OR tags = 'QuasarRAT' OR tags = 'Silver RAT' OR tags = 'StormKitty' OR tags = 'Venom RAT' OR tags = 'VenomRAT' OR tags = 'Xworm' OR tags = 'XWorm'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-remcos-orcus-netwire",
       "connectionName": "discord-rat-nexus-remcos-orcus-netwire",
-      "schedule": "57 * * * *",
+      "schedule": "11 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Nancrat' OR tags = 'NanoCore' OR tags = 'NanoCore RAT' OR tags = 'NetWire' OR tags = 'NetWire RAT' OR tags = 'Netwiresploit' OR tags = 'Orcus' OR tags = 'Orcus RAT' OR tags = 'Remcos' OR tags = 'Remcos Pro' OR tags = 'Remcos RAT'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-classic-windows",
       "connectionName": "discord-rat-nexus-classic-windows",
-      "schedule": "15 * * * *",
+      "schedule": "12 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'BlackShades' OR tags = 'BlackShades RAT' OR tags = 'Chinoxy' OR tags = 'CyberGate' OR tags = 'Cybergate' OR tags = 'Dark Comet' OR tags = 'DarkComet' OR tags = 'Farfli' OR tags = 'Gh0st' OR tags = 'Gh0st RAT' OR tags = 'Ghost RAT' OR tags = 'GhostRAT' OR tags = 'Poison Ivy' OR tags = 'PoisonIvy' OR tags = 'Xtreme RAT' OR tags = 'XtremeRAT'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-adwind-jrat",
       "connectionName": "discord-rat-nexus-adwind-jrat",
-      "schedule": "1 * * * *",
+      "schedule": "13 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Adwind' OR tags = 'AlienSpy' OR tags = 'jRAT' OR tags = 'JSocket' OR tags = 'Unrecom'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-criminal-market-panels",
       "connectionName": "discord-rat-nexus-criminal-market-panels",
-      "schedule": "22 * * * *",
+      "schedule": "14 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Ave Maria' OR tags = 'AveMaria' OR tags = 'CRAT' OR tags = 'Hannah Worm' OR tags = 'HannahWorm' OR tags = 'Imminent Monitor' OR tags = 'ImminentMonitor' OR tags = 'Maria RAT' OR tags = 'PCShare' OR tags = 'PcShare' OR tags = 'PcShare RAT' OR tags = 'Revenge RAT' OR tags = 'RevengeRAT' OR tags = 'StrRAT' OR tags = 'Warzone RAT' OR tags = 'WarzoneRAT'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-mobile-android",
       "connectionName": "discord-rat-nexus-mobile-android",
-      "schedule": "43 * * * *",
+      "schedule": "15 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'AhMyth' OR tags = 'AndroRAT' OR tags = 'DroidJack' OR tags = 'SpyNote' OR tags = 'Spynote'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-regional-ics",
       "connectionName": "discord-rat-nexus-regional-ics",
-      "schedule": "50 * * * *",
+      "schedule": "16 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Backdoor.Oldrea' OR tags = 'Bandook' OR tags = 'Bandook RAT' OR tags = 'Crimson RAT' OR tags = 'CrimsonRAT' OR tags = 'Gravity RAT' OR tags = 'GravityRAT' OR tags = 'Havex' OR tags = 'PoetRAT'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-dual-use-rmm",
       "connectionName": "discord-rat-nexus-dual-use-rmm",
-      "schedule": "36 * * * *",
+      "schedule": "17 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'AnyDesk' OR tags = 'Beacon' OR tags = 'Brute Ratel' OR tags = 'BruteRatel' OR tags = 'Cobalt Strike' OR tags = 'Mythic C2' OR tags = 'remote monitoring and management' OR tags = 'RMM abuse' OR tags = 'Sliver' OR tags = 'TeamViewer'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-rat-nexus-catch-all",
       "connectionName": "discord-rat-nexus-catch-all",
-      "schedule": "8 * * * *",
+      "schedule": "17 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Agent Tesla' OR tags = 'CactusTorch' OR tags = 'Monster RAT'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-weekly-iran-nexus-umbrella",
@@ -268,141 +268,141 @@
         "filterExpression": "tags = 'IRGC' OR tags = 'IRGC-IO' OR tags = 'Islamic Revolutionary Guard Corps'"
       },
       "windowDays": 7,
-      "schedule": "0 5 * * 5",
+      "schedule": "0 6 * * 5",
       "connectionName": "discord-weekly-iran-nexus-umbrella",
       "outputFormat": "report"
     },
     {
       "name": "discord-iran-nexus-apt33",
       "connectionName": "discord-iran-nexus-apt33",
-      "schedule": "34 * * * *",
+      "schedule": "18 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT33' OR tags = 'APT42' OR tags = 'Cobalt Trinity' OR tags = 'Elfin' OR tags = 'Holmium' OR tags = 'Magnallium' OR tags = 'Peach Sandstorm' OR tags = 'Refined Kitten'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-apt34-oilrig",
       "connectionName": "discord-iran-nexus-apt34-oilrig",
-      "schedule": "41 * * * *",
+      "schedule": "19 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT34' OR tags = 'Chrysene' OR tags = 'Clayslide' OR tags = 'Cobalt Dickens' OR tags = 'Cobalt Gypsy' OR tags = 'Crambus' OR tags = 'Earth Simnavaz' OR tags = 'Evasive Serpens' OR tags = 'Europium' OR tags = 'Greenbug' OR tags = 'Hazel Sandstorm' OR tags = 'Helix Kitten' OR tags = 'Helminth' OR tags = 'IRN2' OR tags = 'ITG13' OR tags = 'OilRig' OR tags = 'Storm-0861' OR tags = 'TA452'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-apt35-phosphorus",
       "connectionName": "discord-iran-nexus-apt35-phosphorus",
-      "schedule": "48 * * * *",
+      "schedule": "20 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT35' OR tags = 'Ballistic Bobcat' OR tags = 'Charming Kitten' OR tags = 'Clever Kitten' OR tags = 'Cobalt Illusion' OR tags = 'CopyKittens' OR tags = 'ITG18' OR tags = 'Magic Hound' OR tags = 'Magic Kitten' OR tags = 'MagicHound' OR tags = 'Mint Sandstorm' OR tags = 'Newscaster' OR tags = 'Parastoo' OR tags = 'Phosphorus' OR tags = 'Rocket Kitten' OR tags = 'TA453' OR tags = 'UNC788'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-muddywater",
       "connectionName": "discord-iran-nexus-muddywater",
-      "schedule": "30 * * * *",
+      "schedule": "21 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Boggy Serpens' OR tags = 'Earth Vetala' OR tags = 'Mango Sandstorm' OR tags = 'Mercury' OR tags = 'MuddyWater' OR tags = 'NTSTATS' OR tags = 'POWERSTATS' OR tags = 'Seedworm' OR tags = 'Static Kitten' OR tags = 'TA450' OR tags = 'TEMP.Zagros' OR tags = 'Yellow Nix'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-pioneer-fox-kitten",
       "connectionName": "discord-iran-nexus-pioneer-fox-kitten",
-      "schedule": "44 * * * *",
+      "schedule": "22 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Cobalt Foxglove' OR tags = 'Fox Kitten' OR tags = 'Lemon Sandstorm' OR tags = 'PARISITE' OR tags = 'Pioneer Kitten' OR tags = 'Rubidium' OR tags = 'UNC757' OR tags = 'Yellow Dev 15'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-apt39",
       "connectionName": "discord-iran-nexus-apt39",
-      "schedule": "55 * * * *",
+      "schedule": "23 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT39' OR tags = 'Burgundy Sandstorm' OR tags = 'Cadelle' OR tags = 'Chafer' OR tags = 'Cobalt Hickman' OR tags = 'ITG07' OR tags = 'Remix Kitten' OR tags = 'Storm-0589'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-imperial-kitten-curium",
       "connectionName": "discord-iran-nexus-imperial-kitten-curium",
-      "schedule": "16 * * * *",
+      "schedule": "24 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Crimson Sandstorm' OR tags = 'Cuboid Sandstorm' OR tags = 'Curium' OR tags = 'DEV-0056' OR tags = 'DEV-0228' OR tags = 'HOUSEBLEND' OR tags = 'Imperial Kitten' OR tags = 'Smoke Sandstorm' OR tags = 'TA456' OR tags = 'Tortoise Shell' OR tags = 'Tortoiseshell' OR tags = 'UNC1549' OR tags = 'Yellow Liderc'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-cotton-sandstorm",
       "connectionName": "discord-iran-nexus-cotton-sandstorm",
-      "schedule": "9 * * * *",
+      "schedule": "25 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Atlas Group' OR tags = 'ChaoticOrchestra' OR tags = 'Cotton Sandstorm' OR tags = 'Emennet Pasargad' OR tags = 'Haywire Kitten' OR tags = 'Neptunium' OR tags = 'Vice Leaker'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-pink-sandstorm",
       "connectionName": "discord-iran-nexus-pink-sandstorm",
-      "schedule": "37 * * * *",
+      "schedule": "25 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Agrius' OR tags = 'Americium' OR tags = 'Black Shadow' OR tags = 'BlackShadow' OR tags = 'DarkRypt' OR tags = 'Deadwood' OR tags = 'FireAnt' OR tags = 'Justice Blade' OR tags = 'Pink Sandstorm' OR tags = 'SharpBoys' OR tags = 'Spectral Kitten'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-red-sandstorm-void-manticore",
       "connectionName": "discord-iran-nexus-red-sandstorm-void-manticore",
-      "schedule": "51 * * * *",
+      "schedule": "26 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Banished Kitten' OR tags = 'DEV-0842' OR tags = 'Handala Hack Team' OR tags = 'Homeland Justice' OR tags = 'Red Sandstorm' OR tags = 'Scarred Manticore' OR tags = 'Storm-0842' OR tags = 'Void Manticore'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-msft-dev-storm",
       "connectionName": "discord-iran-nexus-msft-dev-storm",
-      "schedule": "23 * * * *",
+      "schedule": "27 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'DEV-0146' OR tags = 'DEV-0343' OR tags = 'Gray Sandstorm' OR tags = 'HEXANE' OR tags = 'Lyceum' OR tags = 'Pumpkin Sandstorm' OR tags = 'Siamesekitten' OR tags = 'Spirlin' OR tags = 'Storm-0133' OR tags = 'Storm-0343'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-iran-nexus-catch-all",
       "connectionName": "discord-iran-nexus-catch-all",
-      "schedule": "2 * * * *",
+      "schedule": "28 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Boss Spider' OR tags = 'Cobalt Mirage' OR tags = 'Cobalt Sapling' OR tags = 'Cobalt Ulster' OR tags = 'Cutting Kitten' OR tags = 'DEV-0270' OR tags = 'Domestic Kitten' OR tags = 'Ferocious Kitten' OR tags = 'Flying Kitten' OR tags = 'Nemesis Kitten' OR tags = 'Rampant Kitten' OR tags = 'Scarecrow' OR tags = 'Slayer Kitten' OR tags = 'TA455' OR tags = 'Tracer Kitten' OR tags = 'UNC2448' OR tags = 'UNC3890' OR tags = 'UNC4899' OR tags = 'Volatile Kitten'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-weekly-dprk-nexus-umbrella",
@@ -410,75 +410,75 @@
         "filterExpression": "tags = 'Bureau 121' OR tags = 'Reconnaissance General Bureau' OR tags = 'RGB' OR tags = 'Unit 121' OR tags = 'Venus 121'"
       },
       "windowDays": 7,
-      "schedule": "0 5 * * 5",
+      "schedule": "0 7 * * 5",
       "connectionName": "discord-weekly-dprk-nexus-umbrella",
       "outputFormat": "report"
     },
     {
       "name": "discord-dprk-nexus-lazarus-apt38",
       "connectionName": "discord-dprk-nexus-lazarus-apt38",
-      "schedule": "27 * * * *",
+      "schedule": "29 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT-C-26' OR tags = 'APT38' OR tags = 'Alluring Pisces' OR tags = 'Andariel' OR tags = 'AppleJeus' OR tags = 'BeagleBoyz' OR tags = 'Black Alicanto' OR tags = 'BlackAlicanto' OR tags = 'Black Artemis' OR tags = 'BlueNoroff' OR tags = 'COPERNICIUM' OR tags = 'CTG-6459' OR tags = 'CageyChameleon' OR tags = 'CryptoCore' OR tags = 'CryptoMimic' OR tags = 'Dangerous Password' OR tags = 'Dark Seoul' OR tags = 'DarkSeoul' OR tags = 'DEV-0139' OR tags = 'DEV-1222' OR tags = 'Diamond Sleet' OR tags = 'Famous Chollima' OR tags = 'Friendly Chollima' OR tags = 'Genie Spider' OR tags = 'Gleaming Pisces' OR tags = 'Group 77' OR tags = 'Guardians of Peace' OR tags = 'Hastati Group' OR tags = 'Hidden Cobra' OR tags = 'Jumpy Pisces' OR tags = 'Labyrinth Chollima' OR tags = 'Lazarus' OR tags = 'Lazarus Group' OR tags = 'Leery Turtle' OR tags = 'Moonstone Sleet' OR tags = 'NICKEL ACADEMY' OR tags = 'NICKEL GLADSTONE' OR tags = 'NICKEL HYATT' OR tags = 'New Romanic Cyber Army' OR tags = 'NewRomanic Cyber Army Team' OR tags = 'Onyx Sleet' OR tags = 'Operation AppleJeus' OR tags = 'Operation Blacksmith' OR tags = 'Operation DarkSeoul' OR tags = 'Rifle' OR tags = 'Ruby Sleet' OR tags = 'Selective Pisces' OR tags = 'Silent Chollima' OR tags = 'Stardust Chollima' OR tags = 'Stonefly' OR tags = 'TAG-71' OR tags = 'TA404' OR tags = 'TEMP.Hermit' OR tags = 'TDrop2' OR tags = 'Trader Traitor' OR tags = 'TraderTraitor' OR tags = 'UNC1069' OR tags = 'UNC1720' OR tags = 'UNC2226' OR tags = 'UNC2970' OR tags = 'UNC577' OR tags = 'Wassonite' OR tags = 'Whois Hacking Team' OR tags = 'ZINC'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-dprk-nexus-apt37-scarcruft",
       "connectionName": "discord-dprk-nexus-apt37-scarcruft",
-      "schedule": "52 * * * *",
+      "schedule": "30 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT-C-28' OR tags = 'APT37' OR tags = 'Group 123' OR tags = 'Group123' OR tags = 'ITG10' OR tags = 'Inky Squid' OR tags = 'InkySquid' OR tags = 'Moldy Pisces' OR tags = 'Operation Muzabi' OR tags = 'Pearl Sleet' OR tags = 'Red Eyes' OR tags = 'RedEyes' OR tags = 'Reaper' OR tags = 'Ricochet Chollima' OR tags = 'ScarCruft' OR tags = 'TA-RedAnt' OR tags = 'TEMP.Reaper' OR tags = 'Venus121'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-dprk-nexus-apt43-kimsuky",
       "connectionName": "discord-dprk-nexus-apt43-kimsuky",
-      "schedule": "59 * * * *",
+      "schedule": "31 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT-C-55' OR tags = 'APT43' OR tags = 'Black Banshee' OR tags = 'CERIUM' OR tags = 'Crooked Pisces' OR tags = 'DPRK IT Worker' OR tags = 'Emerald Sleet' OR tags = 'IT Worker' OR tags = 'Kimsuky' OR tags = 'Opal Sleet' OR tags = 'Operation Contagious Interview' OR tags = 'Operation DreamJob' OR tags = 'Osmium' OR tags = 'SharpTongue' OR tags = 'Slow Pisces' OR tags = 'Sparkling Pisces' OR tags = 'Springtail' OR tags = 'STOLEN PENCIL' OR tags = 'TA406' OR tags = 'TA408' OR tags = 'TA427' OR tags = 'Thallium' OR tags = 'UAT-5394' OR tags = 'Velvet Chollima' OR tags = 'Wagemole'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-dprk-nexus-apt45-plutonium",
       "connectionName": "discord-dprk-nexus-apt45-plutonium",
-      "schedule": "6 * * * *",
+      "schedule": "32 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT45' OR tags = 'Citrine Sleet' OR tags = 'PLUTONIUM' OR tags = 'Sapphire Sleet' OR tags = 'TA444' OR tags = 'UNC4899'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-dprk-nexus-konni",
       "connectionName": "discord-dprk-nexus-konni",
-      "schedule": "20 * * * *",
+      "schedule": "33 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Jade Sleet' OR tags = 'Konni' OR tags = 'Smoke Screen'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-dprk-nexus-catch-all",
       "connectionName": "discord-dprk-nexus-catch-all",
-      "schedule": "13 * * * *",
+      "schedule": "34 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'ARCHIPELAGO' OR tags = 'Covellite' OR tags = 'Dark River' OR tags = 'DEV-0954' OR tags = 'ITG16' OR tags = 'Storm-0954' OR tags = 'Storm-1744' OR tags = 'UNC3782' OR tags = 'UNC614'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-weekly-china-nexus-umbrella",
@@ -486,152 +486,152 @@
         "filterExpression": "tags = 'China-nexus' OR tags = 'China state-sponsored' OR tags = 'PRC-nexus' OR tags = 'PRC state-sponsored' OR tags = 'PRC' OR tags = 'MSS' OR tags = 'PLA' OR tags = 'People’s Republic of China' OR tags = 'Ministry of State Security' OR tags = 'People’s Liberation Army' OR tags = 'Chinese Government'"
       },
       "windowDays": 7,
-      "schedule": "0 5 * * 5",
+      "schedule": "0 8 * * 5",
       "connectionName": "discord-weekly-china-nexus-umbrella",
       "outputFormat": "report"
     },
     {
       "name": "discord-china-nexus-enterprise-it-cloud",
       "connectionName": "discord-china-nexus-enterprise-it-cloud",
-      "schedule": "56 * * * *",
+      "schedule": "34 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Silk Typhoon' OR tags = 'Hafnium' OR tags = 'HAFNIUM' OR tags = 'UNC5221' OR tags = 'UNC5174' OR tags = 'Murky Panda'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-critical-infrastructure",
       "connectionName": "discord-china-nexus-critical-infrastructure",
-      "schedule": "35 * * * *",
+      "schedule": "35 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Volt Typhoon' OR tags = 'UNC6201' OR tags = 'Bronze Starlight' OR tags = 'RedEcho' OR tags = 'RedFoxtrot' OR tags = 'Vanguard Panda' OR tags = 'BRONZE SILHOUETTE' OR tags = 'Bronze Silhouette' OR tags = 'DEV-0401' OR tags = 'Cinnamon Tempest' OR tags = 'HighGround'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-telecom",
       "connectionName": "discord-china-nexus-telecom",
-      "schedule": "38 * * * *",
+      "schedule": "36 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Salt Typhoon' OR tags = 'UNC3886' OR tags = 'LightBasin' OR tags = 'UAT-9244' OR tags = 'Operator Panda' OR tags = 'GhostEmperor' OR tags = 'FamousSparrow' OR tags = 'Famous Sparrow' OR tags = 'Tropic Trooper'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-taiwan-cross-strait",
       "connectionName": "discord-china-nexus-taiwan-cross-strait",
-      "schedule": "31 * * * *",
+      "schedule": "37 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Flax Typhoon' OR tags = 'Antlion' OR tags = 'Aoqin Dragon' OR tags = 'Bronze Highland' OR tags = 'Dagger Panda' OR tags = 'ETHEREAL PANDA' OR tags = 'Ethereal Panda' OR tags = 'Storm-0919' OR tags = 'Evasive Panda' OR tags = 'Daggerfly'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-japan-industrial",
       "connectionName": "discord-china-nexus-japan-industrial",
-      "schedule": "10 * * * *",
+      "schedule": "38 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'BlackTech' OR tags = 'Circuit Panda' OR tags = 'Radio Panda' OR tags = 'Blue Termite' OR tags = 'Cloudy Omega' OR tags = 'Bronze Butler' OR tags = 'RedBaldNight' OR tags = 'Stalker Panda' OR tags = 'Canary Typhoon' OR tags = 'Swirl Typhoon' OR tags = 'CIRCUIT PANDA' OR tags = 'APT24' OR tags = 'Palmerworm' OR tags = 'Tick'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-southeast-asia",
       "connectionName": "discord-china-nexus-southeast-asia",
-      "schedule": "24 * * * *",
+      "schedule": "39 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Earth Alux' OR tags = 'Earth Ammit' OR tags = 'Earth Baxia' OR tags = 'Earth Berberoka' OR tags = 'Earth Freybug' OR tags = 'Earth Krahang' OR tags = 'Earth Kurma' OR tags = 'Earth Lamia' OR tags = 'Earth Longzhi' OR tags = 'Earth Lusca' OR tags = 'Earth Minotaur' OR tags = 'Earth Wendigo' OR tags = 'Aquatic Panda' OR tags = 'APT30' OR tags = 'Lotus Blossom' OR tags = 'Spring Dragon' OR tags = 'Lotus Panda' OR tags = 'Phantom Taurus' OR tags = 'Mustang Panda' OR tags = 'Bronze President' OR tags = 'CL-STA-0048' OR tags = 'APT40' OR tags = 'Charcoal Typhoon' OR tags = 'CHROMIUM' OR tags = 'ControlX' OR tags = 'RedHotel' OR tags = 'Twill Typhoon' OR tags = 'Gingham Typhoon' OR tags = 'Kryptonite Panda' OR tags = 'Leviathan'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-diplomatic",
       "connectionName": "discord-china-nexus-diplomatic",
-      "schedule": "49 * * * *",
+      "schedule": "40 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT15' OR tags = 'Vixen Panda' OR tags = 'Mustang Panda' OR tags = 'Bronze President' OR tags = 'Nylon Typhoon' OR tags = 'ke3chang'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-policy-think-tanks",
       "connectionName": "discord-china-nexus-policy-think-tanks",
-      "schedule": "17 * * * *",
+      "schedule": "41 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT31' OR tags = 'Judgment Panda' OR tags = 'Zirconium' OR tags = 'Curious Gorge' OR tags = 'Violet Typhoon' OR tags = 'Google Threat Analysis Group'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-defense-aerospace",
       "connectionName": "discord-china-nexus-defense-aerospace",
-      "schedule": "42 * * * *",
+      "schedule": "42 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT1' OR tags = 'APT3' OR tags = 'Gothic Panda' OR tags = 'APT4' OR tags = 'Maverick Panda' OR tags = 'APT5' OR tags = 'Keyhole Panda' OR tags = 'APT6' OR tags = 'APT9' OR tags = 'Nightshade Panda' OR tags = 'APT12' OR tags = 'Numbered Panda' OR tags = 'APT14' OR tags = 'Anchor Panda' OR tags = 'APT16' OR tags = 'APT17' OR tags = 'Sneaky Panda' OR tags = 'Hidden Lynx' OR tags = 'Aurora Panda' OR tags = 'Hurricane Panda' OR tags = 'APT18' OR tags = 'Dynamite Panda' OR tags = 'APT19' OR tags = 'Deep Panda' OR tags = 'APT20' OR tags = 'Violin Panda' OR tags = 'APT21' OR tags = 'Hammer Panda' OR tags = 'APT22' OR tags = 'APT40' OR tags = 'Gallium' OR tags = 'Brocade Typhoon' OR tags = 'Salmon Typhoon' OR tags = 'Mulberry Typhoon' OR tags = 'Hexagon Typhoon' OR tags = 'Heart Typhoon' OR tags = 'Satin Typhoon' OR tags = 'Checkered Typhoon' OR tags = 'Raspberry Typhoon' OR tags = 'Gingham Typhoon' OR tags = 'Circle Typhoon' OR tags = 'Granite Typhoon' OR tags = 'LOTUS PANDA' OR tags = 'Kryptonite Panda' OR tags = 'Leviathan' OR tags = 'Phantom Panda'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-apt27-global",
       "connectionName": "discord-china-nexus-apt27-global",
-      "schedule": "21 * * * *",
+      "schedule": "42 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT27' OR tags = 'Emissary Panda' OR tags = 'Bronze Union' OR tags = 'UNC215' OR tags = 'Linen Typhoon' OR tags = 'IODINE' OR tags = 'Iodine' OR tags = 'Red Phoenix'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-apt41-winnti",
       "connectionName": "discord-china-nexus-apt41-winnti",
-      "schedule": "28 * * * *",
+      "schedule": "43 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Brass Typhoon' OR tags = 'APT41' OR tags = 'Winnti' OR tags = 'Barium' OR tags = 'Double Dragon' OR tags = 'Winnti Group' OR tags = 'LightBasin' OR tags = 'Leopard Typhoon' OR tags = 'Wicked Panda' OR tags = 'BARIUM' OR tags = 'LEAD'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-unclustered-ids",
       "connectionName": "discord-china-nexus-unclustered-ids",
-      "schedule": "45 * * * *",
+      "schedule": "44 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'UNC4841' OR tags = 'Velvet Ant' OR tags = 'Gelsemium' OR tags = 'Goblin Panda' OR tags = 'DragonSpark' OR tags = 'SLIME57' OR tags = 'MITRE G1047' OR tags = 'G1047'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-china-nexus-historical",
       "connectionName": "discord-china-nexus-historical",
-      "schedule": "3 * * * *",
+      "schedule": "45 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'GhostNet' OR tags = 'Snooping Dragon' OR tags = 'Night Dragon' OR tags = 'Dust Storm' OR tags = 'Covert Grove'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-weekly-russia-nexus-umbrella",
@@ -639,174 +639,174 @@
         "filterExpression": "tags = 'Federal Security Service' OR tags = 'Foreign Intelligence Service' OR tags = 'FSB' OR tags = 'GRU' OR tags = 'Main Intelligence Directorate' OR tags = 'SVR'"
       },
       "windowDays": 7,
-      "schedule": "0 5 * * 5",
+      "schedule": "0 9 * * 5",
       "connectionName": "discord-weekly-russia-nexus-umbrella",
       "outputFormat": "report"
     },
     {
       "name": "discord-russia-nexus-apt28",
       "connectionName": "discord-russia-nexus-apt28",
-      "schedule": "4 * * * *",
+      "schedule": "46 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT28' OR tags = 'Fancy Bear' OR tags = 'Fighting Ursa' OR tags = 'Forest Blizzard' OR tags = 'FROZENLAKE' OR tags = 'GruesomeLarch' OR tags = 'Group 74' OR tags = 'Iron Twilight' OR tags = 'Pawn Storm' OR tags = 'Sednit' OR tags = 'SNAKEMACKEREL' OR tags = 'Sofacy' OR tags = 'Strontium' OR tags = 'Swallowtail' OR tags = 'TG-4127' OR tags = 'Tsar Team'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-sandworm-apt44",
       "connectionName": "discord-russia-nexus-sandworm-apt44",
-      "schedule": "14 * * * *",
+      "schedule": "47 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT44' OR tags = 'BlackEnergy' OR tags = 'Blue Echidna' OR tags = 'ELECTRUM' OR tags = 'FROZENBARENTS' OR tags = 'IRIDIUM' OR tags = 'Quedagh' OR tags = 'Sandworm' OR tags = 'Sandworm Team' OR tags = 'Seashell Blizzard' OR tags = 'Sunglow Blizzard' OR tags = 'TeleBots' OR tags = 'TEMP.Noble' OR tags = 'Voodoo Bear'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-destructive-wartime",
       "connectionName": "discord-russia-nexus-destructive-wartime",
-      "schedule": "25 * * * *",
+      "schedule": "48 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Bleeding Bear' OR tags = 'Cadet Blizzard' OR tags = 'DEV-0586' OR tags = 'Ember Bear' OR tags = 'UAC-0056' OR tags = 'UNC2589'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-apt29",
       "connectionName": "discord-russia-nexus-apt29",
-      "schedule": "11 * * * *",
+      "schedule": "49 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'APT29' OR tags = 'Cloaked Ursa' OR tags = 'Cozy Bear' OR tags = 'CozyCar' OR tags = 'Dark Halo' OR tags = 'Group 100' OR tags = 'Hammertoss' OR tags = 'Iron Hemlock' OR tags = 'Iron Ritual' OR tags = 'Midnight Blizzard' OR tags = 'Minidionis' OR tags = 'Nobelium' OR tags = 'SeaDuke' OR tags = 'TAG-11' OR tags = 'The Dukes' OR tags = 'UAC-0029' OR tags = 'UNC2452' OR tags = 'UNC3524' OR tags = 'YTTRIUM'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-star-blizzard-seaborgium",
       "connectionName": "discord-russia-nexus-star-blizzard-seaborgium",
-      "schedule": "21 * * * *",
+      "schedule": "50 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Blue Charlie' OR tags = 'Callisto' OR tags = 'Callisto Group' OR tags = 'Cold River' OR tags = 'COLDRIVER' OR tags = 'Gossamer Bear' OR tags = 'SEABORGIUM' OR tags = 'Star Blizzard' OR tags = 'TAG-53' OR tags = 'TA446' OR tags = 'UNC4057'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-gamaredon",
       "connectionName": "discord-russia-nexus-gamaredon",
-      "schedule": "46 * * * *",
+      "schedule": "51 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Actinium' OR tags = 'Aqua Blizzard' OR tags = 'Armageddon' OR tags = 'Blue Otso' OR tags = 'BlueAlpha' OR tags = 'Gamaredon' OR tags = 'Gamaredon Group' OR tags = 'Primitive Bear' OR tags = 'Shuckworm' OR tags = 'Trident Ursa' OR tags = 'UAC-0010' OR tags = 'UAC-0082' OR tags = 'UAC-0113' OR tags = 'UAC-0165' OR tags = 'UNC530'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-turla",
       "connectionName": "discord-russia-nexus-turla",
-      "schedule": "35 * * * *",
+      "schedule": "51 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'BELUGASTURGEON' OR tags = 'Blue Python' OR tags = 'Hippo Team' OR tags = 'Iron Hunter' OR tags = 'IRON TILDEN' OR tags = 'Krypton' OR tags = 'Oroboros' OR tags = 'Ouroboros' OR tags = 'Pacers' OR tags = 'Secret Blizzard' OR tags = 'Snake' OR tags = 'SUMMIT' OR tags = 'Turla' OR tags = 'Uroburos' OR tags = 'Venomous Bear' OR tags = 'Waterbug'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-energetic-bear-dragonfly",
       "connectionName": "discord-russia-nexus-energetic-bear-dragonfly",
-      "schedule": "32 * * * *",
+      "schedule": "52 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'ALLANITE' OR tags = 'Berserk Bear' OR tags = 'Bromine' OR tags = 'Crouching Yeti' OR tags = 'Dragonfly' OR tags = 'Dragonfly 2.0' OR tags = 'DYMALLOY' OR tags = 'Energetic Bear' OR tags = 'Ghost Blizzard' OR tags = 'InvisiMole' OR tags = 'Iron Liberty' OR tags = 'Koala Team' OR tags = 'RC2 Cluster' OR tags = 'RC2C' OR tags = 'TeamSpy'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-indrik-spider-evil-corp",
       "connectionName": "discord-russia-nexus-indrik-spider-evil-corp",
-      "schedule": "0 * * * *",
+      "schedule": "53 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Evil Corp' OR tags = 'EvilCorp' OR tags = 'GOLD DRAKE' OR tags = 'Indrik Spider' OR tags = 'Manatee Tempest'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-wizard-spider",
       "connectionName": "discord-russia-nexus-wizard-spider",
-      "schedule": "42 * * * *",
+      "schedule": "54 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'DEV-0193' OR tags = 'Gold Blackburn' OR tags = 'ITG23' OR tags = 'UNC1878' OR tags = 'Wizard Spider'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-fin7-carbon-spider",
       "connectionName": "discord-russia-nexus-fin7-carbon-spider",
-      "schedule": "39 * * * *",
+      "schedule": "55 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Carbanak' OR tags = 'Carbon Spider' OR tags = 'ELBRUS' OR tags = 'FIN7' OR tags = 'Gold Niagara' OR tags = 'Sangria Tempest'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-ta505",
       "connectionName": "discord-russia-nexus-ta505",
-      "schedule": "28 * * * *",
+      "schedule": "56 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Chimichuri' OR tags = 'Graceful Spider' OR tags = 'SectorJ04' OR tags = 'TA505'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-romcom-tropical-scorpius",
       "connectionName": "discord-russia-nexus-romcom-tropical-scorpius",
-      "schedule": "7 * * * *",
+      "schedule": "57 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'LAUNDRY BEAR' OR tags = 'RomCom' OR tags = 'Storm-0978' OR tags = 'Tropical Scorpius' OR tags = 'UNC2596' OR tags = 'Void Blizzard' OR tags = 'Void Rabisu'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-inception-cloud-atlas",
       "connectionName": "discord-russia-nexus-inception-cloud-atlas",
-      "schedule": "53 * * * *",
+      "schedule": "58 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Cloud Atlas' OR tags = 'Inception Framework'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     },
     {
       "name": "discord-russia-nexus-catch-all",
       "connectionName": "discord-russia-nexus-catch-all",
-      "schedule": "18 * * * *",
+      "schedule": "59 */4 * * *",
       "outputFormat": "metadata",
       "filter": {
         "filterExpression": "tags = 'Boulder Bear' OR tags = 'Cyber Army of Russia Reborn' OR tags = 'Grizzly Steppe' OR tags = 'Iron Viking' OR tags = 'UAC-0006' OR tags = 'UAC-0020' OR tags = 'UAC-0050' OR tags = 'UAC-0063' OR tags = 'UAC-0173' OR tags = 'UAC-0185' OR tags = 'UAC-0195' OR tags = 'UAC-0219' OR tags = 'UNC4221' OR tags = 'UNC5792'"
       },
       "windowDays": 7,
-      "windowMinutes": 60
+      "windowMinutes": 240
     }
   ]
 }

@@ -233,7 +233,6 @@ export class QueryManager {
 
   private async resolveFilter(job: Job, apiKey: string): Promise<ApiSearchFilter> {
     const now = new Date();
-    const endDateIso = now.toISOString();
 
     if (job.configName) {
       const agentData: AgentData = await this.trussApi.getAgentData(apiKey, job.configName);
@@ -245,7 +244,7 @@ export class QueryManager {
       return {
         ...agentData.filter,
         startDate,
-        endDate: endDateIso,
+        endDate: now.toISOString(),
       };
     }
 
@@ -273,28 +272,36 @@ export class QueryManager {
           return {
             ...agentData.filter,
             startDate,
-            endDate: endDateIso,
+            endDate: now.toISOString(),
           };
         }
-        const built = buildFilterFromConnectionQuery(conn, endDateIso, this.getQueryWindowMs(job));
+        const { startDate, endDate } = this.getQueryDateRange(job, now);
+        const built = buildFilterFromConnectionQuery(conn, endDate, this.getQueryWindowMs(job));
         if (built) {
           return {
             ...built.rest,
-            startDate: built.startDate,
-            endDate: built.endDate,
+            startDate,
+            endDate,
           } as ApiSearchFilter;
         }
       }
     }
 
     const filter = job.filter ?? {};
-    const windowMs = this.getQueryWindowMs(job);
-    const startDate = new Date(Date.now() - windowMs).toISOString();
+    const { startDate, endDate } = this.getQueryDateRange(job, now);
     return {
       ...filter,
       startDate,
-      endDate: endDateIso,
+      endDate,
     };
+  }
+
+  /** Rolling window: endDate = run time, startDate = end − window (schedule / windowMinutes / windowDays). */
+  private getQueryDateRange(job: Job, now: Date): { startDate: string; endDate: string } {
+    const endDate = now.toISOString();
+    const windowMs = this.getQueryWindowMs(job);
+    const startDate = new Date(now.getTime() - windowMs).toISOString();
+    return { startDate, endDate };
   }
 
   /** Query window = run interval when schedule is in minutes (avoids duplicates). */
