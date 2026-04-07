@@ -100,8 +100,15 @@ class TrussApi {
 
   /**
    * POST with retries for rate limits and transient errors.
-   * Env: TRUSS_API_MAX_RETRIES (default 8), TRUSS_API_RETRY_BASE_MS (default 1000),
-   * TRUSS_API_RETRY_MAX_MS (default 120000), TRUSS_API_PAGE_DELAY_MS (search pagination only).
+   *
+   * - **TRUSS_API_RETRY_BUDGET_MS** — Total wall time for this POST (from first try through failed attempts
+   *   and sleeps before the next try). When exhausted, we log and throw so the job queue advances.
+   * - **TRUSS_API_RETRY_MAX_MS** — Max length of *one* sleep (caps exponential backoff and huge
+   *   `Retry-After`). When the budget is smaller, the effective per-wait cap is min(max, budget) so you
+   *   never schedule a single wait longer than the total budget.
+   *
+   * Env: TRUSS_API_MAX_RETRIES (8), TRUSS_API_RETRY_BASE_MS (1000), TRUSS_API_RETRY_MAX_MS (120000),
+   * TRUSS_API_RETRY_BUDGET_MS (60000), TRUSS_API_PAGE_DELAY_MS (pagination only).
    */
   private async postWithRetry<T>(
     url: string,
@@ -111,7 +118,11 @@ class TrussApi {
     const maxAttempts = Math.max(1, parseInt(process.env.TRUSS_API_MAX_RETRIES ?? '8', 10));
     const baseDelayMs = Math.max(100, parseInt(process.env.TRUSS_API_RETRY_BASE_MS ?? '1000', 10));
     const maxDelayMs = Math.max(baseDelayMs, parseInt(process.env.TRUSS_API_RETRY_MAX_MS ?? '120000', 10));
+    const budgetMs = Math.max(1000, parseInt(process.env.TRUSS_API_RETRY_BUDGET_MS ?? '60000', 10));
+    /** Single sleep cannot exceed this (nor the overall budget). */
+    const perWaitCapMs = Math.min(maxDelayMs, budgetMs);
 
+    const t0 = Date.now();
     let attempt = 0;
     while (true) {
       try {
@@ -122,12 +133,45 @@ class TrussApi {
         const retryable = status === 429 || status === 503 || status === 502;
         if (!retryable || attempt >= maxAttempts - 1) throw error;
 
+        const elapsed = Date.now() - t0;
+        if (elapsed >= budgetMs) {
+          logger.error(
+            {
+              operation: 'AGENT PULL',
+              url,
+              status,
+              context,
+              elapsedMs: elapsed,
+              budgetMs,
+            },
+            'Truss API retry budget elapsed without success; giving up on this request'
+          );
+          throw error;
+        }
+
         attempt += 1;
         const fromHeader = headerRetryAfterMs(error.response?.headers);
         const backoff = Math.min(
           fromHeader ?? baseDelayMs * 2 ** (attempt - 1),
-          maxDelayMs
+          perWaitCapMs
         );
+
+        if (Date.now() - t0 + backoff > budgetMs) {
+          logger.error(
+            {
+              operation: 'AGENT PULL',
+              url,
+              status,
+              context,
+              attempt,
+              waitMs: backoff,
+              elapsedMs: Date.now() - t0,
+              budgetMs,
+            },
+            'Truss API retry backoff would exceed budget; giving up on this request'
+          );
+          throw error;
+        }
 
         logger.warn(
           {
@@ -137,6 +181,7 @@ class TrussApi {
             attempt,
             maxAttempts,
             waitMs: backoff,
+            budgetMs,
             context,
           },
           'Truss API returned retryable status; waiting before retry'
