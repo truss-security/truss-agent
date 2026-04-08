@@ -125,7 +125,7 @@
       "enabled": true,
       "query": {
         "filter": {
-          "filterExpression": "tags = '8Base' OR tags = 'Agenda' OR tags = 'Akira' OR tags = 'AstroLocker' OR tags = 'BianLian' OR tags = 'Cactus' OR tags = 'CrossLock' OR tags = 'Crysis' OR tags = 'Dharma' OR tags = 'Djvu' OR tags = 'Globe Imposter' OR tags = 'GlobeImposter' OR tags = 'Howling Scorpius' OR tags = 'LockFile' OR tags = 'Mallox' OR tags = 'Medusa Locker' OR tags = 'MedusaLocker' OR tags = 'Monti' OR tags = 'Mount Locker' OR tags = 'Phobos' OR tags = 'Qilin' OR tags = 'RansomHouse' OR tags = 'Snatch' OR tags = 'STOP' OR tags = 'STOP ransomware' OR tags = 'Trojan-Ransom.Win32.Dharma' OR tags = 'Trojan-Ransom.Win32.Mallox' OR tags = 'Trojan-Ransom.Win32.Phobos' OR tags = 'Trojan-Ransom.Win32.Snatch' OR tags = 'Trojan-Ransom.Win32.Stop' OR tags = 'VoidCrypt' OR tags = 'XingLocker'"
+          "filterExpression": "tags = '8Base' OR tags = 'Agenda' OR tags = 'Akira' OR tags = 'AstroLocker' OR tags = 'BianLian' OR tags = 'Cactus' OR tags = 'CrossLock' OR tags = 'Crysis' OR tags = 'Dharma' OR tags = 'Djvu' OR tags = 'Globe Imposter' OR tags = 'GlobeImposter' OR tags = 'Howling Scorpius' OR tags = 'LockFile' OR tags = 'Mallox' OR tags = 'Storm-1175' OR tags = 'Medusa' OR tags = 'Medusa Locker' OR tags = 'MedusaLocker' OR tags = 'Monti' OR tags = 'Mount Locker' OR tags = 'Phobos' OR tags = 'Qilin' OR tags = 'RansomHouse' OR tags = 'Snatch' OR tags = 'STOP' OR tags = 'STOP ransomware' OR tags = 'Trojan-Ransom.Win32.Dharma' OR tags = 'Trojan-Ransom.Win32.Mallox' OR tags = 'Trojan-Ransom.Win32.Phobos' OR tags = 'Trojan-Ransom.Win32.Snatch' OR tags = 'Trojan-Ransom.Win32.Stop' OR tags = 'VoidCrypt' OR tags = 'XingLocker'"
         },
         "windowMinutes": 240
       }
@@ -528,7 +528,7 @@
       "enabled": true,
       "query": {
         "filter": {
-          "filterExpression": "tags = 'APT-C-55' OR tags = 'APT43' OR tags = 'Black Banshee' OR tags = 'CERIUM' OR tags = 'Crooked Pisces' OR tags = 'DPRK IT Worker' OR tags = 'Emerald Sleet' OR tags = 'IT Worker' OR tags = 'Kimsuky' OR tags = 'Opal Sleet' OR tags = 'Operation Contagious Interview' OR tags = 'Operation DreamJob' OR tags = 'Osmium' OR tags = 'SharpTongue' OR tags = 'Slow Pisces' OR tags = 'Sparkling Pisces' OR tags = 'Springtail' OR tags = 'STOLEN PENCIL' OR tags = 'TA406' OR tags = 'TA408' OR tags = 'TA427' OR tags = 'Thallium' OR tags = 'UAT-5394' OR tags = 'Velvet Chollima' OR tags = 'Wagemole'"
+          "filterExpression": "tags = 'APT-C-55' OR tags = 'APT43' OR tags = 'Black Banshee' OR tags = 'CERIUM' OR tags = 'Crooked Pisces' OR tags = 'DPRK IT Worker' OR tags = 'Emerald Sleet' OR tags = 'IT Worker' OR tags = 'Jasper Sleet' OR tags = 'Kimsuky' OR tags = 'Opal Sleet' OR tags = 'Operation Contagious Interview' OR tags = 'Operation DreamJob' OR tags = 'Osmium' OR tags = 'SharpTongue' OR tags = 'Slow Pisces' OR tags = 'Sparkling Pisces' OR tags = 'Springtail' OR tags = 'STOLEN PENCIL' OR tags = 'TA406' OR tags = 'TA408' OR tags = 'TA427' OR tags = 'Thallium' OR tags = 'UAT-5394' OR tags = 'Velvet Chollima' OR tags = 'Wagemole'"
         },
         "windowMinutes": 240
       }
