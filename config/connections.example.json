@@ -1,0 +1,11 @@
+{
+  "connections": [
+    {
+      "name": "discord-alerts",
+      "type": "discord",
+      "description": "Security alerts channel for Truss indicators",
+      "webhookUrl": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+      "enabled": false
+    }
+  ]
+}
