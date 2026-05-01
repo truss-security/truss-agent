@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, type AxiosResponse } from 'axios';
+import type { SearchProductsResponse, TrussClientConfig } from '@truss-security/truss-sdk';
 import { logger } from '../../utils/logger';
 import { sanitizeErrorForLog } from '../../utils/sanitize-error';
 import config from '../../config/config';
@@ -6,16 +6,13 @@ import {
   SecurityIndicator,
   ApiSearchFilter
 } from '../../models/types';
-import { buildProductSearchPayload } from './build-product-search-payload';
+import { buildProductSearchPayload, type ProductSearchPayload } from './build-product-search-payload';
 
-/** Truss API /product/search response shape (products array + pagination). */
-interface ProductSearchResponse {
-  products?: unknown[];
-  total?: number;
-  page?: number;
-  limit?: number;
-  hasMore?: boolean;
-}
+// Keep a true runtime `import()` even when compiling to CommonJS.
+// TypeScript otherwise rewrites import() to require(), which cannot load this ESM-only SDK.
+const loadTrussSdk = new Function(
+  "return import('@truss-security/truss-sdk')"
+) as () => Promise<typeof import('@truss-security/truss-sdk')>;
 
 /** Map API product (snake_case) to SecurityIndicator (camelCase). */
 function mapProductToIndicator(item: unknown): SecurityIndicator {
@@ -65,12 +62,9 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function headerRetryAfterMs(headers: AxiosResponse['headers'] | undefined): number | undefined {
+function headerRetryAfterMs(headers: Record<string, string> | undefined): number | undefined {
   if (!headers) return undefined;
-  const raw =
-    (typeof headers.get === 'function' ? headers.get('retry-after') : undefined) ??
-    (headers as Record<string, unknown>)['retry-after'] ??
-    (headers as Record<string, unknown>)['Retry-After'];
+  const raw = headers['retry-after'] ?? headers['Retry-After'];
   if (raw == null || raw === '') return undefined;
   const s = String(raw).trim();
   const seconds = Number(s);
@@ -81,21 +75,55 @@ function headerRetryAfterMs(headers: AxiosResponse['headers'] | undefined): numb
 }
 
 class TrussApi {
-  private apiClient: AxiosInstance;
+  private sdk:
+    | (typeof import('@truss-security/truss-sdk'))
+    | undefined;
+  private trussClient:
+    | { search: { products: (params: ProductSearchPayload) => Promise<SearchProductsResponse> } }
+    | undefined;
+  private httpClient:
+    | { post: <T>(endpoint: string, data?: unknown) => Promise<{ data: T }> }
+    | undefined;
   private baseUrl: string;
   private apiKey: string;
 
   constructor(apiKeyOverride?: string) {
     this.baseUrl = config.get('indicators.apiUrl');
     this.apiKey = apiKeyOverride ?? config.get('indicators.apiKey');
+  }
 
-    this.apiClient = axios.create({
-      baseURL: this.baseUrl,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.apiKey,
-      },
+  private async ensureClients(): Promise<void> {
+    if (this.trussClient && this.httpClient && this.sdk) return;
+    const sdk = await loadTrussSdk();
+    const clientConfig: TrussClientConfig = {
+      baseUrl: this.baseUrl,
+      apiKey: this.apiKey,
+      timeout: Math.max(1000, parseInt(process.env.TRUSS_API_TIMEOUT_MS ?? '30000', 10)),
+      // SDK retry is intentionally disabled because this adapter preserves the
+      // existing env-budgeted retry policy with Retry-After handling.
+      retries: 0,
+      retryDelayMs: 0,
+      userAgent: 'truss-agent',
+    };
+    this.sdk = sdk;
+    this.trussClient = new sdk.TrussClient(clientConfig);
+    this.httpClient = new sdk.HttpClient({
+      baseUrl: clientConfig.baseUrl,
+      apiKey: clientConfig.apiKey ?? '',
+      timeout: clientConfig.timeout ?? 30000,
+      retries: clientConfig.retries ?? 0,
+      retryDelayMs: clientConfig.retryDelayMs ?? 0,
+      userAgent: clientConfig.userAgent ?? 'truss-agent',
     });
+  }
+
+  private isSdkApiError(error: unknown): error is {
+    status: number;
+    message: string;
+    response: { data: unknown; headers: Record<string, string> };
+  } {
+    if (!this.sdk) return false;
+    return error instanceof this.sdk.TrussApiError;
   }
 
   /**
@@ -112,9 +140,13 @@ class TrussApi {
    */
   private async postWithRetry<T>(
     url: string,
-    body: unknown,
+    body: ProductSearchPayload | { apiKey: string; configName: string },
     context: string
-  ): Promise<AxiosResponse<T>> {
+  ): Promise<T> {
+    await this.ensureClients();
+    if (!this.trussClient || !this.httpClient) {
+      throw new Error('Truss SDK clients failed to initialize');
+    }
     const maxAttempts = Math.max(1, parseInt(process.env.TRUSS_API_MAX_RETRIES ?? '8', 10));
     const baseDelayMs = Math.max(100, parseInt(process.env.TRUSS_API_RETRY_BASE_MS ?? '1000', 10));
     const maxDelayMs = Math.max(baseDelayMs, parseInt(process.env.TRUSS_API_RETRY_MAX_MS ?? '120000', 10));
@@ -126,10 +158,15 @@ class TrussApi {
     let attempt = 0;
     while (true) {
       try {
-        return await this.apiClient.post<T>(url, body);
+        if (url === '/product/search') {
+          const response = await this.trussClient.search.products(body as ProductSearchPayload);
+          return response as unknown as T;
+        }
+        const response = await this.httpClient.post<T>(url, body);
+        return response.data;
       } catch (error) {
-        if (!axios.isAxiosError(error)) throw error;
-        const status = error.response?.status;
+        if (!this.isSdkApiError(error)) throw error;
+        const status = error.status;
         const retryable = status === 429 || status === 503 || status === 502;
         if (!retryable || attempt >= maxAttempts - 1) throw error;
 
@@ -150,7 +187,7 @@ class TrussApi {
         }
 
         attempt += 1;
-        const fromHeader = headerRetryAfterMs(error.response?.headers);
+        const fromHeader = headerRetryAfterMs(error.response.headers);
         const backoff = Math.min(
           fromHeader ?? baseDelayMs * 2 ** (attempt - 1),
           perWaitCapMs
@@ -193,11 +230,10 @@ class TrussApi {
 
   public async getAgentData(apiKey: string, configName: string): Promise<AgentData> {
     try {
-      const response = await this.postWithRetry<AgentData>('/agent-data', { apiKey, configName }, 'agent-data');
-      return response.data;
+      return await this.postWithRetry<AgentData>('/agent-data', { apiKey, configName }, 'agent-data');
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
+      if (this.isSdkApiError(error)) {
+        const status = error.status;
         const msg =
           status === 429
             ? 'Truss API rate limit (429) getting agent data. Limit exceeded.'
@@ -209,7 +245,7 @@ class TrussApi {
             operation: 'AGENT PULL',
             status,
             message: error.message,
-            responseData: error.response?.data,
+            responseData: error.response.data,
             configName,
           },
           msg
@@ -232,17 +268,17 @@ class TrussApi {
       while (hasMore) {
         const payload = buildProductSearchPayload(filter, page, limit);
 
-        const response = await this.postWithRetry<ProductSearchResponse>(
+        const response = await this.postWithRetry<SearchProductsResponse>(
           '/product/search',
           payload,
           `product/search page ${page}`
         );
 
-        if (!response.data) {
+        if (!response) {
           throw new Error('No data received from API');
         }
 
-        const data = response.data;
+        const data = response;
         const products = Array.isArray(data.products) ? data.products : [];
         const batch = products.map(mapProductToIndicator);
 
@@ -260,9 +296,9 @@ class TrussApi {
       logger.debug(`Completed retrieval of all indicators. Total count: ${allIndicators.length}`);
       return allIndicators;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
-        const data = error.response?.data;
+      if (this.isSdkApiError(error)) {
+        const status = error.status;
+        const data = error.response.data;
         const message =
           status === 429
             ? 'Truss API rate limit (429). Limit exceeded.'
@@ -275,7 +311,7 @@ class TrussApi {
             status,
             message: error.message,
             responseData: data,
-            url: error.config?.url,
+            url: '/product/search',
           },
           message
         );
