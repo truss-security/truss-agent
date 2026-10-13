@@ -8,6 +8,7 @@ import {
 } from '../../formatters/exec-summary-formatter';
 import type { ConnectionDisplay } from '../../connections/types';
 import { chunkTextByMaxLength } from '../../utils/chunk-text';
+import { buildTrussProductUrl } from '../../utils/truss-product-url';
 
 const DISCORD_CONTENT_MAX_LENGTH = 2000;
 /** Discord allows at most 10 embeds per message. */
@@ -232,9 +233,11 @@ export function buildReportEmbeds(
 
     const title = (item.title || 'Threat intelligence report').trim();
     const safeTitle = title.length > DISCORD_TITLE_MAX ? title.slice(0, DISCORD_TITLE_MAX - 1) + '…' : title;
+    const productUrl = buildTrussProductUrl(item.id);
 
     return clampDiscordEmbedToMessageBudget({
       title: safeTitle,
+      ...(productUrl ? { url: productUrl } : {}),
       color: EMBED_COLOR,
       fields: fields.length > 0 ? fields : [{ name: '\u200b', value: 'No metadata', inline: false }],
       footer: { text: footerText },

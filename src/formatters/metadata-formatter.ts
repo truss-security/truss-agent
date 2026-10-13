@@ -1,4 +1,5 @@
 import { SecurityIndicator } from '../models/types';
+import { buildTrussProductUrl } from '../utils/truss-product-url';
 
 /**
  * Format SecurityIndicators as report / awareness lines: title, author, category, source, pubDate, references.
@@ -26,6 +27,10 @@ export function formatIndicatorsAsReport(indicators: SecurityIndicator[]): strin
       : [];
     if (indicatorTypes.length > 0) {
       parts.push(`IOC types: ${indicatorTypes.join(', ')}`);
+    }
+    const productUrl = buildTrussProductUrl(item.id);
+    if (productUrl) {
+      parts.push(`Truss: ${productUrl}`);
     }
     if (parts.length > 0) {
       blocks.push(parts.join(' | '));

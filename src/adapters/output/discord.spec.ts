@@ -1,4 +1,5 @@
-import { chunkEmbedsForDiscordMessage, type DiscordEmbed } from './discord';
+import { buildReportEmbeds, chunkEmbedsForDiscordMessage, type DiscordEmbed } from './discord';
+import type { SecurityIndicator } from '../../models/types';
 
 describe('chunkEmbedsForDiscordMessage', () => {
   function tinyEmbed(i: number): DiscordEmbed {
@@ -26,5 +27,31 @@ describe('chunkEmbedsForDiscordMessage', () => {
     }));
     const batches = chunkEmbedsForDiscordMessage(embeds);
     expect(batches.length).toBeGreaterThan(1);
+  });
+});
+
+describe('buildReportEmbeds', () => {
+  function indicator(overrides: Partial<SecurityIndicator> = {}): SecurityIndicator {
+    return {
+      id: '128965',
+      title: 'Sample Product',
+      indicators: {},
+      timestamp: '2026-10-13T00:00:00.000Z',
+      ...overrides,
+    };
+  }
+
+  it('sets embed.url to the Truss dashboard product link when id is valid', () => {
+    const embeds = buildReportEmbeds([indicator()]) ?? [];
+    expect(embeds).toHaveLength(1);
+    expect(embeds[0].url).toBe(
+      'https://dashboard.truss-security.com/dashboard?product=128965'
+    );
+  });
+
+  it('omits embed.url when product id is missing or invalid', () => {
+    const embeds = buildReportEmbeds([indicator({ id: '' })]) ?? [];
+    expect(embeds).toHaveLength(1);
+    expect(embeds[0].url).toBeUndefined();
   });
 });

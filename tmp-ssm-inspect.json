@@ -1,0 +1,22 @@
+{
+  "commands": [
+    "set -euo pipefail",
+    "echo === docker ps ===",
+    "docker ps --format '{{.ID}} {{.Names}} {{.Image}} {{.Status}}'",
+    "CID=$(docker ps --format '{{.ID}} {{.Image}}' | awk '/truss-agent/{print $1; exit}')",
+    "echo CID=$CID",
+    "if [ -z \"$CID\" ]; then echo NO_CONTAINER; exit 0; fi",
+    "echo === inspect env redacted ===",
+    "docker inspect \"$CID\" --format '{{range .Config.Env}}{{println .}}{{end}}' | sed -E 's/(TRUSS_API_KEY=).*/\\1<redacted>/'",
+    "echo === mounts ===",
+    "docker inspect \"$CID\" --format '{{json .Mounts}}'",
+    "echo === config ls ===",
+    "docker exec \"$CID\" ls -la /app/config",
+    "echo === agent.json ===",
+    "docker exec \"$CID\" cat /app/config/agent.json || echo missing",
+    "echo === jobs summary ===",
+    "docker exec \"$CID\" python3 -c 'import json,collections; d=json.load(open(\"/app/config/jobs.json\")); jobs=d.get(\"jobs\", d if isinstance(d,list) else []); print(\"job_count\", len(jobs)); print(\"schedules\", dict(collections.Counter(str(j.get(\"schedule\")) for j in jobs))); print(\"windowMinutes\", dict(collections.Counter(j.get(\"windowMinutes\") for j in jobs))); print(\"windowDays\", dict(collections.Counter(j.get(\"windowDays\") for j in jobs))); print(\"outputFormat\", dict(collections.Counter(j.get(\"outputFormat\") for j in jobs))); print(\"has_filter\", sum(1 for j in jobs if j.get(\"filter\"))); print(\"has_connectionName\", sum(1 for j in jobs if j.get(\"connectionName\"))); print(\"has_configName\", sum(1 for j in jobs if j.get(\"configName\")));\n[print({k:j.get(k) for k in [\"name\",\"schedule\",\"windowMinutes\",\"windowDays\",\"outputFormat\",\"connectionName\"]}) for j in jobs[:8]]'",
+    "echo === connections summary ===",
+    "docker exec \"$CID\" python3 -c 'import json,collections; d=json.load(open(\"/app/config/connections.json\")); conns=d.get(\"connections\", d if isinstance(d,list) else []); print(\"connection_count\", len(conns)); print(\"enabled\", dict(collections.Counter(c.get(\"enabled\", c.get(\"isEnabled\")) for c in conns))); print(\"query.windowMinutes\", dict(collections.Counter((c.get(\"query\") or {}).get(\"windowMinutes\") for c in conns))); print(\"query.windowDays\", dict(collections.Counter((c.get(\"query\") or {}).get(\"windowDays\") for c in conns))); print(\"with_filter\", sum(1 for c in conns if (c.get(\"query\") or {}).get(\"filter\\\"))); print(\"with_configName\", sum(1 for c in conns if (c.get(\"query\") or {}).get(\"configName\")));\n\nfor c in conns[:5]:\n q=c.get(\"query\") or {}; f=q.get(\"filter\") or {}; print(\"sample\", c.get(\"name\"), \"enabled\", c.get(\"enabled\", c.get(\"isEnabled\")), \"filter_keys\", sorted(f.keys())[:15], \"windowM\", q.get(\"windowMinutes\"), \"windowD\", q.get(\"windowDays\"))'"
+  ]
+}
